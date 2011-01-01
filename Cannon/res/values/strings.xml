@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="app_name">Cannon</string>
+<string name="app_version">2.0.0</string>
+<string name="dev_name">Pilot_51</string>
+<string name="dev_email">pilota51@gmail.com</string>
+<string name="dev_web">http://pilot51.com</string>
+<string name="dev_twitter">http://twitter.com/Pilot_51</string>
+<string name="prefs">Preferences</string>
+<string name="about">About</string>
+<string name="color_dialog_msg">Value can be a color name (e.g. blue) or a hex color (e.g. #0000ff, or #550000ff for alpha transparency)</string>
+<string name="about_text">
+"For the timeline leading up to the release of Cannon on Android, touch the \'History\' button.
+
+Whether you like Cannon or not, please rate and comment on it to compliment my work and/or let me know where it needs to improve.
+
+As with everything I do, I am open to suggestions, bug reports, questions, comments, etc."</string>
+</resources>
