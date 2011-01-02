@@ -1,29 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.pilot51.cannon" android:versionCode="1" android:installLocation="auto" android:versionName="r1">
 	<application android:icon="@drawable/icon" android:label="@string/app_name">
-		<activity android:label="@string/app_name" android:name="Main">
+		<activity android:name="GameType">
 			<intent-filter>
-				<action android:name="android.intent.action.MAIN"/>
-				<category android:name="android.intent.category.LAUNCHER"/>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+		<activity android:label="@string/app_name" android:name="CustomGame">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
 			</intent-filter>
 		</activity>
 		<activity android:name="Preferences">
 			<intent-filter>
-				<action android:name="android.intent.action.MAIN"/>
+				<action android:name="android.intent.action.MAIN" />
+			</intent-filter>
+		</activity>
+		<activity android:name="GameField">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
 			</intent-filter>
 		</activity>
 		<activity android:name="Classic">
 			<intent-filter>
-				<action android:name="android.intent.action.MAIN"/>
-			</intent-filter>
-		</activity>
-		<activity android:name="Fire">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN"/>
+				<action android:name="android.intent.action.MAIN" />
 			</intent-filter>
 		</activity>
 		<activity android:name="com.admob.android.ads.AdMobActivity" android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:configChanges="orientation|keyboard|keyboardHidden" />
 	</application>
-	<uses-sdk android:minSdkVersion="3" android:targetSdkVersion="8"/>
-<uses-permission android:name="android.permission.INTERNET"></uses-permission>
+	<uses-sdk android:minSdkVersion="3" android:targetSdkVersion="8" />
+	<uses-permission android:name="android.permission.INTERNET" />
 </manifest> 

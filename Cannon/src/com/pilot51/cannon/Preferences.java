@@ -122,7 +122,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-			Intent menu = new Intent(this, Main.class);
+			Intent menu = new Intent(this, CustomGame.class);
 			startActivity(menu);
 			finish();
 			return true;

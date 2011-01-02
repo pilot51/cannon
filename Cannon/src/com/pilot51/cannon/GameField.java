@@ -1,6 +1,7 @@
 package com.pilot51.cannon;
 
 import java.text.DecimalFormat;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -47,7 +48,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 
-public class Fire extends BaseGameActivity implements IOnSceneTouchListener {
+public class GameField extends BaseGameActivity implements IOnSceneTouchListener {
 
 	private static int cameraWidth;
 	private static int cameraHeight;
@@ -60,12 +61,14 @@ public class Fire extends BaseGameActivity implements IOnSceneTouchListener {
 	private SharedPreferences prefs;
 	private float angle, velocity, fuze, gravity, wind;
 	private int targetD, targetH, targetRadius, gridx, gridy, colorbg, colorgrid, colorproj, colortarget;
+	private boolean mRandom;
 	private Ball target;
 	private final float ballRadius = 3;
 	private final float ballScale = ballRadius * 2f / RATIO;
 	private Texture mFontTexture;
 	private Font mFont;
 	private ChangeableText aText, vText;
+	private Random rand_gen = new Random();
 
 	@Override
 	public Engine onLoadEngine() {
@@ -83,19 +86,32 @@ public class Fire extends BaseGameActivity implements IOnSceneTouchListener {
 
 	@Override
 	public void onLoadResources() {
+		mRandom = getIntent().getBooleanExtra("random", false);
 		mTexture = new Texture(64, 64, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		TextureRegionFactory.setAssetBasePath("gfx/");
 		mCircleTextureRegion = TextureRegionFactory.createFromAsset(mTexture, this, "circle_white.png", 0, 32);
 		mEngine.getTextureManager().loadTexture(mTexture);
 		SharedPreferences values = getSharedPreferences("valuePref", 0);
-		angle = values.getFloat("prefAngle", 0);
-		velocity = values.getFloat("prefVelocity", 0);
-		fuze = values.getFloat("prefFuze", 0) * 1000;
-		gravity = values.getFloat("prefGravity", 0) / RATIO;
-		wind = values.getFloat("prefWind", 0) / RATIO;
-		targetD = values.getInt("prefTargetD", 0);
-		targetH = values.getInt("prefTargetH", 0);
-		targetRadius = values.getInt("prefTargetS", 0);
+		if (mRandom == false) {
+			angle = values.getFloat("prefAngle", 0);
+			velocity = values.getFloat("prefVelocity", 0);
+			fuze = values.getFloat("prefFuze", 0) * 1000;
+			gravity = values.getFloat("prefGravity", 0) / RATIO;
+			wind = values.getFloat("prefWind", 0) / RATIO;
+			targetRadius = values.getInt("prefTargetS", 0);
+			targetD = values.getInt("prefTargetD", 0);
+			targetH = values.getInt("prefTargetH", 0);
+		} else {
+			angle = 45;
+			velocity = 50;
+			fuze = 0;
+			gravity = 1f / RATIO;
+			wind = 0;
+			//wind = (float)(rand_gen.nextInt(7) - 3) / RATIO;
+			targetRadius = rand_gen.nextInt(50) + 3;
+			targetD = rand_gen.nextInt(cameraWidth - targetRadius*2) + targetRadius;
+			targetH = rand_gen.nextInt(cameraHeight - targetRadius*2) + targetRadius;
+		}
 		prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 		colorbg = Color.parseColor(prefs.getString("prefColorBG", null));
 		colorgrid = Color.parseColor(prefs.getString("prefColorGrid", null));
@@ -308,7 +324,7 @@ public class Fire extends BaseGameActivity implements IOnSceneTouchListener {
 									result = "Touched! - ";
 									score /= 1.5;
 								}
-								Toast.makeText(Fire.this, result + "Score: " + df2.format(score) + " - Distance: " + df2.format(lastDistance), Toast.LENGTH_SHORT).show();
+								Toast.makeText(GameField.this, result + "Score: " + df2.format(score) + " - Distance: " + df2.format(lastDistance), Toast.LENGTH_SHORT).show();
 								lastDistance = -1;
 								scene.unregisterUpdateHandler(uh);
 							} else if (lastDistance == 0 | distance <= lastDistance) {
@@ -347,7 +363,7 @@ public class Fire extends BaseGameActivity implements IOnSceneTouchListener {
 										result = "Touched! - ";
 										score /= 1.5;
 									}
-									Toast.makeText(Fire.this, result + "Score: " + df2.format(score) + " - Distance: " + df2.format(distance), Toast.LENGTH_SHORT).show();
+									Toast.makeText(GameField.this, result + "Score: " + df2.format(score) + " - Distance: " + df2.format(distance), Toast.LENGTH_SHORT).show();
 								}
 							});
 							removeBall(ball);

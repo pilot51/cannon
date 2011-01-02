@@ -7,8 +7,7 @@
  * TODO Save sources along with binary for each release version
  * 
  * Problems:
- * FIXME Bottom of scrollview in main screen doesn't lose fade when at bottom
- * FIXME Fuze not working for all balls
+ * FIXME Bottom of scrollview in custom screen doesn't lose fade when at bottom
  * 
  * v2.0.0:
  * TODO [4 hours] Update icon
@@ -88,7 +87,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class Main extends Activity implements OnClickListener {
+public class CustomGame extends Activity implements OnClickListener {
 
 	Button btnFire;
 
@@ -106,11 +105,10 @@ public class Main extends Activity implements OnClickListener {
 
 	SharedPreferences values;
 
-	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+		setContentView(R.layout.customgame);
 		new Common().ad(this);
 		editAngle = (EditText) findViewById(R.id.editAngle);
 		editVelocity = (EditText) findViewById(R.id.editVelocity);
@@ -209,7 +207,7 @@ public class Main extends Activity implements OnClickListener {
 			save_values();
 			if(PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getBoolean("prefClassic", false)) {
 				startActivity(new Intent(this, Classic.class));
-			} else startActivity(new Intent(this, Fire.class));
+			} else startActivity(new Intent(this, GameField.class));
 			// finish();
 			break;
 		}
