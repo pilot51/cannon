@@ -2,9 +2,15 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 	<CheckBoxPreference android:key="prefClassic" android:title="Classic Mode" android:summaryOn="v1" android:summaryOff="v2" android:defaultValue="false" />
 	<CheckBoxPreference android:key="prefCollide" android:title="Collision" android:summary="Collision between projectile &amp; target" android:defaultValue="true" />
-	<EditTextPreference android:key="prefGridX" android:title="Grid X scale" android:summary="Scale to measure ground distance" android:dialogTitle="Set X-grid size" android:dialogMessage="Set the distance (in meters) between each grid line measuring ground distance" android:defaultValue="50" android:inputType="phone" android:digits="0123456789" />
-	<EditTextPreference android:key="prefGridY" android:title="Grid Y scale" android:summary="Scale to measure altitude" android:dialogTitle="Set Y-grid size" android:dialogMessage="Set the distance (in meters) between each grid line measuring altitude" android:defaultValue="50" android:inputType="phone" android:digits="0123456789" />
-	<PreferenceScreen android:title="v2-only features">
+	<EditTextPreference android:key="prefGridX" android:title="Grid X scale" android:summary="Scale to measure ground distance" android:dialogTitle="Set X-grid size" android:dialogMessage="Set the distance (in meters) between each grid line measuring ground distance" android:defaultValue="50" android:inputType="phone" android:digits="0123456789"/>
+	<EditTextPreference android:key="prefGridY" android:title="Grid Y scale" android:summary="Scale to measure altitude" android:dialogTitle="Set Y-grid size" android:dialogMessage="Set the distance (in meters) between each grid line measuring altitude" android:defaultValue="50" android:inputType="phone" android:digits="0123456789"/>
+	<PreferenceScreen android:title="v2-only options">
+		<CheckBoxPreference android:key="prefExpTarget" android:title="Explosive Target" android:defaultValue="true" />
+		<PreferenceCategory android:title="Scaling">
+			<EditTextPreference android:key="prefBallRadius" android:summary="" android:defaultValue="3" android:dialogMessage="Radius of projectile in meters" android:dialogTitle="Projectile Size" android:title="Projectile Size" android:digits="0123456789." android:inputType="phone"/>
+			<EditTextPreference android:key="prefSpeed" android:title="Speed Multiplier" android:summary="" android:dialogTitle="Speed Multiplier" android:dialogMessage="" android:defaultValue="1" android:inputType="phone" android:digits="0123456789."/>
+			<EditTextPreference android:key="prefMeter" android:title="Pixels Per Meter" android:summary="" android:dialogTitle="Pixels Per Meter" android:dialogMessage="How many pixels represent 1 meter?" android:defaultValue="1" android:digits="0123456789." android:inputType="phone"/>
+		</PreferenceCategory>
 		<PreferenceCategory android:title="Physical borders">
 			<CheckBoxPreference android:key="prefGround" android:title="Ground" android:defaultValue="true" />
 			<CheckBoxPreference android:key="prefRoof" android:title="Roof" android:defaultValue="false" />
@@ -12,7 +18,7 @@
 			<CheckBoxPreference android:key="prefRightWall" android:title="Right Wall" android:defaultValue="false" />
 		</PreferenceCategory>
 	</PreferenceScreen>
-	<PreferenceScreen android:title="v1-only features">
+	<PreferenceScreen android:title="v1-only options">
 		<CheckBoxPreference android:key="prefTrail" android:title="Projectile trail" android:defaultValue="true" />
 		<CheckBoxPreference android:key="prefRepeat" android:title="Auto-fire" android:summaryOn="Another projectile is fired when previous one completes" android:summaryOff="Manual: Press center D-Pad/wheel or touchscreen to refire" android:defaultValue="false" />
 	</PreferenceScreen>

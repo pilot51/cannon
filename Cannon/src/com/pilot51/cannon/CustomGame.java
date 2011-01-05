@@ -68,16 +68,10 @@
 package com.pilot51.cannon;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.text.SpannableString;
-import android.text.method.LinkMovementMethod;
-import android.text.util.Linkify;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -85,7 +79,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 public class CustomGame extends Activity implements OnClickListener {
 
@@ -94,14 +87,9 @@ public class CustomGame extends Activity implements OnClickListener {
 	EditText editAngle, editVelocity, editFuze, editGravity, editWind,
 			editTargetD, editTargetH, editTargetS;
 
-	String app_name, app_ver, about_text,
-			dev_name, dev_email, dev_web, dev_twitter, about;
-
 	float angle, velocity, fuze, gravity, wind;
 
 	int targetd, targeth, targets;
-
-	AlertDialog dialogAbout;
 
 	SharedPreferences values;
 
@@ -122,30 +110,8 @@ public class CustomGame extends Activity implements OnClickListener {
 		btnFire = (Button) findViewById(R.id.buttonFire);
 		btnFire.setOnClickListener(this);
 
-		app_name = getString(R.string.app_name);
-		app_ver = getString(R.string.app_version);
-		about_text = getString(R.string.about_text);
-		dev_name = getString(R.string.dev_name);
-		dev_email = getString(R.string.dev_email);
-		dev_web = getString(R.string.dev_web);
-		dev_twitter = getString(R.string.dev_twitter);
-		about = getString(R.string.about);
-
-		dialogAbout = new AlertDialog.Builder(this).create();
-
 		values = getSharedPreferences("valuePref", 0);
-		editAngle.setText(Float.toString(values.getFloat("prefAngle", 59)));
-		editVelocity.setText(Float.toString(values.getFloat("prefVelocity",
-				(float) 82.5)));
-		editFuze
-				.setText(Float.toString(values.getFloat("prefFuze", (float) 0)));
-		editGravity.setText(Float.toString(values.getFloat("prefGravity", 1)));
-		editWind.setText(Float.toString(values.getFloat("prefWind", -3)));
-		editTargetD
-				.setText(Integer.toString(values.getInt("prefTargetD", 250)));
-		editTargetH
-				.setText(Integer.toString(values.getInt("prefTargetH", 250)));
-		editTargetS.setText(Integer.toString(values.getInt("prefTargetS", 10)));
+		loadValues();
 
 		// Set the virtual keyboard to the numeric "phone" type without
 		// overriding input type defined in the layout XML
@@ -159,7 +125,7 @@ public class CustomGame extends Activity implements OnClickListener {
 		editTargetS.setRawInputType(3);
 
 		// Load default preferences from xml if not saved
-		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+		PreferenceManager.setDefaultValues(this, R.xml.preferences, true);
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -172,29 +138,10 @@ public class CustomGame extends Activity implements OnClickListener {
 		switch (item.getItemId()) {
 		case R.id.menu_about:
 			// Log.d(TAG, "About pressed");
-			TextView messageAbout = new TextView(this);
-			SpannableString s = new SpannableString(app_name
-					+ " - version " + app_ver + "\nBy " + dev_name + "\n"
-					+ dev_email + "\n" + dev_web + "\n" + dev_twitter
-					+ "\n\n\n" + about_text);
-			Linkify.addLinks(s, Linkify.WEB_URLS);
-			messageAbout.setText(s);
-			messageAbout.setMovementMethod(LinkMovementMethod.getInstance());
-			dialogAbout.setTitle(about + " " + app_name);
-			dialogAbout.setIcon(R.drawable.icon);
-			dialogAbout.setView(messageAbout);
-			dialogAbout.setButton("More apps",
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int id) {
-							startActivity(new Intent(Intent.ACTION_VIEW, Uri
-									.parse("market://search?q=pub:Pilot_51")));
-						}
-					});
-			dialogAbout.show();
+			new Common().menu(this);
 			return true;
 		case R.id.menu_prefs:
-			startActivity(new Intent(getBaseContext(), Preferences.class));
-			finish();
+			startActivityForResult(new Intent(getBaseContext(), Preferences.class), 0);
 			return true;
 		}
 		return false;
@@ -203,17 +150,31 @@ public class CustomGame extends Activity implements OnClickListener {
 	public void onClick(View src) {
 		switch (src.getId()) {
 		case R.id.buttonFire:
-			grab_values();
-			save_values();
+			grabValues();
+			saveValues();
 			if(PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getBoolean("prefClassic", false)) {
 				startActivity(new Intent(this, Classic.class));
 			} else startActivity(new Intent(this, GameField.class));
-			// finish();
 			break;
 		}
 	}
+	
+	void loadValues() {
+		editAngle.setText(Float.toString(values.getFloat("prefAngle", 59)));
+		editVelocity.setText(Float.toString(values.getFloat("prefVelocity",
+				(float) 82.5)));
+		editFuze
+				.setText(Float.toString(values.getFloat("prefFuze", (float) 0)));
+		editGravity.setText(Float.toString(values.getFloat("prefGravity", 1)));
+		editWind.setText(Float.toString(values.getFloat("prefWind", -3)));
+		editTargetD
+				.setText(Integer.toString(values.getInt("prefTargetD", 250)));
+		editTargetH
+				.setText(Integer.toString(values.getInt("prefTargetH", 250)));
+		editTargetS.setText(Integer.toString(values.getInt("prefTargetS", 10)));
+	}
 
-	void grab_values() {
+	void grabValues() {
 		// Grab values from edit fields & use 0 for null fields
 		try {
 			angle = Float.parseFloat(editAngle.getText().toString());
@@ -257,7 +218,7 @@ public class CustomGame extends Activity implements OnClickListener {
 		}
 	}
 
-	void save_values() {
+	void saveValues() {
 		SharedPreferences.Editor editor = values.edit();
 		editor.putFloat("prefAngle", angle);
 		editor.putFloat("prefVelocity", velocity);
@@ -268,5 +229,9 @@ public class CustomGame extends Activity implements OnClickListener {
 		editor.putInt("prefTargetH", targeth);
 		editor.putInt("prefTargetS", targets);
 		editor.commit();
+	}
+	
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if(resultCode == 1) loadValues();
 	}
 }

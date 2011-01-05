@@ -3,6 +3,10 @@ package com.pilot51.cannon;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Process;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -44,5 +48,29 @@ public class GameType extends Activity implements OnClickListener {
 		case R.id.btnMulti:
 			break;
 		}
+	}
+	
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main, menu);
+		return true;
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menu_about:
+			// Log.d(TAG, "About pressed");
+			new Common().menu(this);
+			return true;
+		case R.id.menu_prefs:
+			startActivity(new Intent(getBaseContext(), Preferences.class));
+			return true;
+		}
+		return false;
+	}
+	
+	public void finish() {
+		super.finish();
+		Process.killProcess(Process.myPid());
 	}
 }
