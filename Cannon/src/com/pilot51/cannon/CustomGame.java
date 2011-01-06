@@ -12,7 +12,6 @@
  * v2.0.0:
  * TODO [4 hours] Update icon
  * TODO [30 min] Update About dialog
- * TODO [1 day] Zoom & pan
  * TODO [1 day] Explosion with shrapnel
  * TODO [2 days] Scoring: Distance from target center (closest without fuze, at detonation with fuze), doubled if hit
  * 			[1 day] Display and saving of scores
@@ -21,16 +20,17 @@
  *                  Fuze: Direct hit, touched, richochet, passed through, indirect hit (shrapnel)
  *                  Bounce: Hit or miss
  * TODO Missions: preset, random, or infinitely calculated targets that need to be hit to reach higher levels
- * TODO Get all v1 options working in v2
- * 			Auto-fire toggle
- * 			Projectile trail toggle
  * 
  * v2.0.1:
  * TODO Sounds
  * TODO Textures, maybe themes
+ * TODO Zoom & pan
  * TODO Option: Analytics
- * TODO Add some suggestions
  * TODO Remove balls when they leave the screen and will not return
+ * TODO Add some suggestions
+ * TODO Get all v1 options working in v2
+ * 			Auto-fire toggle
+ * 			Projectile trail toggle
  * 
  * Pro (first release):
  * TODO Look into the new copy protection

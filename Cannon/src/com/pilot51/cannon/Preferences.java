@@ -56,7 +56,23 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 	}
 
 	public void onSharedPreferenceChanged(SharedPreferences sp, String key) {
-		if (key.equals("prefColorBG")) {
+		if (key.equals("prefGridX")) {
+			try {
+				Integer.parseInt(sp.getString("prefGridX", null));
+			} catch (Exception e) {
+				sp.edit().putString("prefGridX", "0").commit();
+				((EditTextPreference)findPreference("prefGridX")).setText("0");
+				Toast.makeText(this, "Empty X-Grid. Set to 0 (disabled).", Toast.LENGTH_SHORT).show();
+			}
+		} else if (key.equals("prefGridY")) {
+			try {
+				Integer.parseInt(sp.getString("prefGridY", null));
+			} catch (Exception e) {
+				sp.edit().putString("prefGridY", "0").commit();
+				((EditTextPreference)findPreference("prefGridY")).setText("0");
+				Toast.makeText(this, "Empty Y-Grid. Set to 0 (disabled).", Toast.LENGTH_SHORT).show();
+			}
+		} else if (key.equals("prefColorBG")) {
 			try {
 				Color.parseColor(sp.getString("prefColorBG", null));
 			} catch (Exception e) {
@@ -64,8 +80,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 				((EditTextPreference)findPreference("prefColorBG")).setText("black");
 				Toast.makeText(this, "Invalid color. Background reset to black.", Toast.LENGTH_SHORT).show();
 			}
-		}
-		if (key.equals("prefColorGrid")) {
+		} else if (key.equals("prefColorGrid")) {
 			try {
 				Color.parseColor(sp.getString("prefColorGrid", null));
 			} catch (Exception e) {
@@ -73,8 +88,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 				((EditTextPreference)findPreference("prefColorGrid")).setText("green");
 				Toast.makeText(this, "Invalid color. Grid reset to green.", Toast.LENGTH_SHORT).show();
 			}
-		}
-		if (key.equals("prefColorTarget")) {
+		} else if (key.equals("prefColorTarget")) {
 			try {
 				Color.parseColor(sp.getString("prefColorTarget", null));
 			} catch (Exception e) {
@@ -82,8 +96,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 				((EditTextPreference)findPreference("prefColorTarget")).setText("red");
 				Toast.makeText(this, "Invalid color. Target reset to red.", Toast.LENGTH_SHORT).show();
 			}
-		}
-		if (key.equals("prefColorProj")) {
+		} else if (key.equals("prefColorProj")) {
 			try {
 				Color.parseColor(sp.getString("prefColorProj", null));
 			} catch (Exception e) {

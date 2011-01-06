@@ -5,7 +5,9 @@
 	<EditTextPreference android:key="prefGridX" android:title="Grid X scale" android:summary="Scale to measure ground distance" android:dialogTitle="Set X-grid size" android:dialogMessage="Set the distance (in meters) between each grid line measuring ground distance" android:defaultValue="50" android:inputType="phone" android:digits="0123456789"/>
 	<EditTextPreference android:key="prefGridY" android:title="Grid Y scale" android:summary="Scale to measure altitude" android:dialogTitle="Set Y-grid size" android:dialogMessage="Set the distance (in meters) between each grid line measuring altitude" android:defaultValue="50" android:inputType="phone" android:digits="0123456789"/>
 	<PreferenceScreen android:title="v2-only options">
-		<CheckBoxPreference android:key="prefExpTarget" android:title="Explosive Target" android:defaultValue="true" />
+		<CheckBoxPreference android:key="prefExpTarget" android:title="Explosive Target" android:summaryOn="Hitting a target will create an explosion" android:summaryOff="Nothing really interesting happens when hitting a target\nImproves performance" android:defaultValue="true" />
+		<!--<CheckBoxPreference android:key="prefScores" android:title="Individual Scores" android:summary="Display scores for each attampt in real-time" android:defaultValue="true" />-->
+		<CheckBoxPreference android:key="prefKeep" android:title="Keep Targets" android:summaryOn="Targets will remain when hit" android:summaryOff="Targets will be destroyed when hit" android:defaultValue="true" />
 		<PreferenceCategory android:title="Scaling">
 			<EditTextPreference android:key="prefBallRadius" android:summary="" android:defaultValue="3" android:dialogMessage="Radius of projectile in meters" android:dialogTitle="Projectile Size" android:title="Projectile Size" android:digits="0123456789." android:inputType="phone"/>
 			<EditTextPreference android:key="prefSpeed" android:title="Speed Multiplier" android:summary="" android:dialogTitle="Speed Multiplier" android:dialogMessage="" android:defaultValue="1" android:inputType="phone" android:digits="0123456789."/>
