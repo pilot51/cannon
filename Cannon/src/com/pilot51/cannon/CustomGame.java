@@ -15,6 +15,8 @@
  * TODO Explosive projectile with shrapnel
  * TODO Display and saving of scores
  * TODO Missions: preset, random, or infinitely calculated targets that need to be hit to reach higher levels
+ * TODO Get all v1 options working in v2
+ * 			Auto-fire toggle
  * 
  * v2.0.1:
  * TODO Sounds
@@ -23,9 +25,6 @@
  * TODO Option: Analytics
  * TODO Remove balls when they leave the screen and will not return
  * TODO Add some suggestions
- * TODO Get all v1 options working in v2
- * 			Auto-fire toggle
- * 			Projectile trail toggle
  * 
  * Pro (first release):
  * TODO Look into the new copy protection

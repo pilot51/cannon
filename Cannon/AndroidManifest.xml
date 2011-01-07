@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.pilot51.cannon" android:versionCode="1" android:installLocation="auto" android:versionName="r1">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.pilot51.cannon" android:installLocation="auto" android:versionCode="2" android:versionName="@string/app_version">
 	<application android:icon="@drawable/icon" android:label="@string/app_name">
 		<activity android:name="GameType">
 			<intent-filter>
@@ -31,4 +31,5 @@
 	</application>
 	<uses-sdk android:minSdkVersion="3" android:targetSdkVersion="8" />
 	<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.WAKE_LOCK"></uses-permission>
 </manifest> 

@@ -9,9 +9,11 @@ import javax.microedition.khronos.opengles.GL10;
 import org.anddev.andengine.engine.Engine;
 import org.anddev.andengine.engine.camera.SmoothCamera;
 import org.anddev.andengine.engine.camera.hud.HUD;
+import org.anddev.andengine.engine.handler.IUpdateHandler;
 import org.anddev.andengine.engine.options.EngineOptions;
 import org.anddev.andengine.engine.options.EngineOptions.ScreenOrientation;
 import org.anddev.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
+import org.anddev.andengine.entity.IEntity;
 import org.anddev.andengine.entity.particle.Particle;
 import org.anddev.andengine.entity.particle.ParticleSystem;
 import org.anddev.andengine.entity.particle.emitter.PointParticleEmitter;
@@ -114,7 +116,6 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 		colorProj = Color.parseColor(prefs.getString("prefColorProj", null));
 
 		ballRadius = Float.parseFloat(prefs.getString("prefBallRadius", null));
-		//ballScale = ballRadius * 0.5f / ratio;
 
 		mTexture = new Texture(128, 128, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		TextureRegionFactory.setAssetBasePath("gfx/");
@@ -152,22 +153,22 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 		if (prefs.getBoolean("prefGround", false)) {
 			final Shape ground = new Rectangle(0, -1, cameraWidth, 1);
 			PhysicsFactory.createBoxBody(mPhysicsWorld, ground, BodyType.StaticBody, wallFixtureDef); // Temporarily disabled for v1 accuracy
-			scene.getLayer(0).addEntity(ground);
+			addEntity(ground, 0, scene);
 		}
 		if (prefs.getBoolean("prefRoof", false)) {
 			final Shape roof = new Rectangle(0, -cameraHeight, cameraWidth, 1);
 			PhysicsFactory.createBoxBody(mPhysicsWorld, roof, BodyType.StaticBody, wallFixtureDef);
-			scene.getLayer(0).addEntity(roof);
+			addEntity(roof, 0, scene);
 		}
 		if (prefs.getBoolean("prefLeftWall", false)) {
 			final Shape left = new Rectangle(0, -cameraHeight, 1, cameraHeight);
 			PhysicsFactory.createBoxBody(mPhysicsWorld, left, BodyType.StaticBody, wallFixtureDef);
-			scene.getLayer(0).addEntity(left);
+			addEntity(left, 0, scene);
 		}
 		if (prefs.getBoolean("prefRightWall", false)) {
 			final Shape right = new Rectangle(cameraWidth - 1, -cameraHeight, 1, cameraHeight);
 			PhysicsFactory.createBoxBody(mPhysicsWorld, right, BodyType.StaticBody, wallFixtureDef);
-			scene.getLayer(0).addEntity(right);
+			addEntity(right, 0, scene);
 		}
 		if (mRandom) {
 			targetRadius = rand_gen.nextInt(50) + 3;
@@ -226,11 +227,11 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 		}
 		scene.registerUpdateHandler(mPhysicsWorld);
 		aText = new ChangeableText(10, 10, mFont, "Angle: " + angle, "Angle: XXXXX".length());
-		hud.getLayer(0).addEntity(aText);
+		addEntity(aText, 0, hud);
 		vText = new ChangeableText(10, 40, mFont, "Velocity: " + velocity, "Velocity: XXXXX".length());
-		hud.getLayer(0).addEntity(vText);
+		addEntity(vText, 0, hud);
 		sText = new ChangeableText(cameraWidth - 120, 10, mFont, "Score: " + score, HorizontalAlign.RIGHT, "Score: XXXXXX".length());
-		hud.getLayer(0).addEntity(sText);
+		addEntity(sText, 0, hud);
 		return scene;
 	}
 
@@ -312,7 +313,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 				final Line linex = new Line(grid, 0, grid, -cameraHeight);
 				linex.setColor(Color.red(colorGrid) / 255f, Color.green(colorGrid) / 255f, Color.blue(colorGrid) / 255f, Color.alpha(colorGrid) / 255f);
 				PhysicsFactory.createBoxBody(mPhysicsWorld, linex, BodyType.StaticBody, gridFixtureDef);
-				scene.getLayer(0).addEntity(linex);
+				addEntity(linex, 0, scene);
 			} while (grid < cameraWidth - gridx && gridx != 0);
 		}
 		gridy = Integer.parseInt(prefs.getString("prefGridY", null));
@@ -324,7 +325,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 				final Line liney = new Line(0, -grid, cameraWidth, -grid);
 				liney.setColor(Color.red(colorGrid) / 255f, Color.green(colorGrid) / 255f, Color.blue(colorGrid) / 255f, Color.alpha(colorGrid) / 255f);
 				PhysicsFactory.createBoxBody(mPhysicsWorld, liney, BodyType.StaticBody, gridFixtureDef);
-				scene.getLayer(0).addEntity(liney);
+				addEntity(liney, 0, scene);
 			} while (grid < cameraHeight - gridy && gridy != 0);
 		}
 	}
@@ -333,23 +334,21 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 		final Scene scene = mEngine.getScene();
 		final FixtureDef ballFixtureDef = PhysicsFactory.createFixtureDef(0, 0.5f, 0, false);
 		final Sprite ball = new Sprite((-tCircle.getWidth() / 2) + 1, (-tCircle.getHeight() / 2) - 1, tCircle);
-		runOnUpdateThread(new Runnable() {
-			@Override
-			public void run() {
-				ball.setVelocity(velocity * speed / ratio * (float) Math.cos(Math.toRadians(angle)), -velocity * speed / ratio * (float) Math.sin(Math.toRadians(angle)));
-				ball.setScaleCenter(ball.getWidth() / 2, ball.getHeight() / 2);
-				ball.setScale(ballRadius / (ball.getWidth() / 2));
-				final Body body = PhysicsFactory.createCircleBody(mPhysicsWorld, ball, BodyType.DynamicBody, ballFixtureDef);
-				ball.setColor(Color.red(colorProj) / 255f, Color.green(colorProj) / 255f, Color.blue(colorProj) / 255f, Color.alpha(colorProj) / 255f);
-				body.setBullet(true);
-				ball.setUpdatePhysics(false);
-				mPhysicsWorld.registerPhysicsConnector(new PhysicsConnector(ball, body, true, true, false, false));
-				body.setUserData(ball);
-				scene.getLayer(2).addEntity(ball);
-			}
-		});
+		ball.setVelocity(velocity * speed / ratio * (float) Math.cos(Math.toRadians(angle)), -velocity * speed / ratio * (float) Math.sin(Math.toRadians(angle)));
+		ball.setScaleCenter(ball.getWidth() / 2, ball.getHeight() / 2);
+		ball.setScale(ballRadius / (ball.getWidth() / 2));
+		final Body body = PhysicsFactory.createCircleBody(mPhysicsWorld, ball, BodyType.DynamicBody, ballFixtureDef);
+		ball.setColor(Color.red(colorProj) / 255f, Color.green(colorProj) / 255f, Color.blue(colorProj) / 255f, Color.alpha(colorProj) / 255f);
+		body.setBullet(true);
+		ball.setUpdatePhysics(false);
+		mPhysicsWorld.registerPhysicsConnector(new PhysicsConnector(ball, body, true, true, false, false));
+		body.setUserData(ball);
+		addEntity(ball, 2, null);
 		score -= 1;
 		sText.setText("Score: " + score);
+		if (prefs.getBoolean("prefTrail", false)) {
+			trail(ball);
+		}
 		if (fuze > 0) {
 			TimerTask task = new TimerTask() {
 				@Override
@@ -359,6 +358,31 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 			};
 			new Timer().schedule(task, (long) (fuze / speed));
 		}
+		scene.registerUpdateHandler(new IUpdateHandler() {
+			IUpdateHandler uh = this;
+
+			@Override
+			public void onUpdate(float pSecondsElapsed) {
+				int ballX = (int) (ball.getX() + (ball.getWidth() / 2));
+				int ballY = (int) (ball.getY() + (ball.getHeight() / 2));
+				//Log.d("Cannon", "X: " + ballX + " | Y: " + ballY);
+				if ((gravity >= 0 & ballY > 0) | (wind <= 0 & ballX < 0) | (gravity <= 0 & ballY < -cameraHeight) | (wind >= 0 & ballX > cameraWidth)) {
+					scene.unregisterUpdateHandler(uh);
+					removeBall(ball, 2);
+					/*
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(GameField.this, "Ball not returning", Toast.LENGTH_SHORT).show();
+					}});
+					*/
+				}
+			}
+
+			@Override
+			public void reset() {
+			}
+		});
 		/*
 		if (targetD > 0 | targetH > 0) {
 			if (fuze == 0) {
@@ -453,26 +477,22 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 		*/
 	}
 
-	private Double getDistance(Sprite ball) {
-		float ballX = ball.getX() + ratio / 2;
-		float ballY = ball.getY() + ratio / 2;
-		float targetX = target.getX() + targetRadius;
-		float targetY = target.getY() + targetRadius;
-		return Math.sqrt(Math.pow((ballX - targetX), 2) + Math.pow((ballY - targetY), 2));
-	}
-
+	/*
+		private Double getDistance(Sprite ball) {
+			float ballX = ball.getX() + ratio / 2;
+			float ballY = ball.getY() + ratio / 2;
+			float targetX = target.getX() + targetRadius;
+			float targetY = target.getY() + targetRadius;
+			return Math.sqrt(Math.pow((ballX - targetX), 2) + Math.pow((ballY - targetY), 2));
+		}
+	*/
 	private void removeBall(final Sprite ball, final int layer) {
 		try {
-			final Scene scene = mEngine.getScene();
 			final PhysicsConnector ballPhysicsConnector = mPhysicsWorld.getPhysicsConnectorManager().findPhysicsConnectorByShape(ball);
-			runOnUpdateThread(new Runnable() {
-				@Override
-				public void run() {
-					mPhysicsWorld.unregisterPhysicsConnector(ballPhysicsConnector);
-					mPhysicsWorld.destroyBody(ballPhysicsConnector.getBody());
-					scene.getLayer(layer).removeEntity(ball);
-				}
-			});
+			mPhysicsWorld.unregisterPhysicsConnector(ballPhysicsConnector);
+			mPhysicsWorld.destroyBody(ballPhysicsConnector.getBody());
+			removeEntity(ball, layer, null);
+			ball.setVisible(false);
 		} catch (NullPointerException e) {
 			Log.e("Cannon", "Unable to remove ball, possibly already removed");
 			e.printStackTrace();
@@ -480,34 +500,28 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 	}
 
 	void addTarget() {
-		runOnUpdateThread(new Runnable() {
-			@Override
-			public void run() {
-				if (mRandom) {
-					targetRadius = rand_gen.nextInt(50) + 3;
-					targetD = rand_gen.nextInt(cameraWidth - targetRadius * 2) + targetRadius;
-					targetH = rand_gen.nextInt(cameraHeight - targetRadius * 2) + targetRadius;
-				} else {
-					targetRadius = values.getInt("prefTargetS", 0);
-					targetD = values.getInt("prefTargetD", 0);
-					targetH = values.getInt("prefTargetH", 0);
-				}
-				final Scene scene = mEngine.getScene();
-				target = new Sprite(targetD - tCircle.getWidth() / 2, -targetH - tCircle.getHeight() / 2, tCircle);
-				//target.setSize(targetRadius * 2, targetRadius * 2);
-				target.setScaleCenter(target.getWidth() / 2, target.getHeight() / 2);
-				target.setScale(targetRadius / (target.getWidth() / 2));
-				target.setColor(Color.red(colorTarget) / 255f, Color.green(colorTarget) / 255f, Color.blue(colorTarget) / 255f, Color.alpha(colorTarget) / 255f);
-				target.setUpdatePhysics(false);
-				final FixtureDef targetFixtureDef = PhysicsFactory.createFixtureDef(0, 0.5f, 0, false);
-				if (!prefs.getBoolean("prefCollide", false)) {
-					targetFixtureDef.isSensor = true;
-				}
-				targetBody = PhysicsFactory.createCircleBody(mPhysicsWorld, target, BodyType.StaticBody, targetFixtureDef);
-				mPhysicsWorld.registerPhysicsConnector(new PhysicsConnector(target, targetBody, false, false, false, false));
-				scene.getLayer(1).addEntity(target);
-			}
-		});
+		if (mRandom) {
+			targetRadius = rand_gen.nextInt(50) + 3;
+			targetD = rand_gen.nextInt(cameraWidth - targetRadius * 2) + targetRadius;
+			targetH = rand_gen.nextInt(cameraHeight - targetRadius * 2) + targetRadius;
+		} else {
+			targetRadius = values.getInt("prefTargetS", 0);
+			targetD = values.getInt("prefTargetD", 0);
+			targetH = values.getInt("prefTargetH", 0);
+		}
+		target = new Sprite(targetD - tCircle.getWidth() / 2, -targetH - tCircle.getHeight() / 2, tCircle);
+		//target.setSize(targetRadius * 2, targetRadius * 2);
+		target.setScaleCenter(target.getWidth() / 2, target.getHeight() / 2);
+		target.setScale(targetRadius / (target.getWidth() / 2));
+		target.setColor(Color.red(colorTarget) / 255f, Color.green(colorTarget) / 255f, Color.blue(colorTarget) / 255f, Color.alpha(colorTarget) / 255f);
+		target.setUpdatePhysics(false);
+		final FixtureDef targetFixtureDef = PhysicsFactory.createFixtureDef(0, 0.5f, 0, false);
+		if (!prefs.getBoolean("prefCollide", false)) {
+			targetFixtureDef.isSensor = true;
+		}
+		targetBody = PhysicsFactory.createCircleBody(mPhysicsWorld, target, BodyType.StaticBody, targetFixtureDef);
+		mPhysicsWorld.registerPhysicsConnector(new PhysicsConnector(target, targetBody, false, false, false, false));
+		addEntity(target, 1, null);
 	}
 
 	private void removeTarget() {
@@ -519,7 +533,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 	}
 
 	private void createFirework() {
-		final Scene scene = mEngine.getScene();
+		final long expire = 10;
 		final PointParticleEmitter particleEmitter = new PointParticleEmitter(target.getX(), target.getY());
 		final ParticleSystem particleSystem = new ParticleSystem(particleEmitter, 1000, 1000, 200, tCircle);
 		particleSystem.addParticleInitializer(new ColorInitializer(1, 1, 0));
@@ -548,58 +562,84 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 		particleSystem.addParticleModifier(new ColorModifier(0, 0, 1, 0, 0, 1, 3, 6));
 		//particleSystem.addParticleModifier(new AlphaModifier(0, 1, 0, 1));
 		particleSystem.addParticleModifier(new AlphaModifier(1, 0, 7, 8));
-		particleSystem.addParticleModifier(new ExpireModifier(10, 10));
-
-		scene.getLayer(0).addEntity(particleSystem);
-		TimerTask task = new TimerTask() {
+		particleSystem.addParticleModifier(new ExpireModifier(expire, expire));
+		addEntity(particleSystem, 0, null);
+		TimerTask disable = new TimerTask() {
 			@Override
 			public void run() {
 				particleSystem.setParticlesSpawnEnabled(false);
 			}
 		};
-		new Timer().schedule(task, 1000);
+		new Timer().schedule(disable, 1000);
+		final TimerTask remove = new TimerTask() {
+			@Override
+			public void run() {
+				removeEntity(particleSystem, 0, null);
+			}
+		};
+		new Timer().schedule(remove, expire * 1000);
 	}
 
-	/*
-	private void trail(final Scene scene) {
-		final PointParticleEmitter particleEmitter = new PointParticleEmitter(0, 0);
-		final ParticleSystem particleSystem = new ParticleSystem(particleEmitter, 5, 5, 100, mCircleTextureRegion);
-		particleSystem.addParticleModifier(new ScaleModifier(6f / RATIO, 6f / RATIO, 0, 0));
+	private void addEntity(final IEntity entity, final int layer, final Scene scene) {
 		runOnUpdateThread(new Runnable() {
 			@Override
 			public void run() {
-				scene.getBottomLayer().addEntity(particleSystem);
+				Scene s = mEngine.getScene();
+				if (scene != null)
+					s = scene;
+				s.getLayer(layer).addEntity(entity);
 			}
 		});
-		TimerTask task = new TimerTask() {
+	}
+
+	private void removeEntity(final IEntity entity, final int layer, final Scene scene) {
+		runOnUpdateThread(new Runnable() {
 			@Override
 			public void run() {
-				Log.d("Cannon", "TimerTask().run()");
-				runOnUpdateThread(new Runnable() {
-					@Override
-					public void run() {
-						Log.d("Cannon", "Runnable().run()");
-						if (scene.getTopLayer().getEntityCount() > 0) {
-							Log.d("Cannon", "Entity exist");
-							final Ball ball = (Ball) scene.getTopLayer().getEntity(0);
-							((BaseParticleEmitter) particleEmitter).setCenter(ball.getX(), ball.getY());
-						} else {
-							Log.d("Cannon", "Entity not exist");
-							scene.getBottomLayer().removeEntity(particleSystem);
-							cancel();
-						}
-					}
-				});
+				Scene s = mEngine.getScene();
+				if (scene != null)
+					s = scene;
+				s.getLayer(layer).removeEntity(entity);
+			}
+		});
+	}
+
+	private void trail(final Sprite ball) {
+		final long expire = 5;
+		final PointParticleEmitter particleEmitter = new PointParticleEmitter(0, 0);
+		final ParticleSystem particleSystem = new ParticleSystem(particleEmitter, 20, 20, 400, tCircle);
+		particleSystem.addParticleInitializer(new ColorInitializer(Color.red(colorProj) / 255f, Color.green(colorProj) / 255f, Color.blue(colorProj) / 255f));
+		particleSystem.addParticleInitializer(new AlphaInitializer(1));
+		particleSystem.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE);
+		particleSystem.addParticleModifier(new ScaleModifier(ballRadius / (tCircle.getWidth() / 2), ballRadius / (tCircle.getWidth() / 2), 0, 0));
+		particleSystem.addParticleModifier(new AlphaModifier(1, 0, 0, 5));
+		particleSystem.addParticleModifier(new ExpireModifier(expire, expire));
+		addEntity(particleSystem, 0, null);
+		final TimerTask remove = new TimerTask() {
+			@Override
+			public void run() {
+				removeEntity(particleSystem, 0, null);
 			}
 		};
-		new Timer().scheduleAtFixedRate(task, 0, 50);
-	}
-	*/
-	/*
-		private static class Ball extends Sprite {
-			public Ball(final float pX, final float pY, final TextureRegion pTextureRegion) {
-				super(pX, pY, pTextureRegion);
+		final TimerTask updatePos = new TimerTask() {
+			@Override
+			public void run() {
+				if (ball.isVisible()) {
+					particleEmitter.setCenter(ball.getX(), ball.getY());
+				} else {
+					/*
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(GameField.this, "Ball no longer visible", Toast.LENGTH_LONG).show();
+					}});
+					*/
+					particleSystem.setParticlesSpawnEnabled(false);
+					new Timer().schedule(remove, expire * 1000);
+					cancel();
+				}
 			}
-		}
-		*/
+		};
+		new Timer().scheduleAtFixedRate(updatePos, 0, 50);
+	}
 }
