@@ -12,13 +12,8 @@
  * v2.0.0:
  * TODO [4 hours] Update icon
  * TODO [30 min] Update About dialog
- * TODO [1 day] Explosion with shrapnel
- * TODO [2 days] Scoring: Distance from target center (closest without fuze, at detonation with fuze), doubled if hit
- * 			[1 day] Display and saving of scores
- * 			[1 day] Logic for scoring
- *                  Contact detonate: Direct hit, richochet, indirect hit (shrapnel)
- *                  Fuze: Direct hit, touched, richochet, passed through, indirect hit (shrapnel)
- *                  Bounce: Hit or miss
+ * TODO Explosive projectile with shrapnel
+ * TODO Display and saving of scores
  * TODO Missions: preset, random, or infinitely calculated targets that need to be hit to reach higher levels
  * 
  * v2.0.1:
@@ -123,9 +118,6 @@ public class CustomGame extends Activity implements OnClickListener {
 		editTargetD.setRawInputType(3);
 		editTargetH.setRawInputType(3);
 		editTargetS.setRawInputType(3);
-
-		// Load default preferences from xml if not saved
-		PreferenceManager.setDefaultValues(this, R.xml.preferences, true);
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {

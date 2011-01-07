@@ -19,6 +19,9 @@
 			<CheckBoxPreference android:key="prefLeftWall" android:title="Left Wall" android:defaultValue="false" />
 			<CheckBoxPreference android:key="prefRightWall" android:title="Right Wall" android:defaultValue="false" />
 		</PreferenceCategory>
+		<PreferenceCategory android:title="Colors">
+			<EditTextPreference android:key="prefColorHitTarget" android:title="Completed Target Color" android:dialogTitle="Choose color for targets that have been hit" android:summary="Useful for Random mode with Keep Targets enabled" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="blue" android:digits="#0123456789abcdefghijklmnopqrstuvwxyz" />
+		</PreferenceCategory>
 	</PreferenceScreen>
 	<PreferenceScreen android:title="v1-only options">
 		<CheckBoxPreference android:key="prefTrail" android:title="Projectile trail" android:defaultValue="true" />

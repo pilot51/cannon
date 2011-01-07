@@ -62,7 +62,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 			} catch (Exception e) {
 				sp.edit().putString("prefGridX", "0").commit();
 				((EditTextPreference)findPreference("prefGridX")).setText("0");
-				Toast.makeText(this, "Empty X-Grid. Set to 0 (disabled).", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, "Grid X scale set to 0 (disabled)", Toast.LENGTH_SHORT).show();
 			}
 		} else if (key.equals("prefGridY")) {
 			try {
@@ -70,7 +70,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 			} catch (Exception e) {
 				sp.edit().putString("prefGridY", "0").commit();
 				((EditTextPreference)findPreference("prefGridY")).setText("0");
-				Toast.makeText(this, "Empty Y-Grid. Set to 0 (disabled).", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, "Grid Y scale set to 0 (disabled)", Toast.LENGTH_SHORT).show();
 			}
 		} else if (key.equals("prefColorBG")) {
 			try {
@@ -95,6 +95,14 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 				sp.edit().putString("prefColorTarget", "red").commit();
 				((EditTextPreference)findPreference("prefColorTarget")).setText("red");
 				Toast.makeText(this, "Invalid color. Target reset to red.", Toast.LENGTH_SHORT).show();
+			}
+		} else if (key.equals("prefColorHitTarget")) {
+			try {
+				Color.parseColor(sp.getString("prefColorHitTarget", null));
+			} catch (Exception e) {
+				sp.edit().putString("prefColorHitTarget", "blue").commit();
+				((EditTextPreference)findPreference("prefColorTarget")).setText("blue");
+				Toast.makeText(this, "Invalid color. Hit Target reset to blue.", Toast.LENGTH_SHORT).show();
 			}
 		} else if (key.equals("prefColorProj")) {
 			try {

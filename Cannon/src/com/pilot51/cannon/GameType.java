@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Process;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,6 +20,10 @@ public class GameType extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gametype);
+		
+		// Load default preferences from xml if not saved
+		PreferenceManager.setDefaultValues(this, R.xml.preferences, true);
+		
 		new Common().ad(this);
 		btnCustom = (Button) findViewById(R.id.btnCustom);
 		btnCustom.setOnClickListener(this);

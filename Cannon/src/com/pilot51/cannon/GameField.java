@@ -1,6 +1,5 @@
 package com.pilot51.cannon;
 
-import java.text.DecimalFormat;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -10,13 +9,11 @@ import javax.microedition.khronos.opengles.GL10;
 import org.anddev.andengine.engine.Engine;
 import org.anddev.andengine.engine.camera.SmoothCamera;
 import org.anddev.andengine.engine.camera.hud.HUD;
-import org.anddev.andengine.engine.handler.IUpdateHandler;
 import org.anddev.andengine.engine.options.EngineOptions;
 import org.anddev.andengine.engine.options.EngineOptions.ScreenOrientation;
 import org.anddev.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
 import org.anddev.andengine.entity.particle.Particle;
 import org.anddev.andengine.entity.particle.ParticleSystem;
-import org.anddev.andengine.entity.particle.emitter.CircleOutlineParticleEmitter;
 import org.anddev.andengine.entity.particle.emitter.PointParticleEmitter;
 import org.anddev.andengine.entity.particle.modifier.AlphaInitializer;
 import org.anddev.andengine.entity.particle.modifier.AlphaModifier;
@@ -24,9 +21,7 @@ import org.anddev.andengine.entity.particle.modifier.ColorInitializer;
 import org.anddev.andengine.entity.particle.modifier.ColorModifier;
 import org.anddev.andengine.entity.particle.modifier.ExpireModifier;
 import org.anddev.andengine.entity.particle.modifier.IParticleInitializer;
-import org.anddev.andengine.entity.particle.modifier.RotationInitializer;
 import org.anddev.andengine.entity.particle.modifier.ScaleModifier;
-import org.anddev.andengine.entity.particle.modifier.VelocityInitializer;
 import org.anddev.andengine.entity.primitive.Line;
 import org.anddev.andengine.entity.primitive.Rectangle;
 import org.anddev.andengine.entity.scene.Scene;
@@ -52,13 +47,11 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.hardware.SensorManager;
-import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.FloatMath;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.widget.Toast;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -77,7 +70,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 	private SharedPreferences prefs, values;
 	private float ratio, speed, pxPerMeter, angle, velocity, gravity, wind, ballRadius;
 	private long fuze;
-	private int cameraWidth, cameraHeight, targetD, targetH, targetRadius, gridx, gridy, colorbg, colorgrid, colorproj, colortarget, score;
+	private int cameraWidth, cameraHeight, targetD, targetH, targetRadius, gridx, gridy, colorBG, colorGrid, colorProj, colorTarget, colorHitTarget, score;
 	private boolean mRandom;
 	private Sprite target;
 	private Body targetBody;
@@ -114,10 +107,11 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 	public void onLoadResources() {
 		mRandom = getIntent().getBooleanExtra("random", false);
 
-		colorbg = Color.parseColor(prefs.getString("prefColorBG", null));
-		colorgrid = Color.parseColor(prefs.getString("prefColorGrid", null));
-		colortarget = Color.parseColor(prefs.getString("prefColorTarget", null));
-		colorproj = Color.parseColor(prefs.getString("prefColorProj", null));
+		colorBG = Color.parseColor(prefs.getString("prefColorBG", null));
+		colorGrid = Color.parseColor(prefs.getString("prefColorGrid", null));
+		colorTarget = Color.parseColor(prefs.getString("prefColorTarget", null));
+		colorHitTarget = Color.parseColor(prefs.getString("prefColorHitTarget", null));
+		colorProj = Color.parseColor(prefs.getString("prefColorProj", null));
 
 		ballRadius = Float.parseFloat(prefs.getString("prefBallRadius", null));
 		//ballScale = ballRadius * 0.5f / ratio;
@@ -150,7 +144,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 	@Override
 	public Scene onLoadScene() {
 		final Scene scene = new Scene(3);
-		scene.setBackground(new ColorBackground(Color.red(colorbg) / 255f, Color.green(colorbg) / 255f, Color.blue(colorbg) / 255f, Color.alpha(colorbg) / 255f));
+		scene.setBackground(new ColorBackground(Color.red(colorBG) / 255f, Color.green(colorBG) / 255f, Color.blue(colorBG) / 255f, Color.alpha(colorBG) / 255f));
 		scene.setOnSceneTouchListener(this);
 		mPhysicsWorld = new FixedStepPhysicsWorld(30, new Vector2(wind * (float) Math.pow(speed, 2), SensorManager.GRAVITY_EARTH * gravity * (float) Math.pow(speed, 2)), false, 3, 2);
 		drawGrid(scene);
@@ -190,15 +184,16 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 				public void beginContact(final Contact pContact) {
 					Body bodyA = pContact.getFixtureA().getBody();
 					Body bodyB = pContact.getFixtureB().getBody();
-					/*
-					if (bodyA == targetBody) {
-						//target.setColor(0, 0, 1);
-						//target.setScale(target.getScaleX()*0.9f);
-						((Sprite) bodyB.getUserData()).setColor(1, 0, 0);
-					} else if (bodyB == targetBody) {
-						((Sprite) bodyA.getUserData()).setColor(1, 0, 0);
+					if (bodyA == targetBody | bodyB == targetBody) {
+						score += 2;
+						sText.setText("Score: " + score);
+						if (bodyA == targetBody) {
+							target.setColor(Color.red(colorHitTarget) / 255f, Color.green(colorHitTarget) / 255f, Color.blue(colorHitTarget) / 255f, Color.alpha(colorHitTarget) / 255f);
+							//((Sprite) bodyB.getUserData()).setColor(1, 0, 0);
+						} else if (bodyB == targetBody) {
+							//((Sprite) bodyA.getUserData()).setColor(1, 0, 0);
+						}
 					}
-					*/
 				}
 
 				public void endContact(final Contact pContact) {
@@ -217,7 +212,6 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 							removeTarget();
 						if (mRandom)
 							addTarget();
-
 					} else if (bodyB == targetBody) {
 						//((Sprite) bodyA.getUserData()).setColor(0, 1, 0);
 						if (expTarget)
@@ -235,7 +229,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 		hud.getLayer(0).addEntity(aText);
 		vText = new ChangeableText(10, 40, mFont, "Velocity: " + velocity, "Velocity: XXXXX".length());
 		hud.getLayer(0).addEntity(vText);
-		sText = new ChangeableText(cameraWidth - 100, 10, mFont, "Score: " + score, HorizontalAlign.RIGHT, "Score: XXXXXXX".length());
+		sText = new ChangeableText(cameraWidth - 120, 10, mFont, "Score: " + score, HorizontalAlign.RIGHT, "Score: XXXXXX".length());
 		hud.getLayer(0).addEntity(sText);
 		return scene;
 	}
@@ -316,7 +310,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 			do {
 				grid += gridx;
 				final Line linex = new Line(grid, 0, grid, -cameraHeight);
-				linex.setColor(Color.red(colorgrid) / 255f, Color.green(colorgrid) / 255f, Color.blue(colorgrid) / 255f, Color.alpha(colorgrid) / 255f);
+				linex.setColor(Color.red(colorGrid) / 255f, Color.green(colorGrid) / 255f, Color.blue(colorGrid) / 255f, Color.alpha(colorGrid) / 255f);
 				PhysicsFactory.createBoxBody(mPhysicsWorld, linex, BodyType.StaticBody, gridFixtureDef);
 				scene.getLayer(0).addEntity(linex);
 			} while (grid < cameraWidth - gridx && gridx != 0);
@@ -328,7 +322,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 			do {
 				grid += gridy;
 				final Line liney = new Line(0, -grid, cameraWidth, -grid);
-				liney.setColor(Color.red(colorgrid) / 255f, Color.green(colorgrid) / 255f, Color.blue(colorgrid) / 255f, Color.alpha(colorgrid) / 255f);
+				liney.setColor(Color.red(colorGrid) / 255f, Color.green(colorGrid) / 255f, Color.blue(colorGrid) / 255f, Color.alpha(colorGrid) / 255f);
 				PhysicsFactory.createBoxBody(mPhysicsWorld, liney, BodyType.StaticBody, gridFixtureDef);
 				scene.getLayer(0).addEntity(liney);
 			} while (grid < cameraHeight - gridy && gridy != 0);
@@ -346,7 +340,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 				ball.setScaleCenter(ball.getWidth() / 2, ball.getHeight() / 2);
 				ball.setScale(ballRadius / (ball.getWidth() / 2));
 				final Body body = PhysicsFactory.createCircleBody(mPhysicsWorld, ball, BodyType.DynamicBody, ballFixtureDef);
-				ball.setColor(Color.red(colorproj) / 255f, Color.green(colorproj) / 255f, Color.blue(colorproj) / 255f, Color.alpha(colorproj) / 255f);
+				ball.setColor(Color.red(colorProj) / 255f, Color.green(colorProj) / 255f, Color.blue(colorProj) / 255f, Color.alpha(colorProj) / 255f);
 				body.setBullet(true);
 				ball.setUpdatePhysics(false);
 				mPhysicsWorld.registerPhysicsConnector(new PhysicsConnector(ball, body, true, true, false, false));
@@ -354,6 +348,18 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 				scene.getLayer(2).addEntity(ball);
 			}
 		});
+		score -= 1;
+		sText.setText("Score: " + score);
+		if (fuze > 0) {
+			TimerTask task = new TimerTask() {
+				@Override
+				public void run() {
+					removeBall(ball, 2);
+				}
+			};
+			new Timer().schedule(task, (long) (fuze / speed));
+		}
+		/*
 		if (targetD > 0 | targetH > 0) {
 			if (fuze == 0) {
 				scene.registerUpdateHandler(new IUpdateHandler() {
@@ -379,7 +385,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 											result = "Touched! - ";
 											score /= 1.5;
 										}
-										*/
+										//*
 										if (targetRadius + ballRadius >= lastDistance) {
 											result = "Hit! - ";
 											score += 1;
@@ -427,7 +433,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 										result = "Touched! - ";
 										score /= 1.5;
 									}
-									*/
+									//*
 									if (targetRadius + ballRadius >= distance) {
 										result = "Hit! - ";
 										score += 2;
@@ -444,6 +450,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 				}.start();
 			}
 		}
+		*/
 	}
 
 	private Double getDistance(Sprite ball) {
@@ -490,7 +497,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 				//target.setSize(targetRadius * 2, targetRadius * 2);
 				target.setScaleCenter(target.getWidth() / 2, target.getHeight() / 2);
 				target.setScale(targetRadius / (target.getWidth() / 2));
-				target.setColor(Color.red(colortarget) / 255f, Color.green(colortarget) / 255f, Color.blue(colortarget) / 255f, Color.alpha(colortarget) / 255f);
+				target.setColor(Color.red(colorTarget) / 255f, Color.green(colorTarget) / 255f, Color.blue(colorTarget) / 255f, Color.alpha(colorTarget) / 255f);
 				target.setUpdatePhysics(false);
 				final FixtureDef targetFixtureDef = PhysicsFactory.createFixtureDef(0, 0.5f, 0, false);
 				if (!prefs.getBoolean("prefCollide", false)) {
