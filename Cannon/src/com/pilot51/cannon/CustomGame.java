@@ -8,15 +8,15 @@
  * 
  * Problems:
  * FIXME Bottom of scrollview in custom screen doesn't lose fade when at bottom
+ * FIXME Targets spawning completely inside other targets in random mode, impossible to hit with collision enabled
  * 
  * v2.0.0:
  * TODO [4 hours] Update icon
  * TODO [30 min] Update About dialog
  * TODO Explosive projectile with shrapnel
+ * TODO Score combos when hitting multiple targets with one projectile or when hitting targets with consecutive projectiles
  * TODO Display and saving of scores
  * TODO Missions: preset, random, or infinitely calculated targets that need to be hit to reach higher levels
- * TODO Get all v1 options working in v2
- * 			Auto-fire toggle
  * 
  * v2.0.1:
  * TODO Sounds

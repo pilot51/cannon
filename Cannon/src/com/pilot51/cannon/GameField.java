@@ -73,7 +73,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 	private float ratio, speed, pxPerMeter, angle, velocity, gravity, wind, ballRadius;
 	private long fuze;
 	private int cameraWidth, cameraHeight, targetD, targetH, targetRadius, gridx, gridy, colorBG, colorGrid, colorProj, colorTarget, colorHitTarget, score;
-	private boolean mRandom;
+	private boolean mRandom, repeat;
 	private Sprite target;
 	private Body targetBody;
 	private Font mFont;
@@ -108,6 +108,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 	@Override
 	public void onLoadResources() {
 		mRandom = getIntent().getBooleanExtra("random", false);
+		repeat = prefs.getBoolean("prefRepeat", false);
 
 		colorBG = Color.parseColor(prefs.getString("prefColorBG", null));
 		colorGrid = Color.parseColor(prefs.getString("prefColorGrid", null));
@@ -183,13 +184,27 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 			addTarget();
 			mPhysicsWorld.setContactListener(new ContactListener() {
 				public void beginContact(final Contact pContact) {
-					Body bodyA = pContact.getFixtureA().getBody();
-					Body bodyB = pContact.getFixtureB().getBody();
-					if (bodyA == targetBody | bodyB == targetBody) {
+					final Body bodyA = pContact.getFixtureA().getBody();
+					final Body bodyB = pContact.getFixtureB().getBody();
+					if ((bodyA == targetBody | bodyB == targetBody) & targetBody.getUserData().equals(true)) {
+						targetBody.setUserData(false);
 						score += 2;
 						sText.setText("Score: " + score);
+						final Boolean expTarget = prefs.getBoolean("prefExpTarget", false);
+						final Boolean keepTargets = prefs.getBoolean("prefKeep", false);
+						TimerTask targetAction = new TimerTask() {
+							@Override
+							public void run() {
+								if (expTarget)
+									createFirework();
+								if (keepTargets)
+									target.setColor(Color.red(colorHitTarget) / 255f, Color.green(colorHitTarget) / 255f, Color.blue(colorHitTarget) / 255f, Color.alpha(colorHitTarget) / 255f);
+								else removeSprite(target, 1);
+								if (mRandom)
+									addTarget();
+						}};
+						new Timer().schedule(targetAction, (long) (100 / speed));
 						if (bodyA == targetBody) {
-							target.setColor(Color.red(colorHitTarget) / 255f, Color.green(colorHitTarget) / 255f, Color.blue(colorHitTarget) / 255f, Color.alpha(colorHitTarget) / 255f);
 							//((Sprite) bodyB.getUserData()).setColor(1, 0, 0);
 						} else if (bodyB == targetBody) {
 							//((Sprite) bodyA.getUserData()).setColor(1, 0, 0);
@@ -198,29 +213,17 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 				}
 
 				public void endContact(final Contact pContact) {
-					Body bodyA = pContact.getFixtureA().getBody();
-					Body bodyB = pContact.getFixtureB().getBody();
-					Boolean expTarget = prefs.getBoolean("prefExpTarget", false);
-					Boolean keepTargets = prefs.getBoolean("prefKeep", false);
-					if (bodyA == targetBody) {
-						//target.setColor(1, 0, 0);
-						//target.setPosition(100, -100);
-						//targetBody.setType(BodyType.DynamicBody);
-						//((Sprite) bodyB.getUserData()).setColor(0, 1, 0);
-						if (expTarget)
-							createFirework();
-						if (!keepTargets)
-							removeTarget();
-						if (mRandom)
-							addTarget();
-					} else if (bodyB == targetBody) {
-						//((Sprite) bodyA.getUserData()).setColor(0, 1, 0);
-						if (expTarget)
-							createFirework();
-						if (!keepTargets)
-							removeTarget();
-						if (mRandom)
-							addTarget();
+					final Body bodyA = pContact.getFixtureA().getBody();
+					final Body bodyB = pContact.getFixtureB().getBody();
+					if (bodyA == targetBody | bodyB == targetBody) {
+						if (bodyA == targetBody) {
+							//target.setColor(1, 0, 0);
+							//target.setPosition(100, -100);
+							//targetBody.setType(BodyType.DynamicBody);
+							//((Sprite) bodyB.getUserData()).setColor(0, 1, 0);
+						} else if (bodyB == targetBody) {
+							//((Sprite) bodyA.getUserData()).setColor(0, 1, 0);
+						}
 					}
 				}
 			});
@@ -240,25 +243,28 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER && event.getRepeatCount() == 0) {
-			addBall();
-			return true;
-		}
-		if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_DPAD_CENTER:
+			if ((repeat & event.getRepeatCount()%5 == 0) | event.getRepeatCount() == 0) {
+				addBall();
+			}
+			break;
+		case KeyEvent.KEYCODE_DPAD_RIGHT:
 			angle--;
 			aText.setText("Angle: " + angle);
-		}
-		if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
+			break;
+		case KeyEvent.KEYCODE_DPAD_LEFT:
 			angle++;
 			aText.setText("Angle: " + angle);
-		}
-		if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+			break;
+		case KeyEvent.KEYCODE_DPAD_DOWN:
 			velocity--;
 			vText.setText("Velocity: " + velocity);
-		}
-		if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+			break;
+		case KeyEvent.KEYCODE_DPAD_UP:
 			velocity++;
 			vText.setText("Velocity: " + velocity);
+			break;
 		}
 		return super.onKeyDown(keyCode, event);
 	}
@@ -269,11 +275,6 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 		case TouchEvent.ACTION_DOWN:
 			if (mPhysicsWorld != null) {
 				addBall();
-				/* // Trail disabled until find a way to make it work right
-				if (prefs.getBoolean("prefTrail", false)) {
-					trail(pScene); // Disabled for now
-				}
-				*/
 			}
 			/* // Zoom disabled for v2.0.0 until something better is found
 			TimerTask task = new TimerTask() {
@@ -337,12 +338,16 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 		ball.setVelocity(velocity * speed / ratio * (float) Math.cos(Math.toRadians(angle)), -velocity * speed / ratio * (float) Math.sin(Math.toRadians(angle)));
 		ball.setScaleCenter(ball.getWidth() / 2, ball.getHeight() / 2);
 		ball.setScale(ballRadius / (ball.getWidth() / 2));
-		final Body body = PhysicsFactory.createCircleBody(mPhysicsWorld, ball, BodyType.DynamicBody, ballFixtureDef);
 		ball.setColor(Color.red(colorProj) / 255f, Color.green(colorProj) / 255f, Color.blue(colorProj) / 255f, Color.alpha(colorProj) / 255f);
-		body.setBullet(true);
 		ball.setUpdatePhysics(false);
-		mPhysicsWorld.registerPhysicsConnector(new PhysicsConnector(ball, body, true, true, false, false));
-		body.setUserData(ball);
+		runOnUpdateThread(new Runnable() {
+			@Override
+			public void run() {
+				final Body body = PhysicsFactory.createCircleBody(mPhysicsWorld, ball, BodyType.DynamicBody, ballFixtureDef);
+				body.setBullet(true);
+				body.setUserData(ball);
+				mPhysicsWorld.registerPhysicsConnector(new PhysicsConnector(ball, body, true, true, false, false));
+		}});
 		addEntity(ball, 2, null);
 		score -= 1;
 		sText.setText("Score: " + score);
@@ -350,13 +355,13 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 			trail(ball);
 		}
 		if (fuze > 0) {
-			TimerTask task = new TimerTask() {
+			TimerTask remove = new TimerTask() {
 				@Override
 				public void run() {
-					removeBall(ball, 2);
+					removeSprite(ball, 2);
 				}
 			};
-			new Timer().schedule(task, (long) (fuze / speed));
+			new Timer().schedule(remove, (long) (fuze / speed));
 		}
 		scene.registerUpdateHandler(new IUpdateHandler() {
 			IUpdateHandler uh = this;
@@ -368,7 +373,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 				//Log.d("Cannon", "X: " + ballX + " | Y: " + ballY);
 				if ((gravity >= 0 & ballY > 0) | (wind <= 0 & ballX < 0) | (gravity <= 0 & ballY < -cameraHeight) | (wind >= 0 & ballX > cameraWidth)) {
 					scene.unregisterUpdateHandler(uh);
-					removeBall(ball, 2);
+					removeSprite(ball, 2);
 					/*
 					runOnUiThread(new Runnable() {
 						@Override
@@ -486,17 +491,12 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 			return Math.sqrt(Math.pow((ballX - targetX), 2) + Math.pow((ballY - targetY), 2));
 		}
 	*/
-	private void removeBall(final Sprite ball, final int layer) {
-		try {
-			final PhysicsConnector ballPhysicsConnector = mPhysicsWorld.getPhysicsConnectorManager().findPhysicsConnectorByShape(ball);
-			mPhysicsWorld.unregisterPhysicsConnector(ballPhysicsConnector);
-			mPhysicsWorld.destroyBody(ballPhysicsConnector.getBody());
-			removeEntity(ball, layer, null);
-			ball.setVisible(false);
-		} catch (NullPointerException e) {
-			Log.e("Cannon", "Unable to remove ball, possibly already removed");
-			e.printStackTrace();
-		}
+	private void removeSprite(final Sprite sprite, final int layer) {
+		final PhysicsConnector ballPhysicsConnector = mPhysicsWorld.getPhysicsConnectorManager().findPhysicsConnectorByShape(sprite);
+		mPhysicsWorld.unregisterPhysicsConnector(ballPhysicsConnector);
+		mPhysicsWorld.destroyBody(ballPhysicsConnector.getBody());
+		removeEntity(sprite, layer, null);
+		sprite.setVisible(false);
 	}
 
 	void addTarget() {
@@ -523,17 +523,11 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 			@Override
 			public void run() {
 				targetBody = PhysicsFactory.createCircleBody(mPhysicsWorld, target, BodyType.StaticBody, targetFixtureDef);
-			}});
-		mPhysicsWorld.registerPhysicsConnector(new PhysicsConnector(target, targetBody, false, false, false, false));
+				targetBody.setUserData(true);
+				mPhysicsWorld.registerPhysicsConnector(new PhysicsConnector(target, targetBody, false, false, false, false));
+			}
+		});
 		addEntity(target, 1, null);
-	}
-
-	private void removeTarget() {
-		final Scene scene = mEngine.getScene();
-		if (scene.getLayer(1).getEntityCount() != 0) {
-			//Log.d("Cannon", "Layer 1 entity count is not 0");
-			removeBall(target, 1);
-		}
 	}
 
 	private void createFirework() {

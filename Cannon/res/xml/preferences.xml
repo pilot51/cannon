@@ -2,6 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 	<CheckBoxPreference android:key="prefClassic" android:title="Classic Mode" android:summaryOn="v1" android:summaryOff="v2" android:defaultValue="false" />
 	<CheckBoxPreference android:key="prefCollide" android:title="Collision" android:summary="Collision between projectile &amp; target" android:defaultValue="true" />
+	<CheckBoxPreference android:key="prefRepeat" android:title="Auto-fire" android:summaryOn="Classic: Another projectile is fired when previous one completes\nv2: Fully automatic machine gun (D-Pad/wheel only)" android:summaryOff="Manual: Press center D-Pad/wheel or touchscreen to fire again" android:defaultValue="false" />
 	<CheckBoxPreference android:key="prefTrail" android:title="Projectile trail" android:defaultValue="true" />
 	<EditTextPreference android:key="prefGridX" android:title="Grid X scale" android:summary="Scale to measure ground distance" android:dialogTitle="Set X-grid size" android:dialogMessage="Set the distance (in meters) between each grid line measuring ground distance" android:defaultValue="50" android:inputType="phone" android:digits="0123456789"/>
 	<EditTextPreference android:key="prefGridY" android:title="Grid Y scale" android:summary="Scale to measure altitude" android:dialogTitle="Set Y-grid size" android:dialogMessage="Set the distance (in meters) between each grid line measuring altitude" android:defaultValue="50" android:inputType="phone" android:digits="0123456789"/>
@@ -22,9 +23,6 @@
 		<PreferenceCategory android:title="Colors">
 			<EditTextPreference android:key="prefColorHitTarget" android:title="Completed Target color" android:dialogTitle="Choose color for targets that have been hit" android:summary="Useful for Random mode with Keep Targets enabled" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="blue" android:digits="abcdefghijklmnopqrstuvwxyz0123456789#" />
 		</PreferenceCategory>
-	</PreferenceScreen>
-	<PreferenceScreen android:title="v1-only options">
-		<CheckBoxPreference android:key="prefRepeat" android:title="Auto-fire" android:summaryOn="Another projectile is fired when previous one completes" android:summaryOff="Manual: Press center D-Pad/wheel or touchscreen to refire" android:defaultValue="false" />
 	</PreferenceScreen>
 	<PreferenceCategory android:title="Colors">
 		<EditTextPreference android:key="prefColorBG" android:title="Background color" android:dialogTitle="Choose background color" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="black" android:digits="abcdefghijklmnopqrstuvwxyz0123456789#" />
