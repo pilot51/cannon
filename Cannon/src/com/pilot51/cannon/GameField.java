@@ -519,7 +519,11 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 		if (!prefs.getBoolean("prefCollide", false)) {
 			targetFixtureDef.isSensor = true;
 		}
-		targetBody = PhysicsFactory.createCircleBody(mPhysicsWorld, target, BodyType.StaticBody, targetFixtureDef);
+		runOnUpdateThread(new Runnable() {
+			@Override
+			public void run() {
+				targetBody = PhysicsFactory.createCircleBody(mPhysicsWorld, target, BodyType.StaticBody, targetFixtureDef);
+			}});
 		mPhysicsWorld.registerPhysicsConnector(new PhysicsConnector(target, targetBody, false, false, false, false));
 		addEntity(target, 1, null);
 	}

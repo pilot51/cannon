@@ -101,8 +101,8 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 				Color.parseColor(sp.getString("prefColorHitTarget", null));
 			} catch (Exception e) {
 				sp.edit().putString("prefColorHitTarget", "blue").commit();
-				((EditTextPreference)findPreference("prefColorTarget")).setText("blue");
-				Toast.makeText(this, "Invalid color. Hit Target reset to blue.", Toast.LENGTH_SHORT).show();
+				((EditTextPreference)findPreference("prefColorHitTarget")).setText("blue");
+				Toast.makeText(this, "Invalid color. Completed Target reset to blue.", Toast.LENGTH_SHORT).show();
 			}
 		} else if (key.equals("prefColorProj")) {
 			try {

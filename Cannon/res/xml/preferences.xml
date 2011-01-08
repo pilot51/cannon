@@ -7,7 +7,6 @@
 	<EditTextPreference android:key="prefGridY" android:title="Grid Y scale" android:summary="Scale to measure altitude" android:dialogTitle="Set Y-grid size" android:dialogMessage="Set the distance (in meters) between each grid line measuring altitude" android:defaultValue="50" android:inputType="phone" android:digits="0123456789"/>
 	<PreferenceScreen android:title="v2-only options">
 		<CheckBoxPreference android:key="prefExpTarget" android:title="Explosive Target" android:summaryOn="Hitting a target will create an explosion" android:summaryOff="Nothing really interesting happens when hitting a target\nImproves performance" android:defaultValue="true" />
-		<!--<CheckBoxPreference android:key="prefScores" android:title="Individual Scores" android:summary="Display scores for each attampt in real-time" android:defaultValue="true" />-->
 		<CheckBoxPreference android:key="prefKeep" android:title="Keep Targets" android:summaryOn="Targets will remain when hit" android:summaryOff="Targets will be destroyed when hit" android:defaultValue="true" />
 		<PreferenceCategory android:title="Scaling">
 			<EditTextPreference android:key="prefBallRadius" android:summary="" android:defaultValue="3" android:dialogMessage="Radius of projectile in meters" android:dialogTitle="Projectile Size" android:title="Projectile Size" android:digits="0123456789." android:inputType="phone"/>
@@ -21,17 +20,17 @@
 			<CheckBoxPreference android:key="prefRightWall" android:title="Right Wall" android:defaultValue="false" />
 		</PreferenceCategory>
 		<PreferenceCategory android:title="Colors">
-			<EditTextPreference android:key="prefColorHitTarget" android:title="Completed Target Color" android:dialogTitle="Choose color for targets that have been hit" android:summary="Useful for Random mode with Keep Targets enabled" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="blue" android:digits="#0123456789abcdefghijklmnopqrstuvwxyz" />
+			<EditTextPreference android:key="prefColorHitTarget" android:title="Completed Target color" android:dialogTitle="Choose color for targets that have been hit" android:summary="Useful for Random mode with Keep Targets enabled" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="blue" android:digits="abcdefghijklmnopqrstuvwxyz0123456789#" />
 		</PreferenceCategory>
 	</PreferenceScreen>
 	<PreferenceScreen android:title="v1-only options">
 		<CheckBoxPreference android:key="prefRepeat" android:title="Auto-fire" android:summaryOn="Another projectile is fired when previous one completes" android:summaryOff="Manual: Press center D-Pad/wheel or touchscreen to refire" android:defaultValue="false" />
 	</PreferenceScreen>
 	<PreferenceCategory android:title="Colors">
-		<EditTextPreference android:key="prefColorBG" android:title="Background color" android:dialogTitle="Choose background color" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="black" android:digits="#0123456789abcdefghijklmnopqrstuvwxyz" />
-		<EditTextPreference android:key="prefColorGrid" android:title="Grid color" android:dialogTitle="Choose grid color" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="green" android:digits="#0123456789abcdefghijklmnopqrstuvwxyz" />
-		<EditTextPreference android:key="prefColorTarget" android:title="Target color" android:dialogTitle="Choose target color" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="red" android:digits="#0123456789abcdefghijklmnopqrstuvwxyz" />
-		<EditTextPreference android:key="prefColorProj" android:title="Projectile color" android:dialogTitle="Choose projectile color" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="yellow" android:digits="#0123456789abcdefghijklmnopqrstuvwxyz" />
+		<EditTextPreference android:key="prefColorBG" android:title="Background color" android:dialogTitle="Choose background color" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="black" android:digits="abcdefghijklmnopqrstuvwxyz0123456789#" />
+		<EditTextPreference android:key="prefColorGrid" android:title="Grid color" android:dialogTitle="Choose grid color" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="green" android:digits="abcdefghijklmnopqrstuvwxyz0123456789#" />
+		<EditTextPreference android:key="prefColorTarget" android:title="Target color" android:dialogTitle="Choose target color" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="red" android:digits="abcdefghijklmnopqrstuvwxyz0123456789#" />
+		<EditTextPreference android:key="prefColorProj" android:title="Projectile color" android:dialogTitle="Choose projectile color" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="yellow" android:digits="abcdefghijklmnopqrstuvwxyz0123456789#" />
 	</PreferenceCategory>
 	<PreferenceCategory>
 		<Preference android:key="prefResetValues" android:title="Reset values" android:summary="Reset values to example defaults" />
