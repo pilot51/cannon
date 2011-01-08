@@ -9,27 +9,35 @@
  * Problems:
  * FIXME Bottom of scrollview in custom screen doesn't lose fade when at bottom
  * FIXME Targets spawning completely inside other targets in random mode, impossible to hit with collision enabled
+ * FIXME Fit borders and keep random targets within scaled screen, also scale targets relative to screen scale  
  * 
  * v2.0.0:
  * TODO [4 hours] Update icon
  * TODO [30 min] Update About dialog
- * TODO Explosive projectile with shrapnel
+ * TODO Usability - Tell players what the controls are [suggested by HotShots]
+ * TODO Reorganize preferences - Preference type (e.g. colors) go in screens and version-specific go in category
  * TODO Score combos when hitting multiple targets with one projectile or when hitting targets with consecutive projectiles
  * TODO Display and saving of scores
- * TODO Missions: preset, random, or infinitely calculated targets that need to be hit to reach higher levels
- * 
- * v2.0.1:
- * TODO Sounds
- * TODO Textures, maybe themes
- * TODO Zoom & pan
- * TODO Option: Analytics
- * TODO Remove balls when they leave the screen and will not return
- * TODO Add some suggestions
  * 
  * Pro (first release):
  * TODO Look into the new copy protection
  * 
- * v2.1.0:
+ * v2.0.1:
+ * TODO Zoom & pan
+ * TODO Option: Analytics
+ * TODO Add some suggestions
+ * TODO Prevent random targets from spawning too close to launcher
+ * TODO Adjust minimum size of targets 
+ * 
+ * v2.1.0
+ * TODO Sounds
+ * TODO Textures, maybe themes
+ * TODO Explosive projectile with shrapnel
+ * TODO Moving targets [extstw]
+ * TODO Missions: preset, random, or infinitely calculated targets that need to be hit to reach higher levels
+ * TODO Basic multiplayer
+ * 
+ * v2.2.0:
  * TODO Multiplayer: Hotseat & direct IP
  * 			Simultaneous turn-based, allowing projectiles to collide
  * 			One player places target, other player tries hitting it (requires in-game angle/velocity controls)

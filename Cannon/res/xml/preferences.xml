@@ -1,37 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-	<CheckBoxPreference android:key="prefClassic" android:title="Classic Mode" android:summaryOn="v1" android:summaryOff="v2" android:defaultValue="false" />
-	<CheckBoxPreference android:key="prefCollide" android:title="Collision" android:summary="Collision between projectile &amp; target" android:defaultValue="true" />
-	<CheckBoxPreference android:key="prefRepeat" android:title="Auto-fire" android:summaryOn="Classic: Another projectile is fired when previous one completes\nv2: Fully automatic machine gun (D-Pad/wheel only)" android:summaryOff="Manual: Press center D-Pad/wheel or touchscreen to fire again" android:defaultValue="false" />
-	<CheckBoxPreference android:key="prefTrail" android:title="Projectile trail" android:defaultValue="true" />
-	<EditTextPreference android:key="prefGridX" android:title="Grid X scale" android:summary="Scale to measure ground distance" android:dialogTitle="Set X-grid size" android:dialogMessage="Set the distance (in meters) between each grid line measuring ground distance" android:defaultValue="50" android:inputType="phone" android:digits="0123456789"/>
-	<EditTextPreference android:key="prefGridY" android:title="Grid Y scale" android:summary="Scale to measure altitude" android:dialogTitle="Set Y-grid size" android:dialogMessage="Set the distance (in meters) between each grid line measuring altitude" android:defaultValue="50" android:inputType="phone" android:digits="0123456789"/>
-	<PreferenceScreen android:title="v2-only options">
-		<CheckBoxPreference android:key="prefExpTarget" android:title="Explosive Target" android:summaryOn="Hitting a target will create an explosion" android:summaryOff="Nothing really interesting happens when hitting a target\nImproves performance" android:defaultValue="true" />
-		<CheckBoxPreference android:key="prefKeep" android:title="Keep Targets" android:summaryOn="Targets will remain when hit" android:summaryOff="Targets will be destroyed when hit" android:defaultValue="true" />
-		<PreferenceCategory android:title="Scaling">
-			<EditTextPreference android:key="prefBallRadius" android:summary="" android:defaultValue="3" android:dialogMessage="Radius of projectile in meters" android:dialogTitle="Projectile Size" android:title="Projectile Size" android:digits="0123456789." android:inputType="phone"/>
-			<EditTextPreference android:key="prefSpeed" android:title="Speed Multiplier" android:summary="" android:dialogTitle="Speed Multiplier" android:dialogMessage="" android:defaultValue="1" android:inputType="phone" android:digits="0123456789."/>
-			<EditTextPreference android:key="prefMeter" android:title="Pixels Per Meter" android:summary="" android:dialogTitle="Pixels Per Meter" android:dialogMessage="How many pixels represent 1 meter?" android:defaultValue="1" android:digits="0123456789." android:inputType="phone"/>
+	<PreferenceScreen android:title="Gameplay">
+		<CheckBoxPreference android:key="prefClassic" android:title="Classic Mode" android:summaryOn="Current mode: v1" android:summaryOff="Current mode: v2" android:defaultValue="false" />
+		<CheckBoxPreference android:key="prefCollide" android:title="Collision" android:summary="Collision between projectile and target" android:defaultValue="true" />
+		<CheckBoxPreference android:key="prefRepeat" android:title="Auto-fire" android:summaryOn="Classic: Another projectile is fired when previous one completes\nv2: Fully automatic machine gun (D-Pad/wheel only)" android:summaryOff="Manual: Press center D-Pad/wheel or touchscreen to fire again" android:defaultValue="false" />
+		<PreferenceCategory android:title="v2 only">
+			<CheckBoxPreference android:key="prefKeep" android:title="Keep Targets" android:summaryOn="Targets will remain when hit" android:summaryOff="Targets will be destroyed when hit" android:defaultValue="true" />
+			<EditTextPreference android:key="prefBallRadius" android:title="Projectile size" android:dialogTitle="Projectile size" android:dialogMessage="Radius of projectile in meters" android:defaultValue="3" android:digits="0123456789." android:inputType="phone"/>
 		</PreferenceCategory>
-		<PreferenceCategory android:title="Physical borders">
+	</PreferenceScreen>
+	<PreferenceScreen android:title="Scale">
+		<EditTextPreference android:key="prefGridX" android:title="X-Grid scale" android:summary="Scale to measure ground distance" android:dialogTitle="Set X-grid size" android:dialogMessage="Set the distance (in meters) between each grid line measuring ground distance" android:defaultValue="50" android:inputType="phone" android:digits="0123456789"/>
+		<EditTextPreference android:key="prefGridY" android:title="Y-Grid scale" android:summary="Scale to measure altitude" android:dialogTitle="Set Y-grid size" android:dialogMessage="Set the distance (in meters) between each grid line measuring altitude" android:defaultValue="50" android:inputType="phone" android:digits="0123456789"/>
+		<PreferenceCategory android:title="v2 only">
+			<EditTextPreference android:key="prefSpeed" android:title="Speed Multiplier" android:dialogTitle="Speed Multiplier" android:defaultValue="1" android:inputType="phone" android:digits="0123456789."/>
+			<EditTextPreference android:key="prefMeter" android:title="Pixels Per Meter" android:dialogTitle="Pixels Per Meter" android:dialogMessage="How many pixels represent 1 meter?" android:defaultValue="1" android:digits="0123456789." android:inputType="phone"/>
+		</PreferenceCategory>
+	</PreferenceScreen>
+	<PreferenceScreen android:title="Borders" android:summary="Physical boundaries along edges of screen">
+		<PreferenceCategory android:title="v2 only">
 			<CheckBoxPreference android:key="prefGround" android:title="Ground" android:defaultValue="true" />
 			<CheckBoxPreference android:key="prefRoof" android:title="Roof" android:defaultValue="false" />
 			<CheckBoxPreference android:key="prefLeftWall" android:title="Left Wall" android:defaultValue="false" />
 			<CheckBoxPreference android:key="prefRightWall" android:title="Right Wall" android:defaultValue="false" />
 		</PreferenceCategory>
-		<PreferenceCategory android:title="Colors">
-			<EditTextPreference android:key="prefColorHitTarget" android:title="Completed Target color" android:dialogTitle="Choose color for targets that have been hit" android:summary="Useful for Random mode with Keep Targets enabled" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="blue" android:digits="abcdefghijklmnopqrstuvwxyz0123456789#" />
+	</PreferenceScreen>
+	<PreferenceScreen android:title="Visual Effects" android:summary="Disable these to improve performance">
+		<CheckBoxPreference android:key="prefTrail" android:title="Projectile Trail" android:defaultValue="true" />
+		<PreferenceCategory android:title="v2 only">
+			<CheckBoxPreference android:key="prefExpTarget" android:title="Explosive Target" android:summaryOn="Hitting a target will create a firework explosion" android:summaryOff="Nothing really interesting happens when hitting a target\nImproves performance" android:defaultValue="true" />
 		</PreferenceCategory>
 	</PreferenceScreen>
-	<PreferenceCategory android:title="Colors">
+	<PreferenceScreen android:title="Colors">
 		<EditTextPreference android:key="prefColorBG" android:title="Background color" android:dialogTitle="Choose background color" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="black" android:digits="abcdefghijklmnopqrstuvwxyz0123456789#" />
 		<EditTextPreference android:key="prefColorGrid" android:title="Grid color" android:dialogTitle="Choose grid color" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="green" android:digits="abcdefghijklmnopqrstuvwxyz0123456789#" />
 		<EditTextPreference android:key="prefColorTarget" android:title="Target color" android:dialogTitle="Choose target color" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="red" android:digits="abcdefghijklmnopqrstuvwxyz0123456789#" />
 		<EditTextPreference android:key="prefColorProj" android:title="Projectile color" android:dialogTitle="Choose projectile color" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="yellow" android:digits="abcdefghijklmnopqrstuvwxyz0123456789#" />
-	</PreferenceCategory>
+		<PreferenceCategory android:title="v2 only">
+			<EditTextPreference android:key="prefColorHitTarget" android:title="Completed Target color" android:summary="Useful for Random mode with Keep Targets enabled" android:dialogTitle="Color for targets that have been hit" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="blue" android:digits="abcdefghijklmnopqrstuvwxyz0123456789#" />
+		</PreferenceCategory>
+	</PreferenceScreen>
 	<PreferenceCategory>
-		<Preference android:key="prefResetValues" android:title="Reset values" android:summary="Reset values to example defaults" />
-		<Preference android:key="prefResetPrefs" android:title="Reset preferences" android:summary="Reset preferences to defaults" />
+		<Preference android:key="prefResetValues" android:title="Reset Custom Game" android:summary="Reset Custom Game values to example defaults" />
+		<Preference android:key="prefResetPrefs" android:title="Reset Preferences" android:summary="Reset preferences to defaults" />
 	</PreferenceCategory>
 </PreferenceScreen>

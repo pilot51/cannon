@@ -52,7 +52,6 @@ import android.hardware.SensorManager;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.FloatMath;
-import android.util.Log;
 import android.view.KeyEvent;
 
 import com.badlogic.gdx.math.Vector2;
