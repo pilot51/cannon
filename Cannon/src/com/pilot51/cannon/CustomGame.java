@@ -7,27 +7,30 @@
  * TODO Save sources along with binary for each release version
  * 
  * Problems:
- * FIXME Bottom of scrollview in custom screen doesn't lose fade when at bottom
- * FIXME Targets spawning completely inside other targets in random mode, impossible to hit with collision enabled
- * FIXME Fit borders and keep random targets within scaled screen, also scale targets relative to screen scale  
- * FIXME Handle orientation/keyboard changes
+ * FIXME HIGH - Targets spawning completely inside other targets in random mode, impossible to hit with collision enabled
+ * FIXME HIGH - Fit borders and keep random targets within scaled screen, also scale targets relative to screen scale
+ * FIXME MED - Bottom of scrollview in custom screen doesn't lose fade when at bottom  
+ * FIXME MED - Handle orientation/keyboard changes
  * 
  * v2.0.0:
- * TODO [4 hours] Update icon
- * TODO [30 min] Update About dialog
+ * TODO Update About dialog
  * TODO Usability - Tell players what the controls are [suggested by HotShots]
  * TODO Score combos when hitting targets with consecutive projectiles
  * TODO Display and saving of scores
  * 
  * Pro (first release):
  * TODO Look into the new copy protection
+ * TODO Live wallpaper - Random mode with random shots 
  * 
  * v2.0.1:
  * TODO Zoom & pan
+ * TODO Prevent random targets from spawning too close to launcher
+ * TODO Adjust minimum size of targets
+ * 
+ * v2.0.2:
+ * TODO Stop GameField activity when leaving it
  * TODO Option: Analytics
  * TODO Add some suggestions
- * TODO Prevent random targets from spawning too close to launcher
- * TODO Adjust minimum size of targets 
  * 
  * v2.1.0
  * TODO Sounds
