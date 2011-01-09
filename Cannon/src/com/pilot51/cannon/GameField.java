@@ -1,5 +1,6 @@
 package com.pilot51.cannon;
 
+import java.util.HashMap;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -67,10 +68,9 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 	private TextureRegion tCircle;
 	private FixedStepPhysicsWorld mPhysicsWorld;
 	private SmoothCamera camera;
-	//private Timer timer = new Timer();
 	private SharedPreferences prefs, values;
 	private float ratio, speed, pxPerMeter, angle, velocity, gravity, wind, ballRadius;
-	private long fuze;
+	private long fuze, nTargets, nShots;
 	private int cameraWidth, cameraHeight, targetD, targetH, targetRadius, gridx, gridy, colorBG, colorGrid, colorProj, colorTarget, colorHitTarget, score;
 	private boolean mRandom, repeat;
 	private Sprite target;
@@ -90,10 +90,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 		getWindowManager().getDefaultDisplay().getMetrics(dm);
 		cameraWidth = dm.widthPixels;
 		cameraHeight = dm.heightPixels;
-		//cameraWidth = (int)(dm.widthPixels / pxPerMeter);
-		//cameraHeight = (int)(dm.heightPixels / pxPerMeter);
 		camera = new SmoothCamera(0, -cameraHeight, cameraWidth, cameraHeight, 1000, 1000, 100f);
-		//camera = new BoundCamera(0, -cameraHeight, cameraWidth, cameraHeight,0, cameraWidth / 2, 0, -cameraHeight);
 		camera.setHUD(hud);
 		camera.setCenter(cameraWidth / 2 / pxPerMeter, -cameraHeight / 2 / pxPerMeter);
 		camera.setZoomFactor(pxPerMeter);
@@ -187,8 +184,6 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 					final Body bodyB = pContact.getFixtureB().getBody();
 					if ((bodyA == targetBody | bodyB == targetBody) & targetBody.getUserData().equals(true)) {
 						targetBody.setUserData(false);
-						score += 2;
-						sText.setText("Score: " + score);
 						final Boolean expTarget = prefs.getBoolean("prefExpTarget", false);
 						final Boolean keepTargets = prefs.getBoolean("prefKeep", false);
 						TimerTask targetAction = new TimerTask() {
@@ -198,32 +193,42 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 									createFirework();
 								if (keepTargets)
 									target.setColor(Color.red(colorHitTarget) / 255f, Color.green(colorHitTarget) / 255f, Color.blue(colorHitTarget) / 255f, Color.alpha(colorHitTarget) / 255f);
-								else removeSprite(target, 1);
+								else {
+									nTargets--;
+									removeSprite(target, 1);
+								}
 								if (mRandom)
 									addTarget();
 						}};
 						new Timer().schedule(targetAction, (long) (100 / speed));
+						long hits;
 						if (bodyA == targetBody) {
-							//((Sprite) bodyB.getUserData()).setColor(1, 0, 0);
-						} else if (bodyB == targetBody) {
-							//((Sprite) bodyA.getUserData()).setColor(1, 0, 0);
+							@SuppressWarnings("unchecked")
+							HashMap<String, Object> map = ((HashMap<String, Object>) bodyB.getUserData());
+							hits = (Long)map.get("hits") + 1;
+							map.put("hits", hits);
+							bodyB.setUserData(map);
+						} else {
+							@SuppressWarnings("unchecked")
+							HashMap<String, Object> map = ((HashMap<String, Object>) bodyA.getUserData());
+							hits = (Long)map.get("hits") + 1;
+							map.put("hits", hits);
+							bodyA.setUserData(map);
 						}
+						score += Math.pow(nTargets,hits);
+						sText.setText("Score: " + score);
 					}
 				}
 
 				public void endContact(final Contact pContact) {
+					/*
 					final Body bodyA = pContact.getFixtureA().getBody();
 					final Body bodyB = pContact.getFixtureB().getBody();
 					if (bodyA == targetBody | bodyB == targetBody) {
-						if (bodyA == targetBody) {
-							//target.setColor(1, 0, 0);
-							//target.setPosition(100, -100);
-							//targetBody.setType(BodyType.DynamicBody);
-							//((Sprite) bodyB.getUserData()).setColor(0, 1, 0);
-						} else if (bodyB == targetBody) {
-							//((Sprite) bodyA.getUserData()).setColor(0, 1, 0);
-						}
+						if (bodyA == targetBody) {}
+						else if (bodyB == targetBody) {}
 					}
+					*/
 				}
 			});
 		}
@@ -344,8 +349,12 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 			public void run() {
 				final Body body = PhysicsFactory.createCircleBody(mPhysicsWorld, ball, BodyType.DynamicBody, ballFixtureDef);
 				body.setBullet(true);
-				body.setUserData(ball);
-				mPhysicsWorld.registerPhysicsConnector(new PhysicsConnector(ball, body, true, true, false, false));
+				HashMap<String, Object> map = new HashMap<String, Object>();
+				map.put("sprite", ball);
+				map.put("hits", (long)0);
+				map.put("shot", nShots++);
+				body.setUserData(map);
+				mPhysicsWorld.registerPhysicsConnector(new PhysicsConnector(ball, body, true, true, true, false));
 		}});
 		addEntity(ball, 2, null);
 		score -= 1;
@@ -369,17 +378,10 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 			public void onUpdate(float pSecondsElapsed) {
 				int ballX = (int) (ball.getX() + (ball.getWidth() / 2));
 				int ballY = (int) (ball.getY() + (ball.getHeight() / 2));
-				//Log.d("Cannon", "X: " + ballX + " | Y: " + ballY);
+				// Remove ball if it leaves screen and definitely won't come back
 				if ((gravity >= 0 & ballY > 0) | (wind <= 0 & ballX < 0) | (gravity <= 0 & ballY < -cameraHeight) | (wind >= 0 & ballX > cameraWidth)) {
 					scene.unregisterUpdateHandler(uh);
 					removeSprite(ball, 2);
-					/*
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							Toast.makeText(GameField.this, "Ball not returning", Toast.LENGTH_SHORT).show();
-					}});
-					*/
 				}
 			}
 
@@ -387,98 +389,6 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 			public void reset() {
 			}
 		});
-		/*
-		if (targetD > 0 | targetH > 0) {
-			if (fuze == 0) {
-				scene.registerUpdateHandler(new IUpdateHandler() {
-					IUpdateHandler uh = this;
-					DecimalFormat df2 = new DecimalFormat("0.##"); // Up to 2 decimal places
-					double lastDistance = 0;
-
-					@Override
-					public void onUpdate(float pSecondsElapsed) {
-						if (scene.getLayer(1).getEntityCount() != 0) {
-							runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									double distance = getDistance(ball);
-									if (distance > lastDistance & lastDistance > 0) {
-										//score = (int)lastDistance;
-										String result = "Miss! - ";
-										/*
-										if (targetRadius >= lastDistance) {
-											result = "Direct hit! - ";
-											score /= 2;
-										} else if (targetRadius + ballRadius >= lastDistance) {
-											result = "Touched! - ";
-											score /= 1.5;
-										}
-										//*
-										if (targetRadius + ballRadius >= lastDistance) {
-											result = "Hit! - ";
-											score += 1;
-										} else {
-											score -= 1;
-										}
-										sText.setText("Score: " + score);
-										//Toast.makeText(GameField.this, result + "Score: " + df2.format(score) + " - Distance: " + df2.format(lastDistance), Toast.LENGTH_SHORT).show();
-										lastDistance = -1;
-										scene.unregisterUpdateHandler(uh);
-									} else if (lastDistance == 0 | distance <= lastDistance) {
-										lastDistance = distance;
-									}
-								}
-							});
-						}
-					}
-
-					@Override
-					public void reset() {
-					}
-				});
-			} else {
-				new CountDownTimer((long) (fuze / speed), (long) (fuze / speed)) {
-					final DecimalFormat df2 = new DecimalFormat("0.##");
-
-					public void onTick(long millisUntilFinished) {
-					}
-
-					@Override
-					public void onFinish() {
-						if (scene.getLayer(1).getEntityCount() != 0) {
-							// Scoring with fuze
-							runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									double distance = getDistance(ball);
-									//score = (int)distance;
-									String result = "Miss! - ";
-									/*
-									if (targetRadius >= distance) {
-										result = "Direct hit! - ";
-										score /= 2;
-									} else if (targetRadius + ballRadius >= distance) {
-										result = "Touched! - ";
-										score /= 1.5;
-									}
-									//*
-									if (targetRadius + ballRadius >= distance) {
-										result = "Hit! - ";
-										score += 2;
-									} else {
-										score -= 1;
-									}
-									sText.setText("Score: " + score);
-									//Toast.makeText(GameField.this, result + "Score: " + df2.format(score) + " - Distance: " + df2.format(distance), Toast.LENGTH_SHORT).show();
-								}
-							});
-						}
-						removeBall(ball, 2);
-					}
-				}.start();
-			}
-		}
-		*/
 	}
 
 	/*
@@ -509,7 +419,6 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 			targetH = values.getInt("prefTargetH", 0);
 		}
 		target = new Sprite(targetD - tCircle.getWidth() / 2, -targetH - tCircle.getHeight() / 2, tCircle);
-		//target.setSize(targetRadius * 2, targetRadius * 2);
 		target.setScaleCenter(target.getWidth() / 2, target.getHeight() / 2);
 		target.setScale(targetRadius / (target.getWidth() / 2));
 		target.setColor(Color.red(colorTarget) / 255f, Color.green(colorTarget) / 255f, Color.blue(colorTarget) / 255f, Color.alpha(colorTarget) / 255f);
@@ -526,6 +435,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 				mPhysicsWorld.registerPhysicsConnector(new PhysicsConnector(target, targetBody, false, false, false, false));
 			}
 		});
+		nTargets++;
 		addEntity(target, 1, null);
 	}
 
@@ -536,8 +446,6 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 		particleSystem.addParticleInitializer(new ColorInitializer(1, 1, 0));
 		particleSystem.addParticleInitializer(new AlphaInitializer(1));
 		particleSystem.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE);
-		//particleSystem.addParticleInitializer(new VelocityInitializer(0, 50, 0, 50));
-		//particleSystem.addParticleInitializer(new RotationInitializer(0.0f, 360.0f));
 		particleSystem.addParticleInitializer(new IParticleInitializer() {
 			@Override
 			public void onInitializeParticle(Particle pParticle) {
@@ -546,10 +454,6 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 				float fVelocityX = FloatMath.cos((float) Math.toRadians(ang)) * vel;
 				float fVelocityY = FloatMath.sin((float) Math.toRadians(ang)) * vel;
 				pParticle.setVelocity(fVelocityX, fVelocityY);
-				// calculate air resistance that acts opposite to particle
-				// velocity
-				// x% of deceleration is applied (that is opposite to velocity)
-				//pParticle.setAcceleration(-fVelocityX / 10f, -fVelocityY / 10f);
 				pParticle.setAcceleration((-fVelocityX / 6f) + wind * 30, (-fVelocityY / 6f) + SensorManager.GRAVITY_EARTH * gravity * 30);
 			}
 		});
@@ -621,16 +525,9 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 		final TimerTask updatePos = new TimerTask() {
 			@Override
 			public void run() {
-				if (ball.isVisible()) {
+				if (ball.isVisible() & (Math.sqrt(Math.pow(Math.abs(ball.getVelocityX()),2) + Math.pow(Math.abs(ball.getVelocityY()),2))) / speed * ratio >= 5) {
 					particleEmitter.setCenter(ball.getX(), ball.getY());
 				} else {
-					/*
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							Toast.makeText(GameField.this, "Ball no longer visible", Toast.LENGTH_LONG).show();
-					}});
-					*/
 					particleSystem.setParticlesSpawnEnabled(false);
 					new Timer().schedule(remove, expire * 1000);
 					cancel();

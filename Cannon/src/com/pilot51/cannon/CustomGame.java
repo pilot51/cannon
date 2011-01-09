@@ -10,13 +10,13 @@
  * FIXME Bottom of scrollview in custom screen doesn't lose fade when at bottom
  * FIXME Targets spawning completely inside other targets in random mode, impossible to hit with collision enabled
  * FIXME Fit borders and keep random targets within scaled screen, also scale targets relative to screen scale  
+ * FIXME Handle orientation/keyboard changes
  * 
  * v2.0.0:
  * TODO [4 hours] Update icon
  * TODO [30 min] Update About dialog
  * TODO Usability - Tell players what the controls are [suggested by HotShots]
- * TODO Reorganize preferences - Preference type (e.g. colors) go in screens and version-specific go in category
- * TODO Score combos when hitting multiple targets with one projectile or when hitting targets with consecutive projectiles
+ * TODO Score combos when hitting targets with consecutive projectiles
  * TODO Display and saving of scores
  * 
  * Pro (first release):
