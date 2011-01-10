@@ -1,0 +1,69 @@
+Immediately before release:
+	Test on all API's and screen sizes, particularly 1.6 QVGA and 1.5 HVGA
+	In all projects, set release date in strings and version in strings and manifest
+	Clean before compiling
+	Install old version from Market to make sure update from Market works properly
+	Save sources along with binary for each release version
+
+Problems:
+	HIGH - Targets spawning completely inside other targets in random mode, impossible to hit with collision enabled
+	HIGH - Fit borders and keep random targets within scaled screen, also scale targets relative to screen scale
+	MED - Bottom of scrollview in custom screen doesn't lose fade when at bottom  
+	MED - Handle orientation/keyboard changes
+
+v2.0.0:
+	Update About dialog
+	Usability - Tell players what the controls are [suggested by HotShots]
+	Score combos when hitting targets with consecutive projectiles
+	Display and saving of scores
+
+Pro (first release):
+	Look into the new copy protection
+	Live wallpaper - Random mode with random shots 
+
+v2.0.1:
+	Zoom & pan
+	Prevent random targets from spawning too close to launcher
+	Adjust minimum size of targets
+
+v2.0.2:
+	Stop GameField activity when leaving it
+	Option: Analytics
+	Add some suggestions
+
+v2.1.0
+	Sounds
+	Textures, maybe themes
+	Explosive projectile with shrapnel
+	Moving targets [extstw]
+	Missions: preset, random, or infinitely calculated targets that need to be hit to reach higher levels
+	Basic multiplayer
+
+v2.2.0:
+	Multiplayer: Hotseat & direct IP
+		Simultaneous turn-based, allowing projectiles to collide
+		One player places target, other player tries hitting it (requires in-game angle/velocity controls)
+		Players try to hit randomly placed target [suggested by SuM_WuN]
+			After so many seconds, closest shot wins
+			First direct hit wins
+	Gravity presets (earth, moon, mars, etc.)
+	Different types of targets/projectiles with different collision physics
+		Projectiles: Bouncy, sticky, explosive
+
+Suggested features (high priority):
+	Preview before firing [Tyler]
+	Pause, timestep forward/back, speed [+1 by extstw]
+	Explosions [+1 by extstw]
+	For missions: Multiple projectiles/targets, hit multiple targets with a single projectile (maybe in an order) [+1 by extstw]
+	Fading tail [extstw]
+	Moving targets [extstw]
+	Obstacles [extstw]
+	Cluster bomb [extstw]
+	Return to main screen after shot [Bill Irwin] Self note: Make optional, maybe enabled by default
+
+Bin:
+	More realistic wind (limited speed, not squared)
+	Air resistance/density (ballistic coefficient on Wikipedia)
+	Solve feature (automatically enter most conservative values in null fields necessary to hit the target)
+	Dynamic gravity (targets that push or pull)
+	Option: Show overlay data for projectile X, Y, speed, angle of motion, and time
