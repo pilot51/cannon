@@ -68,7 +68,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 	private TextureRegion tCircle;
 	private FixedStepPhysicsWorld mPhysicsWorld;
 	private SmoothCamera camera;
-	private SharedPreferences prefs, values;
+	private SharedPreferences prefs, prefCustom, prefScores;
 	private float ratio, speed, pxPerMeter, angle, velocity, gravity, wind, ballRadius;
 	private long fuze, nTargets, nShots;
 	private int cameraWidth, cameraHeight, targetD, targetH, targetRadius, gridx, gridy, colorBG, colorGrid, colorProj, colorTarget, colorHitTarget, score;
@@ -76,7 +76,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 	private Sprite target;
 	private Body targetBody;
 	private Font mFont;
-	private ChangeableText aText, vText, sText;
+	private ChangeableText aText, vText, sText, hText;
 	private Random rand_gen = new Random();
 	private final HUD hud = new HUD();
 
@@ -105,20 +105,17 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 	public void onLoadResources() {
 		mRandom = getIntent().getBooleanExtra("random", false);
 		repeat = prefs.getBoolean("prefRepeat", false);
-
 		colorBG = Color.parseColor(prefs.getString("prefColorBG", null));
 		colorGrid = Color.parseColor(prefs.getString("prefColorGrid", null));
 		colorTarget = Color.parseColor(prefs.getString("prefColorTarget", null));
 		colorHitTarget = Color.parseColor(prefs.getString("prefColorHitTarget", null));
 		colorProj = Color.parseColor(prefs.getString("prefColorProj", null));
-
 		ballRadius = Float.parseFloat(prefs.getString("prefBallRadius", null));
-
 		mTexture = new Texture(128, 128, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		TextureRegionFactory.setAssetBasePath("gfx/");
 		tCircle = TextureRegionFactory.createFromAsset(mTexture, this, "circle_white.png", 0, 0);
 		mEngine.getTextureManager().loadTexture(mTexture);
-		values = getSharedPreferences("valuePref", 0);
+		prefCustom = getSharedPreferences("custom", MODE_PRIVATE);
 		if (mRandom) {
 			angle = 45;
 			velocity = 100;
@@ -127,16 +124,17 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 			wind = 0;
 			//wind = (float)(rand_gen.nextInt(7) - 3) / RATIO;
 		} else {
-			angle = values.getFloat("prefAngle", 0);
-			velocity = values.getFloat("prefVelocity", 0);
-			fuze = (long) (values.getFloat("prefFuze", 0) * 1000);
-			gravity = values.getFloat("prefGravity", 0) / ratio;
-			wind = values.getFloat("prefWind", 0) / ratio;
+			angle = prefCustom.getFloat("angle", 0);
+			velocity = prefCustom.getFloat("velocity", 0);
+			fuze = (long) (prefCustom.getFloat("fuze", 0) * 1000);
+			gravity = prefCustom.getFloat("gravity", 0) / ratio;
+			wind = prefCustom.getFloat("wind", 0) / ratio;
 		}
 		mFontTexture = new Texture(256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		mFont = new Font(mFontTexture, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 20, true, Color.WHITE);
 		mEngine.getTextureManager().loadTexture(mFontTexture);
 		mEngine.getFontManager().loadFont(mFont);
+		prefScores = getSharedPreferences("scores", MODE_PRIVATE);
 	}
 
 	@Override
@@ -172,9 +170,9 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 			targetD = rand_gen.nextInt(cameraWidth - targetRadius * 2) + targetRadius;
 			targetH = rand_gen.nextInt(cameraHeight - targetRadius * 2) + targetRadius;
 		} else {
-			targetRadius = values.getInt("prefTargetS", 0);
-			targetD = values.getInt("prefTargetD", 0);
-			targetH = values.getInt("prefTargetH", 0);
+			targetRadius = prefCustom.getInt("targetS", 0);
+			targetD = prefCustom.getInt("targetD", 0);
+			targetH = prefCustom.getInt("targetH", 0);
 		}
 		if (targetD > 0 | targetH > 0) {
 			addTarget();
@@ -215,8 +213,16 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 							map.put("hits", hits);
 							bodyA.setUserData(map);
 						}
-						score += Math.pow(nTargets,hits);
-						sText.setText("Score: " + score);
+						if(mRandom) {
+							score += Math.pow(nTargets,hits);
+							if(score > prefScores.getInt("highscore", 0)) {
+								hText.setText("High: " + score);
+								SharedPreferences.Editor e = prefScores.edit();
+								e.putInt("highscore", score);
+								e.commit();
+							}
+							sText.setText("Score: " + score);
+						}
 					}
 				}
 
@@ -237,8 +243,12 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 		addEntity(aText, 0, hud);
 		vText = new ChangeableText(10, 40, mFont, "Velocity: " + velocity, "Velocity: XXXXX".length());
 		addEntity(vText, 0, hud);
-		sText = new ChangeableText(cameraWidth - 120, 10, mFont, "Score: " + score, HorizontalAlign.RIGHT, "Score: XXXXXX".length());
-		addEntity(sText, 0, hud);
+		if(mRandom) {
+			sText = new ChangeableText(cameraWidth - 120, 10, mFont, "Score: " + score, HorizontalAlign.RIGHT, "Score: XXXXXX".length());
+			addEntity(sText, 0, hud);
+			hText = new ChangeableText(cameraWidth - 120, 40, mFont, "High: " + prefScores.getInt("highscore", 0), HorizontalAlign.RIGHT, "High: XXXXXX".length());
+			addEntity(hText, 0, hud);
+		}
 		return scene;
 	}
 
@@ -357,8 +367,10 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 				mPhysicsWorld.registerPhysicsConnector(new PhysicsConnector(ball, body, true, true, true, false));
 		}});
 		addEntity(ball, 2, null);
-		score -= 1;
-		sText.setText("Score: " + score);
+		if(mRandom) {
+			score -= 1;
+			sText.setText("Score: " + score);
+		}
 		if (prefs.getBoolean("prefTrail", false)) {
 			trail(ball);
 		}
@@ -414,9 +426,9 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 			targetD = rand_gen.nextInt(cameraWidth - targetRadius * 2) + targetRadius;
 			targetH = rand_gen.nextInt(cameraHeight - targetRadius * 2) + targetRadius;
 		} else {
-			targetRadius = values.getInt("prefTargetS", 0);
-			targetD = values.getInt("prefTargetD", 0);
-			targetH = values.getInt("prefTargetH", 0);
+			targetRadius = prefCustom.getInt("targetS", 0);
+			targetD = prefCustom.getInt("targetD", 0);
+			targetH = prefCustom.getInt("targetH", 0);
 		}
 		target = new Sprite(targetD - tCircle.getWidth() / 2, -targetH - tCircle.getHeight() / 2, tCircle);
 		target.setScaleCenter(target.getWidth() / 2, target.getHeight() / 2);

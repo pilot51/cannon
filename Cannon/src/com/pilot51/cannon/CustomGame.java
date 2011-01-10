@@ -24,7 +24,7 @@ public class CustomGame extends Activity implements OnClickListener {
 
 	int targetd, targeth, targets;
 
-	SharedPreferences values;
+	SharedPreferences prefCustom;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -39,11 +39,14 @@ public class CustomGame extends Activity implements OnClickListener {
 		editTargetD = (EditText) findViewById(R.id.editTargetD);
 		editTargetH = (EditText) findViewById(R.id.editTargetH);
 		editTargetS = (EditText) findViewById(R.id.editTargetS);
-
 		btnFire = (Button) findViewById(R.id.buttonFire);
 		btnFire.setOnClickListener(this);
-
-		values = getSharedPreferences("valuePref", 0);
+		prefCustom = getSharedPreferences("custom", MODE_PRIVATE);
+		
+		// Move old custom value preferences to new preferences (simpler naming)
+		// To be removed at least 1 month after v2 release
+		if(getSharedPreferences("valuePref", MODE_PRIVATE).contains("prefAngle")) movePref();
+		
 		loadValues();
 
 		// Set the virtual keyboard to the numeric "phone" type without
@@ -67,7 +70,6 @@ public class CustomGame extends Activity implements OnClickListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_about:
-			// Log.d(TAG, "About pressed");
 			new Common().menu(this);
 			return true;
 		case R.id.menu_prefs:
@@ -90,18 +92,14 @@ public class CustomGame extends Activity implements OnClickListener {
 	}
 	
 	void loadValues() {
-		editAngle.setText(Float.toString(values.getFloat("prefAngle", 59)));
-		editVelocity.setText(Float.toString(values.getFloat("prefVelocity",
-				(float) 82.5)));
-		editFuze
-				.setText(Float.toString(values.getFloat("prefFuze", (float) 0)));
-		editGravity.setText(Float.toString(values.getFloat("prefGravity", 1)));
-		editWind.setText(Float.toString(values.getFloat("prefWind", -3)));
-		editTargetD
-				.setText(Integer.toString(values.getInt("prefTargetD", 250)));
-		editTargetH
-				.setText(Integer.toString(values.getInt("prefTargetH", 250)));
-		editTargetS.setText(Integer.toString(values.getInt("prefTargetS", 10)));
+		editAngle.setText(Float.toString(prefCustom.getFloat("angle", 59)));
+		editVelocity.setText(Float.toString(prefCustom.getFloat("velocity", (float) 82.5)));
+		editFuze.setText(Float.toString(prefCustom.getFloat("fuze", (float) 0)));
+		editGravity.setText(Float.toString(prefCustom.getFloat("gravity", 1)));
+		editWind.setText(Float.toString(prefCustom.getFloat("wind", -3)));
+		editTargetD.setText(Integer.toString(prefCustom.getInt("targetD", 250)));
+		editTargetH.setText(Integer.toString(prefCustom.getInt("targetH", 250)));
+		editTargetS.setText(Integer.toString(prefCustom.getInt("targetS", 10)));
 	}
 
 	void grabValues() {
@@ -149,16 +147,31 @@ public class CustomGame extends Activity implements OnClickListener {
 	}
 
 	void saveValues() {
-		SharedPreferences.Editor editor = values.edit();
-		editor.putFloat("prefAngle", angle);
-		editor.putFloat("prefVelocity", velocity);
-		editor.putFloat("prefFuze", fuze);
-		editor.putFloat("prefGravity", gravity);
-		editor.putFloat("prefWind", wind);
-		editor.putInt("prefTargetD", targetd);
-		editor.putInt("prefTargetH", targeth);
-		editor.putInt("prefTargetS", targets);
-		editor.commit();
+		SharedPreferences.Editor e = prefCustom.edit();
+		e.putFloat("angle", angle);
+		e.putFloat("velocity", velocity);
+		e.putFloat("fuze", fuze);
+		e.putFloat("gravity", gravity);
+		e.putFloat("wind", wind);
+		e.putInt("targetD", targetd);
+		e.putInt("targetH", targeth);
+		e.putInt("targetS", targets);
+		e.commit();
+	}
+	
+	void movePref() {
+		SharedPreferences p = getSharedPreferences("valuePref", 0);
+		SharedPreferences.Editor e = prefCustom.edit();
+		e.putFloat("angle", p.getFloat("prefAngle", 0));
+		e.putFloat("velocity", p.getFloat("prefVelocity", 0));
+		e.putFloat("fuze", p.getFloat("prefFuze", 0));
+		e.putFloat("gravity", p.getFloat("prefGravity", 0));
+		e.putFloat("wind", p.getFloat("prefWind", 0));
+		e.putInt("targetD", p.getInt("prefTargetD", 0));
+		e.putInt("targetH", p.getInt("prefTargetH", 0));
+		e.putInt("targetS", p.getInt("prefTargetS", 0));
+		e.commit();
+		p.edit().clear().commit();
 	}
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
