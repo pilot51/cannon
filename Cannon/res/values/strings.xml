@@ -1,18 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<string name="app_name">Cannon</string>
-<string name="app_version">2.0.0</string>
-<string name="dev_name">Pilot_51</string>
-<string name="dev_email">pilota51@gmail.com</string>
-<string name="dev_web">http://pilot51.com</string>
-<string name="dev_twitter">http://twitter.com/Pilot_51</string>
-<string name="prefs">Preferences</string>
-<string name="about">About</string>
-<string name="color_dialog_msg">Value can be a color name (e.g. blue) or a hex color (e.g. #0000ff, or #550000ff for alpha transparency)</string>
-<string name="about_text">
-"For the timeline leading up to the release of Cannon on Android, touch the \'History\' button.
+	<string name="app_name">Cannon</string>
+	<string name="app_version">2.0.0</string>
+	<string name="app_web">http://cannon.pilot51.com</string>
+	<string name="dev_name">Pilot_51</string>
+	<string name="dev_email">pilota51@gmail.com</string>
+	<string name="dev_web">http://pilot51.com</string>
+	<string name="dev_twitter">http://twitter.com/Pilot_51</string>
+	<string name="prefs">Preferences</string>
+	<string name="about">Help/About</string>
+	<string name="color_dialog_msg">Value can be a color name (e.g. blue) or a hex color (e.g. #0000ff, or #550000ff for alpha transparency)</string>
+	<string name="about_text">
+"Controls:
+	Touchscreen: Fire
+	D-Pad/Trackball:
+		Left/Right: Angle
+		Up/Down: Power
+		Center: Fire
 
-Whether you like Cannon or not, please rate and comment on it to compliment my work and/or let me know where it needs to improve.
+		
+Scoring - Random game type:
+	Number of targets on screen by the power of the number of active target hits by the specific projectile.
 
-As with everything I do, I am open to suggestions, bug reports, questions, comments, etc."</string>
+
+Whether you like Cannon or not, please rate it and leave a constructive comment.
+
+As with everything I create for the public, I am open to suggestions, bug reports, questions, comments, etc. I am very easy to contact, more communication mediums are listed on my website. A list of known issues is available on the Cannon website.
+
+It is very important if you report a bug that you contact me in a way that I can reply in case I need more information. A Market comment won't work.
+
+Many thanks to the testers and helpers!
+HotShotS
+SuM_WuN"
+	</string>
 </resources>

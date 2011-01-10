@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class GameType extends Activity implements OnClickListener {
 	
@@ -35,6 +36,15 @@ public class GameType extends Activity implements OnClickListener {
 		btnMulti = (Button) findViewById(R.id.btnMulti);
 		btnMulti.setOnClickListener(this);
 		btnMulti.setVisibility(Button.GONE); // Disabled until operational
+		
+		if(getLastNonConfigurationInstance() != (Object)true) {
+			Toast.makeText(this, "Press menu button for help & preferences.", Toast.LENGTH_LONG).show();
+		}
+	}
+	
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+	    return true;
 	}
 
 	@Override

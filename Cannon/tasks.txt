@@ -11,12 +11,6 @@ Problems:
 	MED - Bottom of scrollview in custom screen doesn't lose fade when at bottom  
 	MED - Handle orientation/keyboard changes
 
-v2.0.0:
-	Update About dialog
-	Usability - Tell players what the controls are [suggested by HotShots]
-	Score combos when hitting targets with consecutive projectiles
-	Display and saving of scores
-
 Pro (first release):
 	Look into the new copy protection
 	Live wallpaper - Random mode with random shots 
@@ -27,6 +21,8 @@ v2.0.1:
 	Adjust minimum size of targets
 
 v2.0.2:
+	Score combos when hitting targets with consecutive projectiles
+	Scores for individual projectiles
 	Stop GameField activity when leaving it
 	Option: Analytics
 	Add some suggestions
