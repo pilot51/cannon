@@ -146,35 +146,26 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 		drawGrid(scene);
 		final FixtureDef wallFixtureDef = PhysicsFactory.createFixtureDef(0, 0, 0, false);
 		if (prefs.getBoolean("ground", false)) {
-			final Shape ground = new Rectangle(0, -1, cameraWidth, 1);
-			PhysicsFactory.createBoxBody(mPhysicsWorld, ground, BodyType.StaticBody, wallFixtureDef); // Temporarily disabled for v1 accuracy
+			final Shape ground = new Rectangle(0, -1 / pxPerMeter, cameraWidth / pxPerMeter, 1 / pxPerMeter);
+			PhysicsFactory.createBoxBody(mPhysicsWorld, ground, BodyType.StaticBody, wallFixtureDef);
 			addEntity(ground, 0, scene);
 		}
 		if (prefs.getBoolean("roof", false)) {
-			final Shape roof = new Rectangle(0, -cameraHeight, cameraWidth, 1);
+			final Shape roof = new Rectangle(0, -cameraHeight / pxPerMeter, cameraWidth / pxPerMeter, 1 / pxPerMeter);
 			PhysicsFactory.createBoxBody(mPhysicsWorld, roof, BodyType.StaticBody, wallFixtureDef);
 			addEntity(roof, 0, scene);
 		}
 		if (prefs.getBoolean("leftWall", false)) {
-			final Shape left = new Rectangle(0, -cameraHeight, 1, cameraHeight);
+			final Shape left = new Rectangle(0, -cameraHeight / pxPerMeter, 1 / pxPerMeter, cameraHeight / pxPerMeter);
 			PhysicsFactory.createBoxBody(mPhysicsWorld, left, BodyType.StaticBody, wallFixtureDef);
 			addEntity(left, 0, scene);
 		}
 		if (prefs.getBoolean("rightWall", false)) {
-			final Shape right = new Rectangle(cameraWidth - 1, -cameraHeight, 1, cameraHeight);
+			final Shape right = new Rectangle((cameraWidth - 1) / pxPerMeter, -cameraHeight / pxPerMeter, 1 / pxPerMeter, cameraHeight / pxPerMeter);
 			PhysicsFactory.createBoxBody(mPhysicsWorld, right, BodyType.StaticBody, wallFixtureDef);
 			addEntity(right, 0, scene);
 		}
-		if (mRandom) {
-			targetRadius = rand_gen.nextInt(50) + 3;
-			targetD = rand_gen.nextInt(cameraWidth - targetRadius * 2) + targetRadius;
-			targetH = rand_gen.nextInt(cameraHeight - targetRadius * 2) + targetRadius;
-		} else {
-			targetRadius = prefCustom.getInt("targetS", 0);
-			targetD = prefCustom.getInt("targetD", 0);
-			targetH = prefCustom.getInt("targetH", 0);
-		}
-		if (targetD > 0 | targetH > 0) {
+		if (mRandom | prefCustom.getInt("targetD", 0) > 0 | prefCustom.getInt("targetH", 0) > 0) {
 			addTarget();
 			mPhysicsWorld.setContactListener(new ContactListener() {
 				public void beginContact(final Contact pContact) {
@@ -422,9 +413,9 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 
 	void addTarget() {
 		if (mRandom) {
-			targetRadius = rand_gen.nextInt(50) + 3;
-			targetD = rand_gen.nextInt(cameraWidth - targetRadius * 2) + targetRadius;
-			targetH = rand_gen.nextInt(cameraHeight - targetRadius * 2) + targetRadius;
+			targetRadius = (int)((rand_gen.nextInt(50) + 6) / pxPerMeter);
+			targetD = rand_gen.nextInt((int)(cameraWidth / pxPerMeter) - targetRadius * 2) + targetRadius;
+			targetH = rand_gen.nextInt((int)(cameraHeight / pxPerMeter) - targetRadius * 2) + targetRadius;
 		} else {
 			targetRadius = prefCustom.getInt("targetS", 0);
 			targetD = prefCustom.getInt("targetD", 0);
