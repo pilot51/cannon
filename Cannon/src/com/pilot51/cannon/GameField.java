@@ -43,7 +43,6 @@ import org.anddev.andengine.opengl.texture.TextureOptions;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 import org.anddev.andengine.opengl.texture.region.TextureRegionFactory;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
-import org.anddev.andengine.util.HorizontalAlign;
 
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -70,8 +69,9 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 	private SmoothCamera camera;
 	private SharedPreferences prefs, prefCustom, prefScores;
 	private float ratio, speed, pxPerMeter, angle, velocity, gravity, wind, ballRadius;
-	private long fuze, nTargets, nShots;
-	private int cameraWidth, cameraHeight, targetD, targetH, targetRadius, gridx, gridy, colorBG, colorGrid, colorProj, colorTarget, colorHitTarget, score;
+	private final byte FONT_SIZE = 20;
+	private long fuze, nTargets, nShots, score;
+	private int cameraWidth, cameraHeight, targetD, targetH, targetRadius, gridx, gridy, colorBG, colorGrid, colorProj, colorTarget, colorHitTarget;
 	private boolean mRandom, repeat;
 	private Sprite target;
 	private Body targetBody;
@@ -131,7 +131,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 			wind = prefCustom.getFloat("wind", 0) / ratio;
 		}
 		mFontTexture = new Texture(256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-		mFont = new Font(mFontTexture, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 20, true, Color.WHITE);
+		mFont = new Font(mFontTexture, Typeface.create(Typeface.MONOSPACE, Typeface.BOLD), FONT_SIZE, true, Color.WHITE);
 		mEngine.getTextureManager().loadTexture(mFontTexture);
 		mEngine.getFontManager().loadFont(mFont);
 		prefScores = getSharedPreferences("scores", MODE_PRIVATE);
@@ -206,13 +206,17 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 						}
 						if(mRandom) {
 							score += Math.pow(nTargets,hits);
-							if(score > prefScores.getInt("highscore", 0)) {
-								hText.setText("High: " + score);
+							if(score > prefScores.getLong("highscore", 0)) {
+								String txt = "High: " + score;
+								hText.setPosition(cameraWidth - 10 - txt.length() * FONT_SIZE * 0.6f, 40);
+								hText.setText(txt);
 								SharedPreferences.Editor e = prefScores.edit();
-								e.putInt("highscore", score);
+								e.putLong("highscore", score);
 								e.commit();
 							}
-							sText.setText("Score: " + score);
+							String txt = "Score: " + score;
+							sText.setPosition(cameraWidth - 10 - txt.length() * FONT_SIZE * 0.6f, 10);
+							sText.setText(txt);
 						}
 					}
 				}
@@ -235,9 +239,11 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 		vText = new ChangeableText(10, 40, mFont, "Velocity: " + velocity, "Velocity: XXXXX".length());
 		addEntity(vText, 0, hud);
 		if(mRandom) {
-			sText = new ChangeableText(cameraWidth - 120, 10, mFont, "Score: " + score, HorizontalAlign.RIGHT, "Score: XXXXXX".length());
+			String txt = "Score: " + score;
+			sText = new ChangeableText(cameraWidth - 10 - txt.length() * FONT_SIZE * 0.6f, 10, mFont, txt, 100);
 			addEntity(sText, 0, hud);
-			hText = new ChangeableText(cameraWidth - 120, 40, mFont, "High: " + prefScores.getInt("highscore", 0), HorizontalAlign.RIGHT, "High: XXXXXX".length());
+			txt = "High: " + prefScores.getLong("highscore", 0);
+			hText = new ChangeableText(cameraWidth - 10 - txt.length() * FONT_SIZE * 0.6f, 40, mFont, txt, 100);
 			addEntity(hText, 0, hud);
 		}
 		return scene;
@@ -360,7 +366,9 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 		addEntity(ball, 2, null);
 		if(mRandom) {
 			score -= 1;
-			sText.setText("Score: " + score);
+			String txt = "Score: " + score;
+			sText.setPosition(cameraWidth - 10 - txt.length() * FONT_SIZE * 0.6f, 10);
+			sText.setText(txt);
 		}
 		if (prefs.getBoolean("trail", false)) {
 			trail(ball);
