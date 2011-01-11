@@ -41,6 +41,14 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 				return true;
 			}
 		});
+		
+		((Preference)findPreference("clearScores")).setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			public boolean onPreferenceClick(Preference p) {
+				getSharedPreferences("scores", MODE_PRIVATE).edit().clear().commit();
+				Toast.makeText(Preferences.this, "Scores cleared", Toast.LENGTH_LONG).show();
+				return true;
+			}
+		});
 	}
 
 	@Override

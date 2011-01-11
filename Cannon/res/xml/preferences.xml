@@ -41,7 +41,8 @@
 		</PreferenceCategory>
 	</PreferenceScreen>
 	<PreferenceCategory>
+		<Preference android:key="clearScores" android:title="Clear saved scores" />
 		<Preference android:key="resetCustom" android:title="Reset Custom Game" android:summary="Reset Custom Game values to example defaults" />
-		<Preference android:key="resetPrefs" android:title="Reset Preferences" android:summary="Reset preferences to defaults" />
+		<Preference android:key="resetPrefs" android:title="Reset preferences" android:summary="Reset preferences to defaults" />
 	</PreferenceCategory>
 </PreferenceScreen>
