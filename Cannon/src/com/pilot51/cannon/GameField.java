@@ -83,9 +83,9 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 	@Override
 	public Engine onLoadEngine() {
 		prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-		pxPerMeter = Float.parseFloat(prefs.getString("prefMeter", null));
+		pxPerMeter = Float.parseFloat(prefs.getString("meter", null));
 		ratio = 32f;
-		speed = Float.parseFloat(prefs.getString("prefSpeed", null));
+		speed = Float.parseFloat(prefs.getString("speed", null));
 		DisplayMetrics dm = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(dm);
 		cameraWidth = dm.widthPixels;
@@ -104,13 +104,13 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 	@Override
 	public void onLoadResources() {
 		mRandom = getIntent().getBooleanExtra("random", false);
-		repeat = prefs.getBoolean("prefRepeat", false);
-		colorBG = Color.parseColor(prefs.getString("prefColorBG", null));
-		colorGrid = Color.parseColor(prefs.getString("prefColorGrid", null));
-		colorTarget = Color.parseColor(prefs.getString("prefColorTarget", null));
-		colorHitTarget = Color.parseColor(prefs.getString("prefColorHitTarget", null));
-		colorProj = Color.parseColor(prefs.getString("prefColorProj", null));
-		ballRadius = Float.parseFloat(prefs.getString("prefBallRadius", null));
+		repeat = prefs.getBoolean("repeat", false);
+		colorBG = Color.parseColor(prefs.getString("colorBG", null));
+		colorGrid = Color.parseColor(prefs.getString("colorGrid", null));
+		colorTarget = Color.parseColor(prefs.getString("colorTarget", null));
+		colorHitTarget = Color.parseColor(prefs.getString("colorHitTarget", null));
+		colorProj = Color.parseColor(prefs.getString("colorProj", null));
+		ballRadius = Float.parseFloat(prefs.getString("ballRadius", null));
 		mTexture = new Texture(128, 128, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		TextureRegionFactory.setAssetBasePath("gfx/");
 		tCircle = TextureRegionFactory.createFromAsset(mTexture, this, "circle_white.png", 0, 0);
@@ -145,22 +145,22 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 		mPhysicsWorld = new FixedStepPhysicsWorld(30, new Vector2(wind * (float) Math.pow(speed, 2), SensorManager.GRAVITY_EARTH * gravity * (float) Math.pow(speed, 2)), false, 3, 2);
 		drawGrid(scene);
 		final FixtureDef wallFixtureDef = PhysicsFactory.createFixtureDef(0, 0, 0, false);
-		if (prefs.getBoolean("prefGround", false)) {
+		if (prefs.getBoolean("ground", false)) {
 			final Shape ground = new Rectangle(0, -1, cameraWidth, 1);
 			PhysicsFactory.createBoxBody(mPhysicsWorld, ground, BodyType.StaticBody, wallFixtureDef); // Temporarily disabled for v1 accuracy
 			addEntity(ground, 0, scene);
 		}
-		if (prefs.getBoolean("prefRoof", false)) {
+		if (prefs.getBoolean("roof", false)) {
 			final Shape roof = new Rectangle(0, -cameraHeight, cameraWidth, 1);
 			PhysicsFactory.createBoxBody(mPhysicsWorld, roof, BodyType.StaticBody, wallFixtureDef);
 			addEntity(roof, 0, scene);
 		}
-		if (prefs.getBoolean("prefLeftWall", false)) {
+		if (prefs.getBoolean("leftWall", false)) {
 			final Shape left = new Rectangle(0, -cameraHeight, 1, cameraHeight);
 			PhysicsFactory.createBoxBody(mPhysicsWorld, left, BodyType.StaticBody, wallFixtureDef);
 			addEntity(left, 0, scene);
 		}
-		if (prefs.getBoolean("prefRightWall", false)) {
+		if (prefs.getBoolean("rightWall", false)) {
 			final Shape right = new Rectangle(cameraWidth - 1, -cameraHeight, 1, cameraHeight);
 			PhysicsFactory.createBoxBody(mPhysicsWorld, right, BodyType.StaticBody, wallFixtureDef);
 			addEntity(right, 0, scene);
@@ -182,8 +182,8 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 					final Body bodyB = pContact.getFixtureB().getBody();
 					if ((bodyA == targetBody | bodyB == targetBody) & targetBody.getUserData().equals(true)) {
 						targetBody.setUserData(false);
-						final Boolean expTarget = prefs.getBoolean("prefExpTarget", false);
-						final Boolean keepTargets = prefs.getBoolean("prefKeep", false);
+						final Boolean expTarget = prefs.getBoolean("expTarget", false);
+						final Boolean keepTargets = prefs.getBoolean("keepTargets", false);
 						TimerTask targetAction = new TimerTask() {
 							@Override
 							public void run() {
@@ -319,7 +319,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 	void drawGrid(Scene scene) {
 		final FixtureDef gridFixtureDef = PhysicsFactory.createFixtureDef(0, 0, 0);
 		gridFixtureDef.isSensor = true;
-		gridx = Integer.parseInt(prefs.getString("prefGridX", null));
+		gridx = Integer.parseInt(prefs.getString("gridX", null));
 		if (gridx > 0) {
 			// Draw vertical lines within screen space
 			int grid = 0;
@@ -331,7 +331,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 				addEntity(linex, 0, scene);
 			} while (grid < cameraWidth - gridx && gridx != 0);
 		}
-		gridy = Integer.parseInt(prefs.getString("prefGridY", null));
+		gridy = Integer.parseInt(prefs.getString("gridY", null));
 		if (gridy > 0) {
 			// Draw horizontal lines within screen space
 			int grid = 0;
@@ -371,7 +371,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 			score -= 1;
 			sText.setText("Score: " + score);
 		}
-		if (prefs.getBoolean("prefTrail", false)) {
+		if (prefs.getBoolean("trail", false)) {
 			trail(ball);
 		}
 		if (fuze > 0) {
@@ -436,7 +436,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 		target.setColor(Color.red(colorTarget) / 255f, Color.green(colorTarget) / 255f, Color.blue(colorTarget) / 255f, Color.alpha(colorTarget) / 255f);
 		target.setUpdatePhysics(false);
 		final FixtureDef targetFixtureDef = PhysicsFactory.createFixtureDef(0, 0.5f, 0, false);
-		if (!prefs.getBoolean("prefCollide", false)) {
+		if (!prefs.getBoolean("collide", false)) {
 			targetFixtureDef.isSensor = true;
 		}
 		runOnUpdateThread(new Runnable() {

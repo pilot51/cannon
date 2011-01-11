@@ -2,6 +2,7 @@ package com.pilot51.cannon;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Process;
 import android.preference.PreferenceManager;
@@ -21,6 +22,8 @@ public class GameType extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gametype);
+		
+		if(PreferenceManager.getDefaultSharedPreferences(getBaseContext()).contains("prefCollide")) movePref();
 		
 		// Load default preferences from xml if not saved
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, true);
@@ -74,7 +77,6 @@ public class GameType extends Activity implements OnClickListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_about:
-			// Log.d(TAG, "About pressed");
 			new Common().menu(this);
 			return true;
 		case R.id.menu_prefs:
@@ -82,6 +84,21 @@ public class GameType extends Activity implements OnClickListener {
 			return true;
 		}
 		return false;
+	}
+	
+	void movePref() {
+		SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+		SharedPreferences.Editor e = p.edit();
+		e.putBoolean("collide", p.getBoolean("prefCollide", false));
+		e.putBoolean("repeat", p.getBoolean("prefRepeat", false));
+		e.putString("gridX", p.getString("prefGridX", null));
+		e.putString("gridY", p.getString("prefGridY", null));
+		e.putBoolean("trail", p.getBoolean("prefCannonTrail", false));
+		e.putString("colorBG", p.getString("prefColorBG", null));
+		e.putString("colorGrid", p.getString("prefColorGrid", null));
+		e.putString("colorTarget", p.getString("prefColorTarget", null));
+		e.putString("colorProj", p.getString("prefColorProj", null));
+		e.clear().commit();
 	}
 	
 	public void finish() {

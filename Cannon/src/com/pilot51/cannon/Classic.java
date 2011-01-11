@@ -37,11 +37,11 @@ public class Classic extends Activity {
 
 		DisplayMetrics dm = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(dm);
-		SharedPreferences values = getSharedPreferences("valuePref", 0);
+		SharedPreferences prefCustom = getSharedPreferences("custom", MODE_PRIVATE);
 
-		cannonView = new ClassicView(this, dm.widthPixels, dm.heightPixels, values.getFloat("prefAngle", 0), values.getFloat("prefVelocity", 0), values.getFloat("prefFuze", 0), values.getFloat(
-				"prefGravity",
-				0), values.getFloat("prefWind", 0), values.getInt("prefTargetD", 0), values.getInt("prefTargetH", 0), values.getInt("prefTargetS", 0));
+		cannonView = new ClassicView(this, dm.widthPixels, dm.heightPixels, prefCustom.getFloat("angle", 0), prefCustom.getFloat("velocity", 0), prefCustom.getFloat("fuze", 0), prefCustom.getFloat(
+				"gravity",
+				0), prefCustom.getFloat("wind", 0), prefCustom.getInt("targetD", 0), prefCustom.getInt("targetH", 0), prefCustom.getInt("targetS", 0));
 
 		setContentView(cannonView);
 		cannonView.requestFocus();
@@ -110,10 +110,10 @@ public class Classic extends Activity {
 
 			prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 
-			colorbg = Color.parseColor(prefs.getString("prefColorBG", null));
-			colorgrid = Color.parseColor(prefs.getString("prefColorGrid", null));
-			colortarget = Color.parseColor(prefs.getString("prefColorTarget", null));
-			colorproj = Color.parseColor(prefs.getString("prefColorProj", null));
+			colorbg = Color.parseColor(prefs.getString("colorBG", null));
+			colorgrid = Color.parseColor(prefs.getString("colorGrid", null));
+			colortarget = Color.parseColor(prefs.getString("colorTarget", null));
+			colorproj = Color.parseColor(prefs.getString("colorProj", null));
 
 			setBackgroundColor(colorbg);
 			paintTarget.setAntiAlias(true);
@@ -147,7 +147,7 @@ public class Classic extends Activity {
 			if (time < timelimit || timelimit == 0) {
 				drawcannon(canvas);
 				time = time + (float) elapsed;
-			} else if (prefs.getBoolean("prefRepeat", false)) {
+			} else if (prefs.getBoolean("repeat", false)) {
 				refire();
 			} else {
 				setFocusable(false);
@@ -169,8 +169,8 @@ public class Classic extends Activity {
 			}
 			if (targetd > 0 | targeth > 0) {
 				// Detect collision
-				if ((prefs.getBoolean("prefCollide", false) && targets >= Math.sqrt(Math.pow((cannon.x - targetd), 2) + Math.pow((screeny - cannon.y - targeth), 2)))) {
-					if (prefs.getBoolean("prefRepeat", false)) {
+				if ((prefs.getBoolean("collide", false) && targets >= Math.sqrt(Math.pow((cannon.x - targetd), 2) + Math.pow((screeny - cannon.y - targeth), 2)))) {
+					if (prefs.getBoolean("repeat", false)) {
 						refire();
 					} else {
 						setFocusable(false);
@@ -207,7 +207,7 @@ public class Classic extends Activity {
 				// If return is impossible
 				else {
 					//					Log.d(TAG, "Projectile will not return");
-					if (prefs.getBoolean("prefRepeat", false)) {
+					if (prefs.getBoolean("repeat", false)) {
 						refire();
 					} else {
 						setFocusable(false);
@@ -225,7 +225,7 @@ public class Classic extends Activity {
 		}
 
 		void drawgrid(Canvas canvas) {
-			gridx = Integer.parseInt(prefs.getString("prefGridX", null));
+			gridx = Integer.parseInt(prefs.getString("gridX", null));
 			if (gridx > 0) {
 				// Draw vertical lines within screen space
 				int grid = 0;
@@ -234,7 +234,7 @@ public class Classic extends Activity {
 					canvas.drawLine(grid, 0, grid, screeny, paintGrid);
 				} while (grid < screenx - gridx && gridx != 0);
 			}
-			gridy = Integer.parseInt(prefs.getString("prefGridY", null));
+			gridy = Integer.parseInt(prefs.getString("gridY", null));
 			if (gridy > 0) {
 				// Draw horizontal lines within screen space
 				int grid = screeny;
@@ -264,7 +264,7 @@ public class Classic extends Activity {
 			cannon = new Point();
 			cannon.x = (float) (velocity * Math.cos(Math.toRadians(angle)) * time + 0.5 * wind * (float) Math.pow(time, 2));
 			cannon.y = (float) -(velocity * Math.sin(Math.toRadians(angle)) * time - 0.5 * 9.81 * gravity * Math.pow(time, 2) - screeny);
-			if (prefs.getBoolean("prefTrail", false)) {
+			if (prefs.getBoolean("trail", false)) {
 				cannonpoints.add(cannon);
 				for (Point point : cannonpoints) {
 					canvas.drawCircle(point.x, point.y, 3, paintCannon);

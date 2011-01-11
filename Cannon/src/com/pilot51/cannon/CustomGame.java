@@ -84,7 +84,7 @@ public class CustomGame extends Activity implements OnClickListener {
 		case R.id.buttonFire:
 			grabValues();
 			saveValues();
-			if(PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getBoolean("prefClassic", false)) {
+			if(PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getBoolean("classic", false)) {
 				startActivity(new Intent(this, Classic.class));
 			} else startActivity(new Intent(this, GameField.class));
 			break;

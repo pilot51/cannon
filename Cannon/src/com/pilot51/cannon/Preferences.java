@@ -22,7 +22,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-		((Preference)findPreference("prefResetPrefs")).setOnPreferenceClickListener(new OnPreferenceClickListener() {
+		((Preference)findPreference("resetPrefs")).setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			public boolean onPreferenceClick(Preference p) {
 				prefs.edit().clear().commit();
 				PreferenceManager.setDefaultValues(Preferences.this, R.xml.preferences, true);
@@ -33,11 +33,11 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 			}
 		});
 
-		((Preference)findPreference("prefResetValues")).setOnPreferenceClickListener(new OnPreferenceClickListener() {
+		((Preference)findPreference("resetCustom")).setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			public boolean onPreferenceClick(Preference p) {
-				getSharedPreferences("valuePref", MODE_PRIVATE).edit().clear().commit();
+				getSharedPreferences("custom", MODE_PRIVATE).edit().clear().commit();
 				setResult(1);
-				Toast.makeText(Preferences.this, "Values reset", Toast.LENGTH_LONG).show();
+				Toast.makeText(Preferences.this, "Custom game values reset", Toast.LENGTH_LONG).show();
 				return true;
 			}
 		});
@@ -56,60 +56,60 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 	}
 
 	public void onSharedPreferenceChanged(SharedPreferences sp, String key) {
-		if (key.equals("prefGridX")) {
+		if (key.equals("gridX")) {
 			try {
-				Integer.parseInt(sp.getString("prefGridX", null));
+				Integer.parseInt(sp.getString("gridX", null));
 			} catch (Exception e) {
-				sp.edit().putString("prefGridX", "0").commit();
-				((EditTextPreference)findPreference("prefGridX")).setText("0");
+				sp.edit().putString("gridX", "0").commit();
+				((EditTextPreference)findPreference("gridX")).setText("0");
 				Toast.makeText(this, "Grid X scale set to 0 (disabled)", Toast.LENGTH_SHORT).show();
 			}
-		} else if (key.equals("prefGridY")) {
+		} else if (key.equals("gridY")) {
 			try {
-				Integer.parseInt(sp.getString("prefGridY", null));
+				Integer.parseInt(sp.getString("gridY", null));
 			} catch (Exception e) {
-				sp.edit().putString("prefGridY", "0").commit();
-				((EditTextPreference)findPreference("prefGridY")).setText("0");
+				sp.edit().putString("gridY", "0").commit();
+				((EditTextPreference)findPreference("gridY")).setText("0");
 				Toast.makeText(this, "Grid Y scale set to 0 (disabled)", Toast.LENGTH_SHORT).show();
 			}
-		} else if (key.equals("prefColorBG")) {
+		} else if (key.equals("colorBG")) {
 			try {
-				Color.parseColor(sp.getString("prefColorBG", null));
+				Color.parseColor(sp.getString("colorBG", null));
 			} catch (Exception e) {
-				sp.edit().putString("prefColorBG", "black").commit();
-				((EditTextPreference)findPreference("prefColorBG")).setText("black");
+				sp.edit().putString("colorBG", "black").commit();
+				((EditTextPreference)findPreference("colorBG")).setText("black");
 				Toast.makeText(this, "Invalid color. Background reset to black.", Toast.LENGTH_SHORT).show();
 			}
-		} else if (key.equals("prefColorGrid")) {
+		} else if (key.equals("colorGrid")) {
 			try {
-				Color.parseColor(sp.getString("prefColorGrid", null));
+				Color.parseColor(sp.getString("colorGrid", null));
 			} catch (Exception e) {
-				sp.edit().putString("prefColorGrid", "green").commit();
-				((EditTextPreference)findPreference("prefColorGrid")).setText("green");
+				sp.edit().putString("colorGrid", "green").commit();
+				((EditTextPreference)findPreference("colorGrid")).setText("green");
 				Toast.makeText(this, "Invalid color. Grid reset to green.", Toast.LENGTH_SHORT).show();
 			}
-		} else if (key.equals("prefColorTarget")) {
+		} else if (key.equals("colorTarget")) {
 			try {
-				Color.parseColor(sp.getString("prefColorTarget", null));
+				Color.parseColor(sp.getString("colorTarget", null));
 			} catch (Exception e) {
-				sp.edit().putString("prefColorTarget", "red").commit();
-				((EditTextPreference)findPreference("prefColorTarget")).setText("red");
+				sp.edit().putString("colorTarget", "red").commit();
+				((EditTextPreference)findPreference("colorTarget")).setText("red");
 				Toast.makeText(this, "Invalid color. Target reset to red.", Toast.LENGTH_SHORT).show();
 			}
-		} else if (key.equals("prefColorHitTarget")) {
+		} else if (key.equals("colorHitTarget")) {
 			try {
-				Color.parseColor(sp.getString("prefColorHitTarget", null));
+				Color.parseColor(sp.getString("colorHitTarget", null));
 			} catch (Exception e) {
-				sp.edit().putString("prefColorHitTarget", "blue").commit();
-				((EditTextPreference)findPreference("prefColorHitTarget")).setText("blue");
+				sp.edit().putString("colorHitTarget", "blue").commit();
+				((EditTextPreference)findPreference("colorHitTarget")).setText("blue");
 				Toast.makeText(this, "Invalid color. Completed Target reset to blue.", Toast.LENGTH_SHORT).show();
 			}
-		} else if (key.equals("prefColorProj")) {
+		} else if (key.equals("colorProj")) {
 			try {
-				Color.parseColor(sp.getString("prefColorProj", null));
+				Color.parseColor(sp.getString("colorProj", null));
 			} catch (Exception e) {
-				sp.edit().putString("prefColorProj", "yellow").commit();
-				((EditTextPreference)findPreference("prefColorProj")).setText("yellow");
+				sp.edit().putString("colorProj", "yellow").commit();
+				((EditTextPreference)findPreference("colorProj")).setText("yellow");
 				Toast.makeText(this, "Invalid color. Projectile reset to yellow.", Toast.LENGTH_SHORT).show();
 			}
 		}
