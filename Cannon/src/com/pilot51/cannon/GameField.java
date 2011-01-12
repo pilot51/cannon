@@ -68,10 +68,10 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 	private FixedStepPhysicsWorld mPhysicsWorld;
 	private SmoothCamera camera;
 	private SharedPreferences prefs, prefCustom, prefScores;
-	private float ratio, speed, pxPerMeter, angle, velocity, gravity, wind, ballRadius;
+	private float ratio, speed, pxPerMeter, angle, velocity, gravity, wind, ballRadius, targetRadius, targetD, targetH;
 	private final byte FONT_SIZE = 20;
 	private long fuze, nTargets, nShots, score;
-	private int cameraWidth, cameraHeight, targetD, targetH, targetRadius, gridx, gridy, colorBG, colorGrid, colorProj, colorTarget, colorHitTarget;
+	private int cameraWidth, cameraHeight, gridx, gridy, colorBG, colorGrid, colorProj, colorTarget, colorHitTarget;
 	private boolean mRandom, repeat;
 	private Sprite target;
 	private Body targetBody;
@@ -421,9 +421,9 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 
 	void addTarget() {
 		if (mRandom) {
-			targetRadius = (int)((rand_gen.nextInt(50) + 6) / pxPerMeter);
-			targetD = rand_gen.nextInt((int)(cameraWidth / pxPerMeter) - targetRadius * 2) + targetRadius;
-			targetH = rand_gen.nextInt((int)(cameraHeight / pxPerMeter) - targetRadius * 2) + targetRadius;
+			targetRadius = (rand_gen.nextInt(50) + 6) / pxPerMeter;
+			targetD = rand_gen.nextInt((int)(cameraWidth / pxPerMeter - targetRadius * 2)) + targetRadius;
+			targetH = rand_gen.nextInt((int)(cameraHeight / pxPerMeter - targetRadius * 2)) + targetRadius;
 		} else {
 			targetRadius = prefCustom.getInt("targetS", 0);
 			targetD = prefCustom.getInt("targetD", 0);
