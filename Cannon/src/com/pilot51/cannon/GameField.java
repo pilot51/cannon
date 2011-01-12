@@ -72,7 +72,8 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 	private final byte FONT_SIZE = 20;
 	private long fuze, nTargets, nShots, score;
 	private int cameraWidth, cameraHeight, gridx, gridy, colorBG, colorGrid, colorProj, colorTarget, colorHitTarget;
-	private boolean mRandom, repeat;
+	private boolean mRandom, repeat, collide, expTarget, keepTargets;
+	private String scoreType;
 	private Sprite target;
 	private Body targetBody;
 	private Font mFont;
@@ -104,7 +105,12 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 	@Override
 	public void onLoadResources() {
 		mRandom = getIntent().getBooleanExtra("random", false);
+		collide = prefs.getBoolean("collide", false);
+		expTarget = prefs.getBoolean("expTarget", false);
+		keepTargets = prefs.getBoolean("keepTargets", false);
 		repeat = prefs.getBoolean("repeat", false);
+		if(mRandom & collide & keepTargets) scoreType = "rMulti";
+		else if(mRandom) scoreType = "rSingle";
 		colorBG = Color.parseColor(prefs.getString("colorBG", null));
 		colorGrid = Color.parseColor(prefs.getString("colorGrid", null));
 		colorTarget = Color.parseColor(prefs.getString("colorTarget", null));
@@ -173,8 +179,6 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 					final Body bodyB = pContact.getFixtureB().getBody();
 					if ((bodyA == targetBody | bodyB == targetBody) & targetBody.getUserData().equals(true)) {
 						targetBody.setUserData(false);
-						final Boolean expTarget = prefs.getBoolean("expTarget", false);
-						final Boolean keepTargets = prefs.getBoolean("keepTargets", false);
 						TimerTask targetAction = new TimerTask() {
 							@Override
 							public void run() {
@@ -205,13 +209,14 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 							bodyA.setUserData(map);
 						}
 						if(mRandom) {
-							score += Math.pow(nTargets,hits);
-							if(score > prefScores.getLong("highscore", 0)) {
+							if(collide & keepTargets) score += nTargets * hits;
+							else score += hits * 20;
+							if(score > prefScores.getLong(scoreType, 0)) {
 								String txt = "High: " + score;
 								hText.setPosition(cameraWidth - 10 - txt.length() * FONT_SIZE * 0.6f, 40);
 								hText.setText(txt);
 								SharedPreferences.Editor e = prefScores.edit();
-								e.putLong("highscore", score);
+								e.putLong(scoreType, score);
 								e.commit();
 							}
 							String txt = "Score: " + score;
@@ -242,7 +247,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 			String txt = "Score: " + score;
 			sText = new ChangeableText(cameraWidth - 10 - txt.length() * FONT_SIZE * 0.6f, 10, mFont, txt, 100);
 			addEntity(sText, 0, hud);
-			txt = "High: " + prefScores.getLong("highscore", 0);
+			txt = "High: " + prefScores.getLong(scoreType, 0);
 			hText = new ChangeableText(cameraWidth - 10 - txt.length() * FONT_SIZE * 0.6f, 40, mFont, txt, 100);
 			addEntity(hText, 0, hud);
 		}
@@ -435,7 +440,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 		target.setColor(Color.red(colorTarget) / 255f, Color.green(colorTarget) / 255f, Color.blue(colorTarget) / 255f, Color.alpha(colorTarget) / 255f);
 		target.setUpdatePhysics(false);
 		final FixtureDef targetFixtureDef = PhysicsFactory.createFixtureDef(0, 0.5f, 0, false);
-		if (!prefs.getBoolean("collide", false)) {
+		if (!collide) {
 			targetFixtureDef.isSensor = true;
 		}
 		runOnUpdateThread(new Runnable() {
