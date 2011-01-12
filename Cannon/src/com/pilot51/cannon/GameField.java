@@ -84,9 +84,9 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 	@Override
 	public Engine onLoadEngine() {
 		prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-		pxPerMeter = Float.parseFloat(prefs.getString("meter", null));
+		pxPerMeter = Float.parseFloat(prefs.getString("meter", "1"));
 		ratio = 32f;
-		speed = Float.parseFloat(prefs.getString("speed", null));
+		speed = Float.parseFloat(prefs.getString("speed", "1"));
 		DisplayMetrics dm = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(dm);
 		cameraWidth = dm.widthPixels;

@@ -14,7 +14,7 @@
 		<EditTextPreference android:key="gridY" android:title="Y-Grid scale" android:summary="Scale to measure altitude" android:dialogTitle="Set Y-grid size" android:dialogMessage="Set the distance (in meters) between each grid line measuring altitude" android:defaultValue="50" android:inputType="phone" android:digits="0123456789"/>
 		<PreferenceCategory android:title="v2 only">
 			<EditTextPreference android:key="speed" android:title="Speed Multiplier" android:dialogTitle="Speed Multiplier" android:defaultValue="1" android:inputType="phone" android:digits="0123456789."/>
-			<EditTextPreference android:key="meter" android:title="Pixels Per Meter" android:dialogTitle="Pixels Per Meter" android:dialogMessage="How many pixels represent 1 meter?" android:defaultValue="1" android:digits="0123456789." android:inputType="phone"/>
+			<!--<EditTextPreference android:key="meter" android:title="Pixels Per Meter" android:dialogTitle="Pixels Per Meter" android:dialogMessage="How many pixels represent 1 meter?" android:defaultValue="1" android:digits="0123456789." android:inputType="phone"/>-->
 		</PreferenceCategory>
 	</PreferenceScreen>
 	<PreferenceScreen android:title="Borders" android:summary="Physical boundaries along edges of screen">
