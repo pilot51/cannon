@@ -116,7 +116,6 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 		colorTarget = Color.parseColor(prefs.getString("colorTarget", null));
 		colorHitTarget = Color.parseColor(prefs.getString("colorHitTarget", null));
 		colorProj = Color.parseColor(prefs.getString("colorProj", null));
-		ballRadius = Float.parseFloat(prefs.getString("ballRadius", null));
 		mTexture = new Texture(128, 128, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		TextureRegionFactory.setAssetBasePath("gfx/");
 		tCircle = TextureRegionFactory.createFromAsset(mTexture, this, "circle_white.png", 0, 0);
@@ -129,12 +128,14 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 			gravity = 1f / ratio;
 			wind = 0;
 			//wind = (float)(rand_gen.nextInt(7) - 3) / RATIO;
+			ballRadius = 3;
 		} else {
 			angle = prefCustom.getFloat("angle", 0);
 			velocity = prefCustom.getFloat("velocity", 0);
 			fuze = (long) (prefCustom.getFloat("fuze", 0) * 1000);
 			gravity = prefCustom.getFloat("gravity", 0) / ratio;
 			wind = prefCustom.getFloat("wind", 0) / ratio;
+			ballRadius = prefCustom.getInt("projS", 0);
 		}
 		mFontTexture = new Texture(256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		mFont = new Font(mFontTexture, Typeface.create(Typeface.MONOSPACE, Typeface.BOLD), FONT_SIZE, true, Color.WHITE);

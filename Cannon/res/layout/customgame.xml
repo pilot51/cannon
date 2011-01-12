@@ -2,48 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_height="match_parent" android:layout_width="match_parent" android:orientation="vertical">
 	<LinearLayout android:id="@+id/layoutAd" android:layout_height="wrap_content" android:layout_width="match_parent" />
 	<ScrollView android:layout_weight="1" android:fadeScrollbars="false" android:scrollbarStyle="insideInset" android:layout_height="match_parent" android:layout_width="match_parent">
-		<LinearLayout android:layout_height="match_parent" android:layout_width="match_parent" android:orientation="vertical">
-			<RelativeLayout android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/RL_Angle" android:layout_marginLeft="20dp">
-				<TextView android:id="@+id/textAngle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="20dp" android:text="Angle"></TextView>
-				<TextView android:id="@+id/text2Angle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Angle in degrees" android:layout_below="@+id/textAngle" android:textSize="12dp"></TextView>
-				<EditText android:id="@+id/editAngle" android:layout_height="wrap_content" android:inputType="numberDecimal" android:layout_alignParentRight="true" android:layout_width="wrap_content" android:minEms="4"></EditText>
-			</RelativeLayout>
-			<RelativeLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/RL_Velocity" android:layout_marginLeft="20dp">
-				<TextView android:id="@+id/textVelocity" android:layout_width="wrap_content" android:textSize="20dp" android:layout_height="wrap_content" android:text="Velocity"></TextView>
-				<TextView android:id="@+id/text2Velocity" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Muzzle velocity in meters/sec" android:layout_below="@+id/textVelocity" android:textSize="12dp"></TextView>
-				<EditText android:id="@+id/editVelocity" android:layout_width="wrap_content" android:layout_height="wrap_content" android:inputType="numberDecimal" android:layout_alignParentRight="true" android:minEms="4"></EditText>
-			</RelativeLayout>
-			<RelativeLayout android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/RL_Fuze" android:layout_marginLeft="20dp">
-				<TextView android:id="@+id/textFuze" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="20dp" android:text="Fuze"></TextView>
-				<TextView android:id="@+id/text2Fuze" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Fuze in seconds [0 = disable]" android:layout_below="@+id/textFuze" android:textSize="12dp"></TextView>
-				<EditText android:id="@+id/editFuze" android:layout_width="wrap_content" android:layout_height="wrap_content" android:inputType="numberDecimal" android:minEms="4" android:layout_alignParentRight="true"></EditText>
-			</RelativeLayout>
-			<RelativeLayout android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/RL_Gravity" android:layout_marginLeft="20dp">
-				<TextView android:id="@+id/textGravity" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="20dp" android:text="Gravity"></TextView>
-				<TextView android:id="@+id/text2Gravity" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@+id/textGravity" android:textSize="12dp" android:text="Gravity in G's (1G = 9.80665m/s²)"></TextView>
-				<EditText android:id="@+id/editGravity" android:layout_width="wrap_content" android:layout_height="wrap_content" android:inputType="numberSigned|numberDecimal" android:layout_alignParentRight="true" android:minEms="4"></EditText>
-			</RelativeLayout>
-			<RelativeLayout android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/RL_Wind" android:layout_marginLeft="20dp">
-				<TextView android:id="@+id/textWind" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="20dp" android:text="Wind"></TextView>
-				<TextView android:id="@+id/text2Wind" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Wind in m/s² [Positive = forward]" android:layout_below="@+id/textWind" android:textSize="12dp"></TextView>
-				<EditText android:id="@+id/editWind" android:layout_width="wrap_content" android:layout_height="wrap_content" android:inputType="numberSigned|numberDecimal" android:layout_alignParentRight="true" android:minEms="4"></EditText>
-			</RelativeLayout>
-			<RelativeLayout android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/RL_TargetD" android:layout_marginLeft="20dp">
-				<TextView android:id="@+id/textTargetD" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="20dp" android:text="Target distance"></TextView>
-				<TextView android:id="@+id/text2TargetD" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@+id/textTargetD" android:textSize="12dp" android:text="Ground distance of target in meters"></TextView>
-				<EditText android:id="@+id/editTargetD" android:layout_width="wrap_content" android:layout_height="wrap_content" android:inputType="number" android:layout_alignParentRight="true" android:minEms="4"></EditText>
-			</RelativeLayout>
-			<RelativeLayout android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/RL_TargetH" android:layout_marginLeft="20dp">
-				<TextView android:id="@+id/textTargetH" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="20dp" android:text="Target height"></TextView>
-				<TextView android:id="@+id/text2TargetH" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@+id/textTargetH" android:textSize="12dp" android:text="Altitude of target in meters"></TextView>
-				<EditText android:id="@+id/editTargetH" android:layout_width="wrap_content" android:layout_height="wrap_content" android:inputType="number" android:layout_alignParentRight="true" android:minEms="4"></EditText>
-			</RelativeLayout>
-			<RelativeLayout android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/RL_TargetS" android:layout_marginLeft="20dp">
-				<TextView android:id="@+id/textTargetS" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="20dp" android:text="Target radius"></TextView>
-				<TextView android:id="@+id/text2TargetS" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Target radius in meters" android:layout_below="@+id/textTargetS" android:textSize="12dp"></TextView>
-				<EditText android:id="@+id/editTargetS" android:layout_width="wrap_content" android:layout_height="wrap_content" android:inputType="number" android:layout_alignParentRight="true" android:minEms="4"></EditText>
-			</RelativeLayout>
-		</LinearLayout>
+		<include layout="@layout/customgame_items" />
 	</ScrollView>
-	<Button android:layout_width="wrap_content" android:id="@+id/buttonFire" android:text="Fire!" android:layout_gravity="center" android:textSize="40dp" android:layout_height="wrap_content"></Button>
+	<Button android:layout_width="wrap_content" android:id="@+id/buttonFire" android:text="Fire!" android:layout_gravity="center" android:textSize="40sp" android:layout_height="wrap_content"></Button>
 </LinearLayout>

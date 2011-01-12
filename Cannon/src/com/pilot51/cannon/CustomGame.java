@@ -18,11 +18,11 @@ public class CustomGame extends Activity implements OnClickListener {
 	Button btnFire;
 
 	EditText editAngle, editVelocity, editFuze, editGravity, editWind,
-			editTargetD, editTargetH, editTargetS;
+			editTargetD, editTargetH, editTargetS, editProjS;
 
 	float angle, velocity, fuze, gravity, wind;
 
-	int targetd, targeth, targets;
+	int targetD, targetH, targetS, projS;
 
 	SharedPreferences prefCustom;
 
@@ -39,6 +39,7 @@ public class CustomGame extends Activity implements OnClickListener {
 		editTargetD = (EditText) findViewById(R.id.editTargetD);
 		editTargetH = (EditText) findViewById(R.id.editTargetH);
 		editTargetS = (EditText) findViewById(R.id.editTargetS);
+		editProjS = (EditText) findViewById(R.id.editProjS);
 		btnFire = (Button) findViewById(R.id.buttonFire);
 		btnFire.setOnClickListener(this);
 		prefCustom = getSharedPreferences("custom", MODE_PRIVATE);
@@ -59,6 +60,7 @@ public class CustomGame extends Activity implements OnClickListener {
 		editTargetD.setRawInputType(3);
 		editTargetH.setRawInputType(3);
 		editTargetS.setRawInputType(3);
+		editProjS.setRawInputType(3);
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -100,6 +102,7 @@ public class CustomGame extends Activity implements OnClickListener {
 		editTargetD.setText(Integer.toString(prefCustom.getInt("targetD", 250)));
 		editTargetH.setText(Integer.toString(prefCustom.getInt("targetH", 250)));
 		editTargetS.setText(Integer.toString(prefCustom.getInt("targetS", 10)));
+		editProjS.setText(Integer.toString(prefCustom.getInt("projS", 3)));
 	}
 
 	void grabValues() {
@@ -130,19 +133,24 @@ public class CustomGame extends Activity implements OnClickListener {
 			wind = 0;
 		}
 		try {
-			targetd = Integer.parseInt(editTargetD.getText().toString());
+			targetD = Integer.parseInt(editTargetD.getText().toString());
 		} catch (NumberFormatException e) {
-			targetd = 0;
+			targetD = 0;
 		}
 		try {
-			targeth = Integer.parseInt(editTargetH.getText().toString());
+			targetH = Integer.parseInt(editTargetH.getText().toString());
 		} catch (NumberFormatException e) {
-			targeth = 0;
+			targetH = 0;
 		}
 		try {
-			targets = Integer.parseInt(editTargetS.getText().toString());
+			targetS = Integer.parseInt(editTargetS.getText().toString());
 		} catch (NumberFormatException e) {
-			targets = 0;
+			targetS = 0;
+		}
+		try {
+			projS = Integer.parseInt(editProjS.getText().toString());
+		} catch (NumberFormatException e) {
+			projS = 0;
 		}
 	}
 
@@ -153,9 +161,10 @@ public class CustomGame extends Activity implements OnClickListener {
 		e.putFloat("fuze", fuze);
 		e.putFloat("gravity", gravity);
 		e.putFloat("wind", wind);
-		e.putInt("targetD", targetd);
-		e.putInt("targetH", targeth);
-		e.putInt("targetS", targets);
+		e.putInt("targetD", targetD);
+		e.putInt("targetH", targetH);
+		e.putInt("targetS", targetS);
+		e.putInt("projS", projS);
 		e.commit();
 	}
 	

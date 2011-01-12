@@ -6,7 +6,6 @@
 		<CheckBoxPreference android:key="repeat" android:title="Auto-fire" android:summaryOn="Classic: Another projectile is fired when previous one completes\nv2: Fully automatic machine gun (D-Pad/wheel only)" android:summaryOff="Manual: Press center D-Pad/wheel or touchscreen to fire again" android:defaultValue="false" />
 		<PreferenceCategory android:title="v2 only">
 			<CheckBoxPreference android:key="keepTargets" android:title="Keep Targets" android:summaryOn="Targets will remain when hit" android:summaryOff="Targets will be destroyed when hit" android:defaultValue="true" />
-			<EditTextPreference android:key="ballRadius" android:title="Projectile size" android:dialogTitle="Projectile size" android:dialogMessage="Radius of projectile in meters" android:defaultValue="3" android:digits="0123456789." android:inputType="phone"/>
 		</PreferenceCategory>
 	</PreferenceScreen>
 	<PreferenceScreen android:title="Scale">
