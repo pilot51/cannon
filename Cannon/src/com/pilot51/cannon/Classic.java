@@ -23,26 +23,15 @@ import android.view.Window;
 import android.view.WindowManager;
 
 public class Classic extends Activity {
-	//	String TAG = "Cannon";
-
 	ClassicView cannonView;
 
-	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// Set full screen view
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-		DisplayMetrics dm = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(dm);
-		SharedPreferences prefCustom = getSharedPreferences("custom", MODE_PRIVATE);
-
-		cannonView = new ClassicView(this, dm.widthPixels, dm.heightPixels, prefCustom.getFloat("angle", 0), prefCustom.getFloat("velocity", 0), prefCustom.getFloat("fuze", 0), prefCustom.getFloat(
-				"gravity",
-				0), prefCustom.getFloat("wind", 0), prefCustom.getInt("targetD", 0), prefCustom.getInt("targetH", 0), prefCustom.getInt("targetS", 0));
-
+		cannonView = new ClassicView(this);
 		setContentView(cannonView);
 		cannonView.requestFocus();
 	}
@@ -66,254 +55,202 @@ public class Classic extends Activity {
 	}
 
 	public class ClassicView extends View {
-		//		String TAG = "Cannon";
-
-		int screenx, screeny, targetd, targeth, targets, gridx, gridy, colorbg, colorgrid, colortarget, colorproj;
-
-		List<Point> targetpoints = new ArrayList<Point>();
-		List<Point> cannonpoints = new ArrayList<Point>();
-		//		List<Point> particlepoints = new ArrayList<Point>(); // Experimental explosion -- Disabled
-		Paint paintTarget = new Paint(), paintCannon = new Paint(), paintGrid = new Paint();
-		float cannonx, cannony, angle, velocity, // ft/sec
-				wind, gravity, // multiple of earth gravity
-				time = 0, time2 = 0,
-				//			time3 = 0, // Experimental explosion -- Disabled
-				//			viewdist,
-				timelimit // time in seconds until projectile stops
-				;
-
+		int
+			screenX,
+			screenY,
+			targetD,
+			targetH,
+			targetS,
+			projS,
+			gridX,
+			gridY,
+			colorBg,
+			colorGrid,
+			colorTarget,
+			colorProj;
+		List<Point>
+			targetPoints = new ArrayList<Point>(),
+			cannonPoints = new ArrayList<Point>();
+		//List<Point> particlepoints = new ArrayList<Point>(); // Experimental explosion -- Disabled
+		Paint
+			paintTarget = new Paint(),
+			paintCannon = new Paint(),
+			paintGrid = new Paint();
+		float
+			cannonx,
+			cannony,
+			angle,
+			velocity, // ft/sec
+			wind,
+			gravity, // multiple of earth gravity
+			time = 0,
+			time2 = 0,
+			//time3 = 0, // Experimental explosion -- Disabled
+			//viewdist,
+			timeLimit; // time in seconds until projectile stops
 		long mLastTime = 0, now = 0;
-
 		double elapsed;
-
 		boolean returncheck = false;
 
-		//		int part1, part2, part3, part4, part5, part6; // Experimental explosion -- Disabled
+		// int part1, part2, part3, part4, part5, part6; // Experimental explosion -- Disabled
 
-		SharedPreferences prefs;
+		SharedPreferences prefs, prefCustom;
 
 		Point cannon;
 
-		public ClassicView(Context context, int screenw, int screenh, float angle, float velocity, float fuze, float gravity, float wind, int targetd, int targeth, int targets) {
+		public ClassicView(Context context) {
 			super(context);
-
-			this.screenx = screenw;
-			this.screeny = screenh;
-			this.angle = angle;
-			this.velocity = velocity;
-			this.timelimit = fuze;
-			this.gravity = gravity;
-			this.wind = wind;
-			this.targetd = targetd;
-			this.targeth = targeth;
-			this.targets = targets;
-
+			DisplayMetrics dm = new DisplayMetrics();
+			getWindowManager().getDefaultDisplay().getMetrics(dm);
+			this.screenX = dm.widthPixels;
+			this.screenY = dm.heightPixels;
+			prefCustom = getSharedPreferences("custom", MODE_PRIVATE);
+			this.angle = prefCustom.getFloat("angle", 0);
+			this.velocity = prefCustom.getFloat("velocity", 0);
+			this.timeLimit = prefCustom.getFloat("fuze", 0);
+			this.gravity = prefCustom.getFloat("gravity", 0);
+			this.wind = prefCustom.getFloat("wind", 0);
+			this.targetD = prefCustom.getInt("targetD", 0);
+			this.targetH = prefCustom.getInt("targetH", 0);
+			this.targetS = prefCustom.getInt("targetS", 0);
+			this.projS = prefCustom.getInt("projS", 0);
 			prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-
-			colorbg = Color.parseColor(prefs.getString("colorBG", null));
-			colorgrid = Color.parseColor(prefs.getString("colorGrid", null));
-			colortarget = Color.parseColor(prefs.getString("colorTarget", null));
-			colorproj = Color.parseColor(prefs.getString("colorProj", null));
-
-			setBackgroundColor(colorbg);
+			colorBg = Color.parseColor(prefs.getString("colorBG", null));
+			colorGrid = Color.parseColor(prefs.getString("colorGrid", null));
+			colorTarget = Color.parseColor(prefs.getString("colorTarget", null));
+			colorProj = Color.parseColor(prefs.getString("colorProj", null));
+			setBackgroundColor(colorBg);
 			paintTarget.setAntiAlias(true);
 			paintCannon.setAntiAlias(true);
-			paintGrid.setColor(colorgrid);
-			paintTarget.setColor(colortarget);
-			paintCannon.setColor(colorproj);
+			paintGrid.setColor(colorGrid);
+			paintTarget.setColor(colorTarget);
+			paintCannon.setColor(colorProj);
 			setFocusable(true);
-
-			/* // Experimental explosion -- Disabled
-			part1 = rand_particle();
-			part2 = rand_particle();
-			part3 = rand_particle();
-			part4 = rand_particle();
-			part5 = rand_particle();
-			part6 = rand_particle();
-			*/
 		}
 
 		@Override
 		public void onDraw(Canvas canvas) {
-			drawgrid(canvas);
-			if (targetd > 0 | targeth > 0) {
-				drawtarget(canvas);
-			}
+			drawGrid(canvas);
+			if (targetD > 0 | targetH > 0) drawTarget(canvas);
 			mLastTime = now;
 			now = System.currentTimeMillis();
-			if (mLastTime != 0) {
-				elapsed = (double) (now - mLastTime) / 1000;
-			}
-			if (time < timelimit || timelimit == 0) {
-				drawcannon(canvas);
+			if (mLastTime != 0) elapsed = (double) (now - mLastTime) / 1000;
+			if (time < timeLimit || timeLimit == 0) {
+				drawCannon(canvas);
 				time = time + (float) elapsed;
-			} else if (prefs.getBoolean("repeat", false)) {
-				refire();
-			} else {
-				setFocusable(false);
-				for (Point point : cannonpoints) {
-					canvas.drawCircle(point.x, point.y, 3, paintCannon);
-				}
-				/* // Experimental explosion -- Disabled
-				if (time3 < 4) {
-					draw_explosion(canvas);
-				}
-				if (time3 > 4) {
-					particlepoints.remove(0);
-					if (particlepoints.size() == 0) {
-						setFocusable(false);
-					}
-				}
-				time3 = time3 + (float)elapsed;
-				*/
 			}
-			if (targetd > 0 | targeth > 0) {
+			else if (prefs.getBoolean("repeat", false)) refire();
+			else {
+				setFocusable(false);
+				for (Point point : cannonPoints) {
+					canvas.drawCircle(point.x, point.y, projS, paintCannon);
+				}
+			}
+			if (targetD > 0 | targetH > 0) {
 				// Detect collision
-				if ((prefs.getBoolean("collide", false) && targets >= Math.sqrt(Math.pow((cannon.x - targetd), 2) + Math.pow((screeny - cannon.y - targeth), 2)))) {
-					if (prefs.getBoolean("repeat", false)) {
-						refire();
-					} else {
-						setFocusable(false);
-					}
+				if ((prefs.getBoolean("collide", false) && targetS >= Math.sqrt(Math.pow((cannon.x - targetD), 2) + Math.pow((screenY - cannon.y - targetH), 2)))) {
+					if (prefs.getBoolean("repeat", false)) refire();
+					else setFocusable(false);
 				}
 			}
 			// Reset returncheck when projectile returns to screen 
-			if (returncheck & cannon.x > 0 & cannon.x < screenx & cannon.y > 0 & cannon.y < screeny) {
-				//				Log.d(TAG, "Projectile has returned");
+			if (returncheck & cannon.x > 0 & cannon.x < screenX & cannon.y > 0 & cannon.y < screenY) {
+				// Log.d(TAG, "Projectile has returned");
 				returncheck = false;
 			}
 			// If projectile goes off screen & has not already been checked for return
-			if (!returncheck & (cannon.x < 0 | cannon.x > screenx | cannon.y < 0 | cannon.y > screeny)) {
-				//				Log.d(TAG, "Start return check");
+			if (!returncheck & (cannon.x < 0 | cannon.x > screenX | cannon.y < 0 | cannon.y > screenY)) {
+				// Log.d(TAG, "Start return check");
 				float timecheck = time, cannonxcheck = 0, cannonycheck = 0;
 				// If there is a possibility of return based on basic knowledge, scan future for return
-				if ((gravity < 0 & cannon.y > screeny) | (wind > 0 & cannon.x < 0) | (gravity > 0 & cannon.y < 0) | (wind < 0 & cannon.x > screenx)) {
-					//					Log.d(TAG, "Scanning future for return");
+				if ((gravity < 0 & cannon.y > screenY) | (wind > 0 & cannon.x < 0) | (gravity > 0 & cannon.y < 0) | (wind < 0 & cannon.x > screenX)) {
+					// Log.d(TAG, "Scanning future for return");
 					do {
 						cannonxcheck = (float) (velocity * Math.cos(Math.toRadians(angle)) * timecheck + 0.5 * wind * (float) Math.pow(timecheck, 2));
-						cannonycheck = (float) -(velocity * Math.sin(Math.toRadians(angle)) * timecheck - 0.5 * SensorManager.GRAVITY_EARTH * gravity * Math.pow(timecheck, 2) - screeny);
+						cannonycheck = (float) -(velocity * Math.sin(Math.toRadians(angle)) * timecheck - 0.5 * SensorManager.GRAVITY_EARTH * gravity * Math.pow(timecheck, 2) - screenY);
 						timecheck = timecheck + (float) 0.1;
 					}
 					// Stop scan if return found
-					while ((cannonxcheck < 0 | cannonxcheck > screenx | cannonycheck < 0 | cannonycheck > screeny)
+					while ((cannonxcheck < 0 | cannonxcheck > screenX | cannonycheck < 0 | cannonycheck > screenY)
 					// Stop scan if return becomes impossible
-							& !((gravity >= 0 & cannonycheck > screeny) | (wind <= 0 & cannonxcheck < 0) | (gravity <= 0 & cannonycheck < 0) | (wind >= 0 & cannonxcheck > screenx)));
+							& !((gravity >= 0 & cannonycheck > screenY) | (wind <= 0 & cannonxcheck < 0) | (gravity <= 0 & cannonycheck < 0) | (wind >= 0 & cannonxcheck > screenX)));
 				}
 				// If return found
-				if (cannonxcheck > 0 & cannonxcheck < screenx & cannonycheck > 0 & cannonycheck < screeny) {
-					//					Log.d(TAG, "Projectile will return");
+				if (cannonxcheck > 0 & cannonxcheck < screenX & cannonycheck > 0 & cannonycheck < screenY) {
+					// Log.d(TAG, "Projectile will return");
 					returncheck = true;
 				}
 				// If return is impossible
 				else {
-					//					Log.d(TAG, "Projectile will not return");
-					if (prefs.getBoolean("repeat", false)) {
-						refire();
-					} else {
-						setFocusable(false);
-					}
+					// Log.d(TAG, "Projectile will not return");
+					if (prefs.getBoolean("repeat", false)) refire();
+					else setFocusable(false);
 					returncheck = false;
 				}
 			}
 
-			if (isFocusable()) {
-				invalidate();
-			}
-			if (onKeyDown(KeyEvent.KEYCODE_DPAD_CENTER, null)) {
-
-			}
+			if (isFocusable()) invalidate();
+			if (onKeyDown(KeyEvent.KEYCODE_DPAD_CENTER, null)) {}
 		}
 
-		void drawgrid(Canvas canvas) {
-			gridx = Integer.parseInt(prefs.getString("gridX", null));
-			if (gridx > 0) {
+		void drawGrid(Canvas canvas) {
+			gridX = Integer.parseInt(prefs.getString("gridX", null));
+			if (gridX > 0) {
 				// Draw vertical lines within screen space
 				int grid = 0;
 				do {
-					grid += gridx;
-					canvas.drawLine(grid, 0, grid, screeny, paintGrid);
-				} while (grid < screenx - gridx && gridx != 0);
+					grid += gridX;
+					canvas.drawLine(grid, 0, grid, screenY, paintGrid);
+				} while (grid < screenX - gridX && gridX != 0);
 			}
-			gridy = Integer.parseInt(prefs.getString("gridY", null));
-			if (gridy > 0) {
+			gridY = Integer.parseInt(prefs.getString("gridY", null));
+			if (gridY > 0) {
 				// Draw horizontal lines within screen space
-				int grid = screeny;
+				int grid = screenY;
 				do {
-					grid -= gridy;
-					canvas.drawLine(0, grid, screenx, grid, paintGrid);
-				} while (grid > gridy && gridy != 0);
+					grid -= gridY;
+					canvas.drawLine(0, grid, screenX, grid, paintGrid);
+				} while (grid > gridY && gridY != 0);
 			}
 		}
 
-		void drawtarget(Canvas canvas) {
+		void drawTarget(Canvas canvas) {
 			if (time2 < 1) {
 				do {
 					Point target = new Point();
-					target.x = (float) (targets * Math.sin(Math.toRadians(360) * time2) + targetd);
-					target.y = (float) -(targets * Math.cos(Math.toRadians(360) * time2) + targeth - screeny);
-					targetpoints.add(target);
+					target.x = (float) (targetS * Math.sin(Math.toRadians(360) * time2) + targetD);
+					target.y = (float) -(targetS * Math.cos(Math.toRadians(360) * time2) + targetH - screenY);
+					targetPoints.add(target);
 					time2 = time2 + (float) 0.01;
 				} while (time2 < 1);
 			}
-			for (Point point : targetpoints) {
+			for (Point point : targetPoints) {
 				canvas.drawCircle(point.x, point.y, 1, paintTarget);
 			}
 		}
 
-		void drawcannon(Canvas canvas) {
+		void drawCannon(Canvas canvas) {
 			cannon = new Point();
 			cannon.x = (float) (velocity * Math.cos(Math.toRadians(angle)) * time + 0.5 * wind * (float) Math.pow(time, 2));
-			cannon.y = (float) -(velocity * Math.sin(Math.toRadians(angle)) * time - 0.5 * 9.81 * gravity * Math.pow(time, 2) - screeny);
+			cannon.y = (float) -(velocity * Math.sin(Math.toRadians(angle)) * time - 0.5 * 9.81 * gravity * Math.pow(time, 2) - screenY);
 			if (prefs.getBoolean("trail", false)) {
-				cannonpoints.add(cannon);
-				for (Point point : cannonpoints) {
-					canvas.drawCircle(point.x, point.y, 3, paintCannon);
+				cannonPoints.add(cannon);
+				for (Point point : cannonPoints) {
+					canvas.drawCircle(point.x, point.y, projS, paintCannon);
 				}
-			} else {
-				canvas.drawCircle(cannon.x, cannon.y, 3, paintCannon);
-			}
+			} else canvas.drawCircle(cannon.x, cannon.y, projS, paintCannon);
 		}
 
 		void refire() {
-			cannonpoints.clear();
+			cannonPoints.clear();
 			time = 0;
 			now = 0;
 			setFocusable(true);
 			invalidate();
 		}
 
-		/* // Experimental explosion -- Disabled
-			void draw_explosion(Canvas canvas) {
-				particle(canvas, part1);
-				particle(canvas, part2);
-				particle(canvas, part3);
-				particle(canvas, part4);
-				particle(canvas, part5);
-				particle(canvas, part6);
-			}
-			
-			void particle(Canvas canvas, int dir) {
-				Point explode = new Point();
-				explode.x = cannon.x + (float)((velocity / 4) * Math.cos(Math.toRadians(dir)) * time3 + 0.5 * wind * (float)Math.pow(time3,2));
-				explode.y = cannon.y + (float)-((velocity / 4) * Math.sin(Math.toRadians(dir)) * time3 - 0.5 * 9.81 * gravity * Math.pow(time3,2));
-		//			canvas.drawCircle(explode.x, explode.y, 1, paintCannon);
-				if (particlepoints.size() == 50) {
-					particlepoints.remove(0);
-				}
-				particlepoints.add(explode);
-				for (Point point : particlepoints) {
-					canvas.drawCircle(point.x, point.y, 1, paintCannon);
-		        }
-			}
-			
-			int rand_particle() {
-				Random rand_gen = new Random();
-				return rand_gen.nextInt(360)+1;
-			}
-		*/
-
 		/*
-			void cannon_original() {
+			void originalCannon() {
 				x = targets * Math.sin(360÷timelimit÷2)time+targetd;
 				y = targets * Math.cos(360÷timelimit÷2)time+targeth;
 				(Ssin (360÷(L÷2))T+D,Scos (360÷(L÷2))T+H
@@ -327,7 +264,6 @@ public class Classic extends Activity {
 
 	class Point {
 		float x, y;
-
 		@Override
 		public String toString() {
 			return x + ", " + y;
