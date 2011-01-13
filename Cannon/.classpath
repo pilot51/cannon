@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="libs/andenginephysicsbox2dextension.jar"/>
 	<classpathentry kind="lib" path="libs/adwhirl-sdk-android_v2.6.0-custom2.jar"/>
 	<classpathentry kind="lib" path="libs/admob-sdk-android_20101109.jar"/>
+	<classpathentry kind="lib" path="libs/mdotm-sdk-android.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
