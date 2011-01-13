@@ -71,7 +71,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 	private Camera camera;
 	private SharedPreferences prefs, prefCustom, prefScores;
 	private float ratio, speed, pxPerMeter, angle, velocity, gravity, wind, ballRadius, targetRadius, targetD, targetH, mLastTouchX, mLastTouchY;
-	private final byte FONT_SIZE = 20;
+	private byte fontSize = 13;
 	private long fuze, nTargets, nShots, score;
 	private int cameraWidth, cameraHeight, gridx, gridy, colorBG, colorGrid, colorProj, colorTarget, colorHitTarget, senseMove, sensePressure;
 	private boolean mRandom, repeat, collide, expTarget, keepTargets, firing;
@@ -96,6 +96,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 		getWindowManager().getDefaultDisplay().getMetrics(dm);
 		cameraWidth = dm.widthPixels;
 		cameraHeight = dm.heightPixels;
+		fontSize *= dm.densityDpi / 160f;
 		camera = new Camera(0, -cameraHeight, cameraWidth, cameraHeight);
 		camera.setHUD(hud);
 		//camera.setCenter(cameraWidth / 2 / pxPerMeter, -cameraHeight / 2 / pxPerMeter);
@@ -145,7 +146,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 			ballRadius = prefCustom.getInt("projS", 0);
 		}
 		mFontTexture = new Texture(256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-		mFont = new Font(mFontTexture, Typeface.create(Typeface.MONOSPACE, Typeface.BOLD), FONT_SIZE, true, Color.WHITE);
+		mFont = new Font(mFontTexture, Typeface.create(Typeface.MONOSPACE, Typeface.BOLD), fontSize, true, Color.WHITE);
 		mEngine.getTextureManager().loadTexture(mFontTexture);
 		mEngine.getFontManager().loadFont(mFont);
 		prefScores = getSharedPreferences("scores", MODE_PRIVATE);
@@ -221,14 +222,14 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 							else score += hits * 20;
 							if(score > prefScores.getLong(scoreType, 0)) {
 								String txt = "High: " + score;
-								hText.setPosition(cameraWidth - 10 - txt.length() * FONT_SIZE * 0.6f, 40);
+								hText.setPosition(cameraWidth - 10 - txt.length() * fontSize * 0.6f, 40);
 								hText.setText(txt);
 								SharedPreferences.Editor e = prefScores.edit();
 								e.putLong(scoreType, score);
 								e.commit();
 							}
 							String txt = "Score: " + score;
-							sText.setPosition(cameraWidth - 10 - txt.length() * FONT_SIZE * 0.6f, 10);
+							sText.setPosition(cameraWidth - 10 - txt.length() * fontSize * 0.6f, 10);
 							sText.setText(txt);
 						}
 					}
@@ -253,10 +254,10 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 		addEntity(vText, 0, hud);
 		if(mRandom) {
 			String txt = "Score: " + score;
-			sText = new ChangeableText(cameraWidth - 10 - txt.length() * FONT_SIZE * 0.6f, 10, mFont, txt, 100);
+			sText = new ChangeableText(cameraWidth - 10 - txt.length() * fontSize * 0.6f, 10, mFont, txt, 100);
 			addEntity(sText, 0, hud);
 			txt = "High: " + prefScores.getLong(scoreType, 0);
-			hText = new ChangeableText(cameraWidth - 10 - txt.length() * FONT_SIZE * 0.6f, 40, mFont, txt, 100);
+			hText = new ChangeableText(cameraWidth - 10 - txt.length() * fontSize * 0.6f, 40, mFont, txt, 100);
 			addEntity(hText, 0, hud);
 		}
 		return scene;
@@ -290,11 +291,11 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 			aText.setText("Angle: " + df1.format(angle));
 			break;
 		case KeyEvent.KEYCODE_DPAD_DOWN:
-			velocity--;
+			velocity = --velocity < 0 ? 0 : velocity--;
 			vText.setText("Velocity: " + df1.format(velocity));
 			break;
 		case KeyEvent.KEYCODE_DPAD_UP:
-			velocity = ++velocity > 0 ? 0 : velocity++;
+			velocity++;
 			vText.setText("Velocity: " + df1.format(velocity));
 			break;
 		}
@@ -416,7 +417,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 		if(mRandom) {
 			score -= 1;
 			String txt = "Score: " + score;
-			sText.setPosition(cameraWidth - 10 - txt.length() * FONT_SIZE * 0.6f, 10);
+			sText.setPosition(cameraWidth - 10 - txt.length() * fontSize * 0.6f, 10);
 			sText.setText(txt);
 		}
 		if (prefs.getBoolean("trail", false)) {
