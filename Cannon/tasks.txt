@@ -7,13 +7,12 @@ Immediately before release:
 
 Problems:
 	HIGH - Targets spawning completely inside other targets in random mode, impossible to hit with collision enabled
-	HIGH - Fit borders and keep random targets within scaled screen, also scale targets relative to screen scale
-	MED - Bottom of scrollview in custom screen doesn't lose fade when at bottom  
 	MED - Handle orientation/keyboard changes
-
+	LOW - Bottom of scrollview in custom screen doesn't lose fade when at bottom
+	
 Pro (first release):
 	Look into the new copy protection
-	Live wallpaper - Random mode with random shots 
+	Live wallpaper - Random mode with random shots
 
 v2.0.1:
 	Zoom & pan
