@@ -23,10 +23,10 @@ public final class R {
         public static final int RL_TargetS=0x7f07001e;
         public static final int RL_Velocity=0x7f070006;
         public static final int RL_Wind=0x7f070012;
-        public static final int btnCustom=0x7f070026;
-        public static final int btnMission=0x7f070028;
-        public static final int btnMulti=0x7f070029;
-        public static final int btnRandom=0x7f070027;
+        public static final int btnCustom=0x7f070029;
+        public static final int btnMission=0x7f070027;
+        public static final int btnMulti=0x7f070028;
+        public static final int btnRandom=0x7f070026;
         public static final int buttonFire=0x7f070001;
         public static final int editAngle=0x7f070005;
         public static final int editFuze=0x7f07000d;
