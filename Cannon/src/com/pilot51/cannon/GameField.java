@@ -1,5 +1,6 @@
 package com.pilot51.cannon;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Timer;
@@ -8,7 +9,7 @@ import java.util.TimerTask;
 import javax.microedition.khronos.opengles.GL10;
 
 import org.anddev.andengine.engine.Engine;
-import org.anddev.andengine.engine.camera.SmoothCamera;
+import org.anddev.andengine.engine.camera.Camera;
 import org.anddev.andengine.engine.camera.hud.HUD;
 import org.anddev.andengine.engine.handler.IUpdateHandler;
 import org.anddev.andengine.engine.options.EngineOptions;
@@ -53,6 +54,7 @@ import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.FloatMath;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -66,12 +68,12 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 	private Texture mTexture, mFontTexture;
 	private TextureRegion tCircle;
 	private FixedStepPhysicsWorld mPhysicsWorld;
-	private SmoothCamera camera;
+	private Camera camera;
 	private SharedPreferences prefs, prefCustom, prefScores;
-	private float ratio, speed, pxPerMeter, angle, velocity, gravity, wind, ballRadius, targetRadius, targetD, targetH;
+	private float ratio, speed, pxPerMeter, angle, velocity, gravity, wind, ballRadius, targetRadius, targetD, targetH, mLastTouchX, mLastTouchY;
 	private final byte FONT_SIZE = 20;
 	private long fuze, nTargets, nShots, score;
-	private int cameraWidth, cameraHeight, gridx, gridy, colorBG, colorGrid, colorProj, colorTarget, colorHitTarget;
+	private int cameraWidth, cameraHeight, gridx, gridy, colorBG, colorGrid, colorProj, colorTarget, colorHitTarget, senseMove, sensePressure;
 	private boolean mRandom, repeat, collide, expTarget, keepTargets, firing;
 	private String scoreType;
 	private Sprite target;
@@ -81,6 +83,8 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 	private Random rand_gen = new Random();
 	private final HUD hud = new HUD();
 	private TimerTask autofire;
+	private DecimalFormat df1 = new DecimalFormat("0.#");
+
 
 	@Override
 	public Engine onLoadEngine() {
@@ -92,10 +96,10 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 		getWindowManager().getDefaultDisplay().getMetrics(dm);
 		cameraWidth = dm.widthPixels;
 		cameraHeight = dm.heightPixels;
-		camera = new SmoothCamera(0, -cameraHeight, cameraWidth, cameraHeight, 1000, 1000, 100f);
+		camera = new Camera(0, -cameraHeight, cameraWidth, cameraHeight);
 		camera.setHUD(hud);
-		camera.setCenter(cameraWidth / 2 / pxPerMeter, -cameraHeight / 2 / pxPerMeter);
-		camera.setZoomFactor(pxPerMeter);
+		//camera.setCenter(cameraWidth / 2 / pxPerMeter, -cameraHeight / 2 / pxPerMeter);
+		//camera.setZoomFactor(pxPerMeter);
 		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
 			return new Engine(new EngineOptions(true, ScreenOrientation.PORTRAIT, new RatioResolutionPolicy(cameraWidth, cameraHeight), camera));
 		} else {
@@ -110,6 +114,8 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 		expTarget = prefs.getBoolean("expTarget", false);
 		keepTargets = prefs.getBoolean("keepTargets", false);
 		repeat = prefs.getBoolean("repeat", false);
+		senseMove = Integer.parseInt(prefs.getString("senseMove", null));
+		sensePressure = Integer.parseInt(prefs.getString("sensePressure", null));
 		if(mRandom & collide & keepTargets) scoreType = "rMulti";
 		else if(mRandom) scoreType = "rSingle";
 		colorBG = Color.parseColor(prefs.getString("colorBG", null));
@@ -276,20 +282,20 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 			}
 			break;
 		case KeyEvent.KEYCODE_DPAD_RIGHT:
-			angle--;
-			aText.setText("Angle: " + angle);
+			angle = --angle < 0 ? 0 : angle--;
+			aText.setText("Angle: " + df1.format(angle));
 			break;
 		case KeyEvent.KEYCODE_DPAD_LEFT:
-			angle++;
-			aText.setText("Angle: " + angle);
+			angle = ++angle > 90 ? 90 : angle++;
+			aText.setText("Angle: " + df1.format(angle));
 			break;
 		case KeyEvent.KEYCODE_DPAD_DOWN:
 			velocity--;
-			vText.setText("Velocity: " + velocity);
+			vText.setText("Velocity: " + df1.format(velocity));
 			break;
 		case KeyEvent.KEYCODE_DPAD_UP:
-			velocity++;
-			vText.setText("Velocity: " + velocity);
+			velocity = ++velocity > 0 ? 0 : velocity++;
+			vText.setText("Velocity: " + df1.format(velocity));
 			break;
 		}
 		return super.onKeyDown(keyCode, event);
@@ -310,25 +316,47 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 
 	@Override
 	public boolean onSceneTouchEvent(final Scene scene, final TouchEvent pSceneTouchEvent) {
+		MotionEvent me = pSceneTouchEvent.getMotionEvent();
+		final float x = me.getX();
+		final float y = me.getY();
+		final float p = me.getPressure();
 		switch (pSceneTouchEvent.getAction()) {
 		case TouchEvent.ACTION_DOWN:
-			if (mPhysicsWorld != null) {
-				if(repeat & !firing) {
+			mLastTouchX = x;
+			mLastTouchY = y;
+			break;
+		case TouchEvent.ACTION_UP:
+			if (firing) {
+				if(repeat) autofire.cancel();
+				firing = false;
+			}
+			break;
+		case TouchEvent.ACTION_MOVE:
+			if (mPhysicsWorld != null & !firing & p > sensePressure / 100f) {
+				firing = true;
+				if(repeat) {
 					autofire = new TimerTask() {
 						@Override
 						public void run() {
 							addBall();
 					}};
-					firing = true;
 					new Timer().schedule(autofire, 0, 250);
 				} else addBall();
-			}
-			break;
-		case TouchEvent.ACTION_UP:
-			if(repeat) {
-				autofire.cancel();
+			} else if (firing & p < sensePressure / 100f) {
+				if(repeat) autofire.cancel();
 				firing = false;
 			}
+			final float dx = x - mLastTouchX;
+			final float dy = y - mLastTouchY;
+			angle -= dx/(100/senseMove);
+			if (angle < 0) angle = 0;
+			else if (angle > 90) angle = 90;
+			aText.setText("Angle: " + df1.format(angle));
+			velocity -= dy/(100/senseMove);
+			if(velocity < 0) velocity = 0;
+			vText.setText("Velocity: " + df1.format(velocity));
+			mLastTouchX = x;
+			mLastTouchY = y;
 			break;
 		}
 		return true;

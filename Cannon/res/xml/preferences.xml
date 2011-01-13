@@ -3,18 +3,20 @@
 	<PreferenceScreen android:title="Gameplay">
 		<CheckBoxPreference android:key="classic" android:title="Classic Mode" android:summaryOn="Current mode: v1" android:summaryOff="Current mode: v2" android:defaultValue="false" />
 		<CheckBoxPreference android:key="collide" android:title="Collision" android:summary="Collision between projectile and target" android:defaultValue="true" />
-		<CheckBoxPreference android:key="repeat" android:title="Auto-fire" android:summaryOn="Classic: Another projectile is fired when previous one completes\nv2: Fully automatic machine gun (D-Pad/wheel only)" android:summaryOff="Manual: Press center D-Pad/wheel or touchscreen to fire again" android:defaultValue="false" />
+		<CheckBoxPreference android:key="repeat" android:title="Auto-fire" android:summaryOn="v2: Fully automatic machine gun\nClassic: Another projectile is fired when previous one completes" android:summaryOff="Manual: Press center D-Pad/wheel or touchscreen to fire one shot" android:defaultValue="false" />
 		<PreferenceCategory android:title="v2 only">
 			<CheckBoxPreference android:key="keepTargets" android:title="Keep Targets" android:summaryOn="Targets will remain when hit" android:summaryOff="Targets will be destroyed when hit" android:defaultValue="true" />
 		</PreferenceCategory>
 	</PreferenceScreen>
-	<PreferenceScreen android:title="Scale">
-		<EditTextPreference android:key="gridX" android:title="X-Grid scale" android:summary="Scale to measure ground distance" android:dialogTitle="Set X-grid size" android:dialogMessage="Set the distance (in meters) between each grid line measuring ground distance" android:defaultValue="50" android:inputType="phone" android:digits="0123456789"/>
-		<EditTextPreference android:key="gridY" android:title="Y-Grid scale" android:summary="Scale to measure altitude" android:dialogTitle="Set Y-grid size" android:dialogMessage="Set the distance (in meters) between each grid line measuring altitude" android:defaultValue="50" android:inputType="phone" android:digits="0123456789"/>
+	<PreferenceScreen android:title="Scale" android:summary="Touchscreen sensitivity, game speed, and grid">
+		<EditTextPreference android:key="gridX" android:title="X-Grid scale" android:summary="Scale to measure ground distance" android:dialogMessage="Set the distance (in meters) between each grid line measuring ground distance" android:defaultValue="50" android:inputType="phone" android:digits="0123456789"/>
+		<EditTextPreference android:key="gridY" android:title="Y-Grid scale" android:summary="Scale to measure altitude" android:dialogMessage="Set the distance (in meters) between each grid line measuring altitude" android:defaultValue="50" android:inputType="phone" android:digits="0123456789"/>
 		<PreferenceCategory android:title="v2 only">
-			<EditTextPreference android:key="speed" android:title="Speed Multiplier" android:dialogTitle="Speed Multiplier" android:defaultValue="1" android:inputType="phone" android:digits="0123456789."/>
+			<EditTextPreference android:key="senseMove" android:title="Touchscreen drag sensitivity" android:summary="Sensitivity for angle and velocity" android:dialogMessage="100 = 1 pixel per degree or m/s\n10 = 10 pixels per degree or m/s" android:defaultValue="5" android:digits="0123456789" android:inputType="phone" />
+			<EditTextPreference android:key="sensePressure" android:title="Touchscreen pressure sensitivity" android:summary="Sensitivity for firing" android:dialogMessage="Higher = More pressure\nThis varies by device and may take a few tries to get a good value." android:defaultValue="10" android:digits="0123456789" android:inputType="phone" />
+			<EditTextPreference android:key="speed" android:title="Speed Multiplier" android:defaultValue="1" android:digits="0123456789." android:inputType="phone"/>
 			<!--<EditTextPreference android:key="meter" android:title="Pixels Per Meter" android:dialogTitle="Pixels Per Meter" android:dialogMessage="How many pixels represent 1 meter?" android:defaultValue="1" android:digits="0123456789." android:inputType="phone"/>-->
-		</PreferenceCategory>
+</PreferenceCategory>
 	</PreferenceScreen>
 	<PreferenceScreen android:title="Borders" android:summary="Physical boundaries along edges of screen">
 		<PreferenceCategory android:title="v2 only">
@@ -31,12 +33,12 @@
 		</PreferenceCategory>
 	</PreferenceScreen>
 	<PreferenceScreen android:title="Colors">
-		<EditTextPreference android:key="colorBG" android:title="Background color" android:dialogTitle="Choose background color" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="black" android:digits="abcdefghijklmnopqrstuvwxyz0123456789#" />
-		<EditTextPreference android:key="colorGrid" android:title="Grid color" android:dialogTitle="Choose grid color" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="green" android:digits="abcdefghijklmnopqrstuvwxyz0123456789#" />
-		<EditTextPreference android:key="colorTarget" android:title="Target color" android:dialogTitle="Choose target color" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="red" android:digits="abcdefghijklmnopqrstuvwxyz0123456789#" />
-		<EditTextPreference android:key="colorProj" android:title="Projectile color" android:dialogTitle="Choose projectile color" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="yellow" android:digits="abcdefghijklmnopqrstuvwxyz0123456789#" />
+		<EditTextPreference android:key="colorBG" android:title="Background color" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="black" android:digits="abcdefghijklmnopqrstuvwxyz0123456789#" />
+		<EditTextPreference android:key="colorGrid" android:title="Grid color" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="green" android:digits="abcdefghijklmnopqrstuvwxyz0123456789#" />
+		<EditTextPreference android:key="colorTarget" android:title="Target color" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="red" android:digits="abcdefghijklmnopqrstuvwxyz0123456789#" />
+		<EditTextPreference android:key="colorProj" android:title="Projectile color" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="yellow" android:digits="abcdefghijklmnopqrstuvwxyz0123456789#" />
 		<PreferenceCategory android:title="v2 only">
-			<EditTextPreference android:key="colorHitTarget" android:title="Completed Target color" android:summary="Useful for Random mode with Keep Targets enabled" android:dialogTitle="Color for targets that have been hit" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="blue" android:digits="abcdefghijklmnopqrstuvwxyz0123456789#" />
+			<EditTextPreference android:key="colorHitTarget" android:title="Completed Target color" android:summary="Color for targets that have been hit" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="blue" android:digits="abcdefghijklmnopqrstuvwxyz0123456789#" />
 		</PreferenceCategory>
 	</PreferenceScreen>
 	<PreferenceCategory>

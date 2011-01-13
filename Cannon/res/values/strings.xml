@@ -12,16 +12,20 @@
 	<string name="color_dialog_msg">Value can be a color name (e.g. blue) or a hex color (e.g. #0000ff, or #550000ff for alpha transparency)</string>
 	<string name="about_text">
 "Controls:
-	Touchscreen: Fire
+	Touchscreen:
+		Sensitivity can be adjusted in preferences under Scale.
+		Left/Right drag: Angle
+		Up/Down drag: Velocity
+		Touch pressure: Fire
 	D-Pad/Trackball:
 		Left/Right: Angle
-		Up/Down: Power
+		Up/Down: Velocity
 		Center: Fire
 
-		
+
 Scoring - Random game type:
 	-1 point per shot
-	Collision and Keep Targets enabled: Number of active targets hit by the specific projectile multiplied by the number of targets on screen.
+	With both Collision and Keep Targets enabled: Number of active targets hit by the specific projectile multiplied by the number of targets on screen.
 	Otherwise: Number of active targets hit by the specific projectile multiplied by 20.
 
 
