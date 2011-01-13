@@ -72,7 +72,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 	private final byte FONT_SIZE = 20;
 	private long fuze, nTargets, nShots, score;
 	private int cameraWidth, cameraHeight, gridx, gridy, colorBG, colorGrid, colorProj, colorTarget, colorHitTarget;
-	private boolean mRandom, repeat, collide, expTarget, keepTargets;
+	private boolean mRandom, repeat, collide, expTarget, keepTargets, firing;
 	private String scoreType;
 	private Sprite target;
 	private Body targetBody;
@@ -80,6 +80,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 	private ChangeableText aText, vText, sText, hText;
 	private Random rand_gen = new Random();
 	private final HUD hud = new HUD();
+	private TimerTask autofire;
 
 	@Override
 	public Engine onLoadEngine() {
@@ -262,8 +263,16 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_DPAD_CENTER:
-			if ((repeat & event.getRepeatCount()%5 == 0) | event.getRepeatCount() == 0) {
-				addBall();
+			if (event.getRepeatCount() == 0) {
+				if(repeat & !firing) {
+					autofire = new TimerTask() {
+						@Override
+						public void run() {
+							addBall();
+					}};
+					firing = true;
+					new Timer().schedule(autofire, 0, 250);
+				} else addBall();
 			}
 			break;
 		case KeyEvent.KEYCODE_DPAD_RIGHT:
@@ -285,36 +294,42 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 		}
 		return super.onKeyDown(keyCode, event);
 	}
+	
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_DPAD_CENTER:
+			if(repeat) {
+				autofire.cancel();
+				firing = false;
+			}
+			break;
+		}
+		return super.onKeyUp(keyCode, event);
+	}
 
 	@Override
 	public boolean onSceneTouchEvent(final Scene scene, final TouchEvent pSceneTouchEvent) {
 		switch (pSceneTouchEvent.getAction()) {
 		case TouchEvent.ACTION_DOWN:
 			if (mPhysicsWorld != null) {
-				addBall();
+				if(repeat & !firing) {
+					autofire = new TimerTask() {
+						@Override
+						public void run() {
+							addBall();
+					}};
+					firing = true;
+					new Timer().schedule(autofire, 0, 250);
+				} else addBall();
 			}
-			/* // Zoom disabled for v2.0.0 until something better is found
-			TimerTask task = new TimerTask() {
-				@Override
-				public void run() {
-					camera.setCenter(targetD, -targetH);
-					camera.setZoomFactor(4f);
-					camera.setZoomFactor(pxPerMeter * 4f);
-				}
-			};
-			timer.schedule(task, 1000);
-			*/
 			break;
-		/* // Other portion of zoom
 		case TouchEvent.ACTION_UP:
-		timer.cancel();
-		timer = new Timer();
-		camera.setCenter(cameraWidth / 2, -cameraHeight / 2);
-		camera.setZoomFactor(1f);
-		camera.setCenter(cameraWidth / 2 / pxPerMeter, -cameraHeight / 2 / pxPerMeter);
-		camera.setZoomFactor(pxPerMeter);
-		break;
-		*/
+			if(repeat) {
+				autofire.cancel();
+				firing = false;
+			}
+			break;
 		}
 		return true;
 	}
