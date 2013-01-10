@@ -28,7 +28,6 @@ public class GameType extends Activity implements OnClickListener {
 		// Load default preferences from xml if not saved
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, true);
 		
-		new Common().ad(this);
 		btnCustom = (Button) findViewById(R.id.btnCustom);
 		btnCustom.setOnClickListener(this);
 		btnRandom = (Button) findViewById(R.id.btnRandom);

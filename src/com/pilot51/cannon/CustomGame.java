@@ -30,7 +30,6 @@ public class CustomGame extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.customgame);
-		new Common().ad(this);
 		editAngle = (EditText) findViewById(R.id.editAngle);
 		editVelocity = (EditText) findViewById(R.id.editVelocity);
 		editFuze = (EditText) findViewById(R.id.editFuze);
