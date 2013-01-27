@@ -221,14 +221,14 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 							if(collide & keepTargets) score += nTargets * hits;
 							else score += hits * 20;
 							if(score > prefScores.getLong(scoreType, 0)) {
-								String txt = "High: " + score;
+								String txt = getString(R.string.high, score);
 								hText.setPosition(cameraWidth - 10 - txt.length() * fontSize * 0.6f, 40);
 								hText.setText(txt);
 								SharedPreferences.Editor e = prefScores.edit();
 								e.putLong(scoreType, score);
 								e.commit();
 							}
-							String txt = "Score: " + score;
+							String txt = getString(R.string.score, score);
 							sText.setPosition(cameraWidth - 10 - txt.length() * fontSize * 0.6f, 10);
 							sText.setText(txt);
 						}
@@ -248,23 +248,22 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 			});
 		}
 		scene.registerUpdateHandler(mPhysicsWorld);
-		aText = new ChangeableText(10, 10, mFont, "Angle: " + angle, "Angle: XXXXX".length());
+		aText = new ChangeableText(10, 10, mFont, getString(R.string.angle, angle), getString(R.string.angle, 11111).length());
 		addEntity(aText, 0, hud);
-		vText = new ChangeableText(10, 40, mFont, "Velocity: " + velocity, "Velocity: XXXXX".length());
+		vText = new ChangeableText(10, 40, mFont, getString(R.string.velocity, velocity), getString(R.string.velocity, 11111).length());
 		addEntity(vText, 0, hud);
 		if(mRandom) {
-			String txt = "Score: " + score;
+			String txt = getString(R.string.score, score);
 			sText = new ChangeableText(cameraWidth - 10 - txt.length() * fontSize * 0.6f, 10, mFont, txt, 100);
 			addEntity(sText, 0, hud);
-			txt = "High: " + prefScores.getLong(scoreType, 0);
+			txt = getString(R.string.high, prefScores.getLong(scoreType, 0));
 			hText = new ChangeableText(cameraWidth - 10 - txt.length() * fontSize * 0.6f, 40, mFont, txt, 100);
 			addEntity(hText, 0, hud);
 		}
 		return scene;
 	}
 
-	public void onLoadComplete() {
-	}
+	public void onLoadComplete() {}
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -284,19 +283,19 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 			break;
 		case KeyEvent.KEYCODE_DPAD_RIGHT:
 			angle = --angle < 0 ? 0 : angle--;
-			aText.setText("Angle: " + df1.format(angle));
+			aText.setText(getString(R.string.angle, df1.format(angle)));
 			break;
 		case KeyEvent.KEYCODE_DPAD_LEFT:
 			angle = ++angle > 90 ? 90 : angle++;
-			aText.setText("Angle: " + df1.format(angle));
+			aText.setText(getString(R.string.angle, df1.format(angle)));
 			break;
 		case KeyEvent.KEYCODE_DPAD_DOWN:
 			velocity = --velocity < 0 ? 0 : velocity--;
-			vText.setText("Velocity: " + df1.format(velocity));
+			vText.setText(getString(R.string.velocity, df1.format(velocity)));
 			break;
 		case KeyEvent.KEYCODE_DPAD_UP:
 			velocity++;
-			vText.setText("Velocity: " + df1.format(velocity));
+			vText.setText(getString(R.string.velocity, df1.format(velocity)));
 			break;
 		}
 		return super.onKeyDown(keyCode, event);
@@ -352,10 +351,10 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 			angle -= dx/(100/senseMove);
 			if (angle < 0) angle = 0;
 			else if (angle > 90) angle = 90;
-			aText.setText("Angle: " + df1.format(angle));
+			aText.setText(getString(R.string.angle, df1.format(angle)));
 			velocity -= dy/(100/senseMove);
 			if(velocity < 0) velocity = 0;
-			vText.setText("Velocity: " + df1.format(velocity));
+			vText.setText(getString(R.string.velocity, df1.format(velocity)));
 			mLastTouchX = x;
 			mLastTouchY = y;
 			break;
@@ -363,7 +362,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 		return true;
 	}
 
-	void drawGrid(Scene scene) {
+	private void drawGrid(Scene scene) {
 		final FixtureDef gridFixtureDef = PhysicsFactory.createFixtureDef(0, 0, 0);
 		gridFixtureDef.isSensor = true;
 		gridx = Integer.parseInt(prefs.getString("gridX", null));
@@ -416,7 +415,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 		addEntity(ball, 2, null);
 		if(mRandom) {
 			score -= 1;
-			String txt = "Score: " + score;
+			String txt = getString(R.string.score, score);
 			sText.setPosition(cameraWidth - 10 - txt.length() * fontSize * 0.6f, 10);
 			sText.setText(txt);
 		}
@@ -469,7 +468,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 		sprite.setVisible(false);
 	}
 
-	void addTarget() {
+	private void addTarget() {
 		if (mRandom) {
 			targetRadius = (rand_gen.nextInt(50) + 6) / pxPerMeter;
 			targetD = rand_gen.nextInt((int)(cameraWidth / pxPerMeter - targetRadius * 2)) + targetRadius;

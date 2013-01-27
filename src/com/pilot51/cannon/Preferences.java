@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 public class Preferences extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 
-	SharedPreferences prefs;
+	private SharedPreferences prefs;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +28,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 				PreferenceManager.setDefaultValues(Preferences.this, R.xml.preferences, true);
 				finish();
 				startActivity(getIntent());
-				Toast.makeText(Preferences.this, "Preferences reset", Toast.LENGTH_LONG).show();
+				Toast.makeText(Preferences.this, R.string.toast_prefs_reset, Toast.LENGTH_LONG).show();
 				return true;
 			}
 		});
@@ -37,7 +37,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 			public boolean onPreferenceClick(Preference p) {
 				getSharedPreferences("custom", MODE_PRIVATE).edit().clear().commit();
 				setResult(1);
-				Toast.makeText(Preferences.this, "Custom game values reset", Toast.LENGTH_LONG).show();
+				Toast.makeText(Preferences.this, R.string.toast_custom_reset, Toast.LENGTH_LONG).show();
 				return true;
 			}
 		});
@@ -45,7 +45,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 		((Preference)findPreference("clearScores")).setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			public boolean onPreferenceClick(Preference p) {
 				getSharedPreferences("scores", MODE_PRIVATE).edit().clear().commit();
-				Toast.makeText(Preferences.this, "Scores cleared", Toast.LENGTH_LONG).show();
+				Toast.makeText(Preferences.this, R.string.toast_scores_cleared, Toast.LENGTH_LONG).show();
 				return true;
 			}
 		});
@@ -70,7 +70,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 			} catch (Exception e) {
 				sp.edit().putString("gridX", "0").commit();
 				((EditTextPreference)findPreference("gridX")).setText("0");
-				Toast.makeText(this, "Grid X scale set to 0 (disabled)", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, getString(R.string.toast_gridx_disabled), Toast.LENGTH_SHORT).show();
 			}
 		} else if (key.equals("gridY")) {
 			try {
@@ -78,7 +78,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 			} catch (Exception e) {
 				sp.edit().putString("gridY", "0").commit();
 				((EditTextPreference)findPreference("gridY")).setText("0");
-				Toast.makeText(this, "Grid Y scale set to 0 (disabled)", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, getString(R.string.toast_gridy_disabled), Toast.LENGTH_SHORT).show();
 			}
 		} else if (key.equals("colorBG")) {
 			try {
@@ -86,7 +86,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 			} catch (Exception e) {
 				sp.edit().putString("colorBG", "black").commit();
 				((EditTextPreference)findPreference("colorBG")).setText("black");
-				Toast.makeText(this, "Invalid color.\nBackground reset to black.", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, getString(R.string.toast_invalid_color_bg), Toast.LENGTH_SHORT).show();
 			}
 		} else if (key.equals("colorGrid")) {
 			try {
@@ -94,7 +94,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 			} catch (Exception e) {
 				sp.edit().putString("colorGrid", "green").commit();
 				((EditTextPreference)findPreference("colorGrid")).setText("green");
-				Toast.makeText(this, "Invalid color.\nGrid reset to green.", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, getString(R.string.toast_invalid_color_grid), Toast.LENGTH_SHORT).show();
 			}
 		} else if (key.equals("colorTarget")) {
 			try {
@@ -102,7 +102,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 			} catch (Exception e) {
 				sp.edit().putString("colorTarget", "red").commit();
 				((EditTextPreference)findPreference("colorTarget")).setText("red");
-				Toast.makeText(this, "Invalid color.\nTarget reset to red.", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, getString(R.string.toast_invalid_color_target), Toast.LENGTH_SHORT).show();
 			}
 		} else if (key.equals("colorHitTarget")) {
 			try {
@@ -110,7 +110,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 			} catch (Exception e) {
 				sp.edit().putString("colorHitTarget", "blue").commit();
 				((EditTextPreference)findPreference("colorHitTarget")).setText("blue");
-				Toast.makeText(this, "Invalid color.\nCompleted Target reset to blue.", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, getString(R.string.toast_invalid_color_target_complete), Toast.LENGTH_SHORT).show();
 			}
 		} else if (key.equals("colorProj")) {
 			try {
@@ -118,19 +118,19 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 			} catch (Exception e) {
 				sp.edit().putString("colorProj", "yellow").commit();
 				((EditTextPreference)findPreference("colorProj")).setText("yellow");
-				Toast.makeText(this, "Invalid color.\nProjectile reset to yellow.", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, getString(R.string.toast_invalid_color_projectile), Toast.LENGTH_SHORT).show();
 			}
 		} else if (key.equals("senseMove")) {
 			try {
 				if(Integer.parseInt(sp.getString("senseMove", null)) == 0) {
 					sp.edit().putString("senseMove", "5").commit();
 					((EditTextPreference)findPreference("senseMove")).setText("5");
-					Toast.makeText(this, "Drag sensitivity must be at least 1.\nReset to 5.", Toast.LENGTH_SHORT).show();
+					Toast.makeText(this, getString(R.string.toast_drag_min), Toast.LENGTH_SHORT).show();
 				}
 			} catch (NumberFormatException e) {
 				sp.edit().putString("senseMove", "5").commit();
 				((EditTextPreference)findPreference("senseMove")).setText("5");
-				Toast.makeText(this, "Drag sensitivity cannot be blank.\nReset to 5.", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, getString(R.string.toast_drag_blank), Toast.LENGTH_SHORT).show();
 			}
 		} else if (key.equals("sensePressure")) {
 			try {
@@ -138,7 +138,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 			} catch (NumberFormatException e) {
 				sp.edit().putString("sensePressure", "10").commit();
 				((EditTextPreference)findPreference("sensePressure")).setText("10");
-				Toast.makeText(this, "Pressure sensitivity cannot be blank.\nReset to 10.", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, getString(R.string.toast_pressure_blank), Toast.LENGTH_SHORT).show();
 			}
 		}
 	}

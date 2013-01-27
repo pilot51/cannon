@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Process;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,7 +15,7 @@ import android.widget.Toast;
 
 public class GameType extends Activity implements OnClickListener {
 	
-	Button btnCustom, btnRandom, btnMission, btnMulti;
+	private Button btnCustom, btnRandom, btnMission, btnMulti;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -40,7 +39,7 @@ public class GameType extends Activity implements OnClickListener {
 		btnMulti.setVisibility(Button.GONE); // Disabled until operational
 		
 		if(getLastNonConfigurationInstance() != (Object)true) {
-			Toast.makeText(this, "Press menu button for help & preferences.", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, R.string.toast_menu, Toast.LENGTH_LONG).show();
 		}
 	}
 	
@@ -85,7 +84,7 @@ public class GameType extends Activity implements OnClickListener {
 		return false;
 	}
 	
-	void movePref() {
+	private void movePref() {
 		SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 		SharedPreferences.Editor e = p.edit();
 		e.putBoolean("collide", p.getBoolean("prefCollide", false));
@@ -98,10 +97,5 @@ public class GameType extends Activity implements OnClickListener {
 		e.putString("colorTarget", p.getString("prefColorTarget", null));
 		e.putString("colorProj", p.getString("prefColorProj", null));
 		e.clear().commit();
-	}
-	
-	public void finish() {
-		super.finish();
-		Process.killProcess(Process.myPid());
 	}
 }

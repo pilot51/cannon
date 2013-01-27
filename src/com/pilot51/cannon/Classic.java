@@ -23,7 +23,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 public class Classic extends Activity {
-	ClassicView cannonView;
+	private ClassicView cannonView;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -54,8 +54,8 @@ public class Classic extends Activity {
 		return super.onTouchEvent(event);
 	}
 
-	public class ClassicView extends View {
-		int
+	private class ClassicView extends View {
+		private int
 			screenX,
 			screenY,
 			targetD,
@@ -68,15 +68,15 @@ public class Classic extends Activity {
 			colorGrid,
 			colorTarget,
 			colorProj;
-		List<Point>
+		private List<Point>
 			targetPoints = new ArrayList<Point>(),
 			cannonPoints = new ArrayList<Point>();
 		//List<Point> particlepoints = new ArrayList<Point>(); // Experimental explosion -- Disabled
-		Paint
+		private Paint
 			paintTarget = new Paint(),
 			paintCannon = new Paint(),
 			paintGrid = new Paint();
-		float
+		private float
 			cannonx,
 			cannony,
 			angle,
@@ -88,17 +88,17 @@ public class Classic extends Activity {
 			//time3 = 0, // Experimental explosion -- Disabled
 			//viewdist,
 			timeLimit; // time in seconds until projectile stops
-		long mLastTime = 0, now = 0;
-		double elapsed;
-		boolean returncheck = false;
+		private long mLastTime = 0, now = 0;
+		private double elapsed;
+		private boolean returncheck = false;
 
 		// int part1, part2, part3, part4, part5, part6; // Experimental explosion -- Disabled
 
-		SharedPreferences prefs, prefCustom;
+		private SharedPreferences prefs, prefCustom;
 
-		Point cannon;
+		private Point cannon;
 
-		public ClassicView(Context context) {
+		private ClassicView(Context context) {
 			super(context);
 			DisplayMetrics dm = new DisplayMetrics();
 			getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -193,7 +193,7 @@ public class Classic extends Activity {
 			if (onKeyDown(KeyEvent.KEYCODE_DPAD_CENTER, null)) {}
 		}
 
-		void drawGrid(Canvas canvas) {
+		private void drawGrid(Canvas canvas) {
 			gridX = Integer.parseInt(prefs.getString("gridX", null));
 			if (gridX > 0) {
 				// Draw vertical lines within screen space
@@ -214,7 +214,7 @@ public class Classic extends Activity {
 			}
 		}
 
-		void drawTarget(Canvas canvas) {
+		private void drawTarget(Canvas canvas) {
 			if (time2 < 1) {
 				do {
 					Point target = new Point();
@@ -229,7 +229,7 @@ public class Classic extends Activity {
 			}
 		}
 
-		void drawCannon(Canvas canvas) {
+		private void drawCannon(Canvas canvas) {
 			cannon = new Point();
 			cannon.x = (float) (velocity * Math.cos(Math.toRadians(angle)) * time + 0.5 * wind * (float) Math.pow(time, 2));
 			cannon.y = (float) -(velocity * Math.sin(Math.toRadians(angle)) * time - 0.5 * 9.81 * gravity * Math.pow(time, 2) - screenY);
@@ -241,7 +241,7 @@ public class Classic extends Activity {
 			} else canvas.drawCircle(cannon.x, cannon.y, projS, paintCannon);
 		}
 
-		void refire() {
+		private void refire() {
 			cannonPoints.clear();
 			time = 0;
 			now = 0;
@@ -262,8 +262,9 @@ public class Classic extends Activity {
 		*/
 	}
 
-	class Point {
-		float x, y;
+	private class Point {
+		private float x, y;
+		
 		@Override
 		public String toString() {
 			return x + ", " + y;

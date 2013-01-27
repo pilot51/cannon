@@ -14,35 +14,29 @@ import android.widget.TextView;
 public class Common {
 	void menu(final Activity a) {
 		String
-			app_name = a.getString(R.string.app_name),
-			app_ver = a.getString(R.string.app_version),
-			app_web = a.getString(R.string.app_web),
-			about_text = a.getString(R.string.about_text),
-			dev_name = a.getString(R.string.dev_name),
-			dev_email = a.getString(R.string.dev_email),
-			dev_web = a.getString(R.string.dev_web),
-			dev_twitter = a.getString(R.string.dev_twitter),
-			about = a.getString(R.string.about);
-
-		AlertDialog dialogAbout = new AlertDialog.Builder(a).create();
+			appName = a.getString(R.string.app_name),
+			appVer = a.getString(R.string.app_version),
+			appWeb = a.getString(R.string.app_web),
+			devName = a.getString(R.string.dev_name),
+			devEmail = a.getString(R.string.dev_email),
+			devWeb = a.getString(R.string.dev_web),
+			aboutInstructions = a.getString(R.string.about_instructions);
 		
 		TextView messageAbout = new TextView(a);
 		messageAbout.setMovementMethod(LinkMovementMethod.getInstance());
 		messageAbout.setTextColor(Color.LTGRAY);
-		SpannableString s = new SpannableString(app_name + " - version "
-				+ app_ver + "\n" + app_web + "\nBy " + dev_name + "\n" + dev_email + "\n"
-				+ dev_web + "\n" + dev_twitter + "\n\n\n" + about_text);
+		SpannableString s = new SpannableString(a.getString(R.string.about_text, appName, appVer, appWeb, devName, devEmail, devWeb, aboutInstructions));
 		Linkify.addLinks(s, Linkify.WEB_URLS);
 		messageAbout.setText(s);
-		dialogAbout.setTitle(about);
+		AlertDialog dialogAbout = new AlertDialog.Builder(a).create();
+		dialogAbout.setTitle(a.getString(R.string.about));
 		dialogAbout.setIcon(R.drawable.icon);
 		dialogAbout.setView(messageAbout);
-		dialogAbout.setButton("More apps",
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						a.startActivity(new Intent(Intent.ACTION_VIEW, Uri
-								.parse("market://search?q=pub:Pilot_51")));
-		}});
+		dialogAbout.setButton(a.getString(R.string.more_apps), new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				a.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://search?q=pub:Pilot_51")));
+			}
+		});
 		dialogAbout.show();
 	}
 }

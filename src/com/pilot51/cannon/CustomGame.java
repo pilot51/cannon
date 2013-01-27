@@ -15,16 +15,16 @@ import android.widget.EditText;
 
 public class CustomGame extends Activity implements OnClickListener {
 
-	Button btnFire;
+	private Button btnFire;
 
-	EditText editAngle, editVelocity, editFuze, editGravity, editWind,
+	private EditText editAngle, editVelocity, editFuze, editGravity, editWind,
 			editTargetD, editTargetH, editTargetS, editProjS;
 
-	float angle, velocity, fuze, gravity, wind;
+	private float angle, velocity, fuze, gravity, wind;
 
-	int targetD, targetH, targetS, projS;
+	private int targetD, targetH, targetS, projS;
 
-	SharedPreferences prefCustom;
+	private SharedPreferences prefCustom;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -92,7 +92,7 @@ public class CustomGame extends Activity implements OnClickListener {
 		}
 	}
 	
-	void loadValues() {
+	private void loadValues() {
 		editAngle.setText(Float.toString(prefCustom.getFloat("angle", 59)));
 		editVelocity.setText(Float.toString(prefCustom.getFloat("velocity", (float) 82.5)));
 		editFuze.setText(Float.toString(prefCustom.getFloat("fuze", (float) 0)));
@@ -104,7 +104,7 @@ public class CustomGame extends Activity implements OnClickListener {
 		editProjS.setText(Integer.toString(prefCustom.getInt("projS", 3)));
 	}
 
-	void grabValues() {
+	private void grabValues() {
 		// Grab values from edit fields & use 0 for null fields
 		try {
 			angle = Float.parseFloat(editAngle.getText().toString());
@@ -153,7 +153,7 @@ public class CustomGame extends Activity implements OnClickListener {
 		}
 	}
 
-	void saveValues() {
+	private void saveValues() {
 		SharedPreferences.Editor e = prefCustom.edit();
 		e.putFloat("angle", angle);
 		e.putFloat("velocity", velocity);
@@ -167,7 +167,7 @@ public class CustomGame extends Activity implements OnClickListener {
 		e.commit();
 	}
 	
-	void movePref() {
+	private void movePref() {
 		SharedPreferences p = getSharedPreferences("valuePref", 0);
 		SharedPreferences.Editor e = prefCustom.edit();
 		e.putFloat("angle", p.getFloat("prefAngle", 0));

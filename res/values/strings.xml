@@ -3,14 +3,33 @@
 	<string name="app_name">Cannon</string>
 	<string name="app_version">2.0.0</string>
 	<string name="app_web">http://cannon.pilot51.com</string>
-	<string name="dev_name">Pilot_51</string>
+	<string name="dev_name">Mark Injerd (aka Pilot_51)</string>
 	<string name="dev_email">pilota51@gmail.com</string>
 	<string name="dev_web">http://pilot51.com</string>
-	<string name="dev_twitter">http://twitter.com/Pilot_51</string>
 	<string name="prefs">Preferences</string>
 	<string name="about">Help/About</string>
+	<string name="high">High: %d</string>
+	<string name="score">Score: %d</string>
+	<string name="angle">Angle: %d</string>
+	<string name="velocity">Velocity: %d</string>
+	<string name="toast_menu">Press menu button for help and preferences.</string>
+	<string name="toast_prefs_reset">Preferences reset</string>
+	<string name="toast_custom_reset">Custom game values reset</string>
+	<string name="toast_scores_cleared">Scores cleared</string>
+	<string name="toast_gridx_disabled">Grid X scale set to 0 (disabled)</string>
+	<string name="toast_gridy_disabled">Grid Y scale set to 0 (disabled)</string>
+	<string name="toast_invalid_color_bg">Invalid color.\nBackground reset to black.</string>
+	<string name="toast_invalid_color_grid">Invalid color.\nGrid reset to green.</string>
+	<string name="toast_invalid_color_target">Invalid color.\nTarget reset to red.</string>
+	<string name="toast_invalid_color_target_complete">Invalid color.\nCompleted Target reset to blue.</string>
+	<string name="toast_invalid_color_projectile">Invalid color.\nProjectile reset to yellow.</string>
+	<string name="toast_drag_min">Drag sensitivity must be at least 1.\nReset to 5.</string>
+	<string name="toast_drag_blank">Drag sensitivity cannot be blank.\nReset to 5.</string>
+	<string name="toast_pressure_blank">Pressure sensitivity cannot be blank.\nReset to 10.</string>
 	<string name="color_dialog_msg">Value can be a color name (e.g. blue) or a hex color (e.g. #0000ff, or #550000ff for alpha transparency)</string>
-	<string name="about_text">
+	<string name="more_apps">More apps</string>
+	<string name="about_text">%1$s - version %2$s\n%3$s\nBy %4$s\n%5$s\n%6$s\n\n\n%7$s</string>
+	<string name="about_instructions">
 "Controls:
 	Touchscreen:
 		Sensitivity can be adjusted in preferences under Scale.
@@ -26,17 +45,6 @@
 Scoring - Random game type:
 	-1 point per shot
 	With both Collision and Keep Targets enabled: Number of active targets hit by the specific projectile multiplied by the number of targets on screen.
-	Otherwise: Number of active targets hit by the specific projectile multiplied by 20.
-
-
-Whether you like Cannon or not, please rate it and leave a constructive comment.
-
-As with everything I create for the public, I am open to suggestions, bug reports, questions, comments, etc. I am very easy to contact, more communication mediums are listed on my website. A list of known issues is available on the Cannon website.
-
-It is very important if you report a bug that you contact me in a way that I can reply in case I need more information. A Market comment won't work.
-
-Many thanks to the testers and helpers!
-HotShotS
-SuM_WuN"
+	Otherwise: Number of active targets hit by the specific projectile multiplied by 20."
 	</string>
 </resources>
