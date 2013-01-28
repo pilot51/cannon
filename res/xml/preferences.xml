@@ -14,50 +14,161 @@
      limitations under the License.
 -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-	<PreferenceScreen android:title="Gameplay">
-		<CheckBoxPreference android:key="classic" android:title="Classic Mode" android:summaryOn="Current mode: v1" android:summaryOff="Current mode: v2" android:defaultValue="false" />
-		<CheckBoxPreference android:key="collide" android:title="Collision" android:summary="Collision between projectile and target" android:defaultValue="true" />
-		<CheckBoxPreference android:key="repeat" android:title="Auto-fire" android:summaryOn="v2: Fully automatic machine gun\nClassic: Another projectile is fired when previous one completes" android:summaryOff="Manual: Press center D-Pad/wheel or touchscreen to fire one shot" android:defaultValue="false" />
-		<PreferenceCategory android:title="v2 only">
-			<CheckBoxPreference android:key="keepTargets" android:title="Keep Targets" android:summaryOn="Targets will remain when hit" android:summaryOff="Targets will be destroyed when hit" android:defaultValue="true" />
+	<PreferenceScreen android:title="@string/gameplay">
+		<CheckBoxPreference
+			android:defaultValue="false"
+			android:key="classic"
+			android:summaryOff="@string/classic_mode_desc_off"
+			android:summaryOn="@string/classic_mode_desc_on"
+			android:title="@string/classic_mode"/>
+		<CheckBoxPreference
+			android:defaultValue="true"
+			android:key="collide"
+			android:summary="@string/collision_desc"
+			android:title="@string/collision"/>
+		<CheckBoxPreference
+			android:defaultValue="false"
+			android:key="repeat"
+			android:summaryOff="@string/auto_fire_desc_off"
+			android:summaryOn="@string/auto_fire_desc_on"
+			android:title="@string/auto_fire"/>
+		<PreferenceCategory android:title="@string/v2_only">
+			<CheckBoxPreference
+				android:defaultValue="true"
+				android:key="keepTargets"
+				android:summaryOff="@string/keep_targets_desc_off"
+				android:summaryOn="@string/keep_targets_desc_on"
+				android:title="@string/keep_targets"/>
 		</PreferenceCategory>
 	</PreferenceScreen>
-	<PreferenceScreen android:title="Scale" android:summary="Touchscreen sensitivity, game speed, and grid">
-		<EditTextPreference android:key="gridX" android:title="X-Grid scale" android:summary="Scale to measure ground distance" android:dialogMessage="Set the distance (in meters) between each grid line measuring ground distance" android:defaultValue="50" android:inputType="phone" android:digits="0123456789"/>
-		<EditTextPreference android:key="gridY" android:title="Y-Grid scale" android:summary="Scale to measure altitude" android:dialogMessage="Set the distance (in meters) between each grid line measuring altitude" android:defaultValue="50" android:inputType="phone" android:digits="0123456789"/>
-		<PreferenceCategory android:title="v2 only">
-			<EditTextPreference android:key="senseMove" android:title="Touchscreen drag sensitivity" android:summary="Sensitivity for angle and velocity" android:dialogMessage="100 = 1 pixel per degree or m/s\n10 = 10 pixels per degree or m/s" android:defaultValue="5" android:digits="0123456789" android:inputType="phone" />
-			<EditTextPreference android:key="sensePressure" android:title="Touchscreen pressure sensitivity" android:summary="Sensitivity for firing" android:dialogMessage="Higher = More pressure\nThis varies by device and may take a few tries to get a good value." android:defaultValue="10" android:digits="0123456789" android:inputType="phone" />
-			<EditTextPreference android:key="speed" android:title="Speed Multiplier" android:defaultValue="1" android:digits="0123456789." android:inputType="phone"/>
-			<!--<EditTextPreference android:key="meter" android:title="Pixels Per Meter" android:dialogTitle="Pixels Per Meter" android:dialogMessage="How many pixels represent 1 meter?" android:defaultValue="1" android:digits="0123456789." android:inputType="phone"/>-->
-</PreferenceCategory>
-	</PreferenceScreen>
-	<PreferenceScreen android:title="Borders" android:summary="Physical boundaries along edges of screen">
-		<PreferenceCategory android:title="v2 only">
-			<CheckBoxPreference android:key="ground" android:title="Ground" android:defaultValue="true" />
-			<CheckBoxPreference android:key="roof" android:title="Roof" android:defaultValue="false" />
-			<CheckBoxPreference android:key="leftWall" android:title="Left Wall" android:defaultValue="false" />
-			<CheckBoxPreference android:key="rightWall" android:title="Right Wall" android:defaultValue="false" />
+	<PreferenceScreen
+		android:summary="@string/scale_desc"
+		android:title="@string/scale">
+		<EditTextPreference
+			android:defaultValue="50"
+			android:dialogMessage="@string/scale_xgrid_dlg"
+			android:digits="0123456789"
+			android:inputType="phone"
+			android:key="gridX"
+			android:summary="@string/scale_xgrid_desc"
+			android:title="@string/scale_xgrid"/>
+		<EditTextPreference
+			android:defaultValue="50"
+			android:dialogMessage="@string/scale_ygrid_dlg"
+			android:digits="0123456789"
+			android:inputType="phone"
+			android:key="gridY"
+			android:summary="@string/scale_ygrid_desc"
+			android:title="@string/scale_ygrid"/>
+		<PreferenceCategory android:title="@string/v2_only">
+			<EditTextPreference
+				android:defaultValue="5"
+				android:dialogMessage="@string/touch_sensitivity_drag_dlg"
+				android:digits="0123456789"
+				android:inputType="phone"
+				android:key="senseMove"
+				android:summary="@string/touch_sensitivity_drag_desc"
+				android:title="@string/touch_sensitivity_drag"/>
+			<EditTextPreference
+				android:defaultValue="10"
+				android:dialogMessage="@string/touch_sensitivity_pressure_dlg"
+				android:digits="0123456789"
+				android:inputType="phone"
+				android:key="sensePressure"
+				android:summary="@string/touch_sensitivity_pressure_desc"
+				android:title="@string/touch_sensitivity_pressure"/>
+			<EditTextPreference
+				android:defaultValue="1"
+				android:digits="0123456789."
+				android:inputType="phone"
+				android:key="speed"
+				android:title="@string/speed_multiplier"/>
 		</PreferenceCategory>
 	</PreferenceScreen>
-	<PreferenceScreen android:title="Visual Effects" android:summary="Disable these to improve performance">
-		<CheckBoxPreference android:key="trail" android:title="Projectile Trail" android:defaultValue="true" />
-		<PreferenceCategory android:title="v2 only">
-			<CheckBoxPreference android:key="expTarget" android:title="Explosive Target" android:summaryOn="Hitting a target will create a firework explosion" android:summaryOff="Nothing really interesting happens when hitting a target\nImproves performance" android:defaultValue="true" />
+	<PreferenceScreen
+		android:summary="@string/borders_desc"
+		android:title="@string/borders">
+		<PreferenceCategory android:title="@string/v2_only">
+			<CheckBoxPreference
+				android:defaultValue="true"
+				android:key="ground"
+				android:title="@string/ground"/>
+			<CheckBoxPreference
+				android:defaultValue="false"
+				android:key="roof"
+				android:title="@string/roof"/>
+			<CheckBoxPreference
+				android:defaultValue="false"
+				android:key="leftWall"
+				android:title="@string/wall_left"/>
+			<CheckBoxPreference
+				android:defaultValue="false"
+				android:key="rightWall"
+				android:title="@string/wall_right"/>
 		</PreferenceCategory>
 	</PreferenceScreen>
-	<PreferenceScreen android:title="Colors">
-		<EditTextPreference android:key="colorBG" android:title="Background color" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="black" android:digits="abcdefghijklmnopqrstuvwxyz0123456789#" />
-		<EditTextPreference android:key="colorGrid" android:title="Grid color" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="green" android:digits="abcdefghijklmnopqrstuvwxyz0123456789#" />
-		<EditTextPreference android:key="colorTarget" android:title="Target color" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="red" android:digits="abcdefghijklmnopqrstuvwxyz0123456789#" />
-		<EditTextPreference android:key="colorProj" android:title="Projectile color" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="yellow" android:digits="abcdefghijklmnopqrstuvwxyz0123456789#" />
-		<PreferenceCategory android:title="v2 only">
-			<EditTextPreference android:key="colorHitTarget" android:title="Completed Target color" android:summary="Color for targets that have been hit" android:dialogMessage="@string/color_dialog_msg" android:defaultValue="blue" android:digits="abcdefghijklmnopqrstuvwxyz0123456789#" />
+	<PreferenceScreen
+		android:summary="@string/visual_effects_desc"
+		android:title="@string/visual_effects">
+		<CheckBoxPreference
+			android:defaultValue="true"
+			android:key="trail"
+			android:title="@string/projectile_trail"/>
+		<PreferenceCategory android:title="@string/v2_only">
+			<CheckBoxPreference
+				android:defaultValue="true"
+				android:key="expTarget"
+				android:summaryOff="@string/explosive_target_desc_off"
+				android:summaryOn="@string/explosive_target_desc_on"
+				android:title="@string/explosive_target"/>
+		</PreferenceCategory>
+	</PreferenceScreen>
+	<PreferenceScreen android:title="@string/colors">
+		<EditTextPreference
+			android:defaultValue="black"
+			android:dialogMessage="@string/color_dialog_msg"
+			android:digits="abcdefghijklmnopqrstuvwxyz0123456789#"
+			android:key="colorBG"
+			android:title="@string/color_bg"/>
+		<EditTextPreference
+			android:defaultValue="green"
+			android:dialogMessage="@string/color_dialog_msg"
+			android:digits="abcdefghijklmnopqrstuvwxyz0123456789#"
+			android:key="colorGrid"
+			android:title="@string/color_grid"/>
+		<EditTextPreference
+			android:defaultValue="red"
+			android:dialogMessage="@string/color_dialog_msg"
+			android:digits="abcdefghijklmnopqrstuvwxyz0123456789#"
+			android:key="colorTarget"
+			android:title="@string/color_target"/>
+		<EditTextPreference
+			android:defaultValue="yellow"
+			android:dialogMessage="@string/color_dialog_msg"
+			android:digits="abcdefghijklmnopqrstuvwxyz0123456789#"
+			android:key="colorProj"
+			android:title="@string/color_projectile"/>
+		<PreferenceCategory android:title="@string/v2_only">
+			<EditTextPreference
+				android:defaultValue="blue"
+				android:dialogMessage="@string/color_dialog_msg"
+				android:digits="abcdefghijklmnopqrstuvwxyz0123456789#"
+				android:key="colorHitTarget"
+				android:summary="@string/color_target_complete_desc"
+				android:title="@string/color_target_complete"/>
 		</PreferenceCategory>
 	</PreferenceScreen>
 	<PreferenceCategory>
-		<Preference android:key="clearScores" android:title="Clear saved scores" />
-		<Preference android:key="resetCustom" android:title="Reset Custom Game" android:summary="Reset Custom Game values to example defaults" />
-		<Preference android:key="resetPrefs" android:title="Reset preferences" android:summary="Reset preferences to defaults" />
+		<Preference
+			android:key="clearScores"
+			android:title="@string/clear_scores"/>
+		<Preference
+			android:key="resetCustom"
+			android:summary="@string/reset_custom_desc"
+			android:title="@string/reset_custom"/>
+		<Preference
+			android:key="resetPrefs"
+			android:summary="@string/reset_prefs_desc"
+			android:title="@string/reset_prefs"/>
 	</PreferenceCategory>
 </PreferenceScreen>

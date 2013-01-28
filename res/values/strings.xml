@@ -14,34 +14,16 @@
      limitations under the License.
 -->
 <resources>
+	<!-- AndroidManifest.xml and Common.java -->
 	<string name="app_name">Cannon</string>
 	<string name="app_version">2.0.0</string>
+	
+	<!-- Common.java -->
+	<string name="more_apps">More apps</string>
 	<string name="app_web">http://cannon.pilot51.com</string>
 	<string name="dev_name">Mark Injerd (aka Pilot_51)</string>
 	<string name="dev_email">pilota51@gmail.com</string>
 	<string name="dev_web">http://pilot51.com</string>
-	<string name="prefs">Preferences</string>
-	<string name="about">Help/About</string>
-	<string name="high">High: %d</string>
-	<string name="score">Score: %d</string>
-	<string name="angle">Angle: %d</string>
-	<string name="velocity">Velocity: %d</string>
-	<string name="toast_menu">Press menu button for help and preferences.</string>
-	<string name="toast_prefs_reset">Preferences reset</string>
-	<string name="toast_custom_reset">Custom game values reset</string>
-	<string name="toast_scores_cleared">Scores cleared</string>
-	<string name="toast_gridx_disabled">Grid X scale set to 0 (disabled)</string>
-	<string name="toast_gridy_disabled">Grid Y scale set to 0 (disabled)</string>
-	<string name="toast_invalid_color_bg">Invalid color.\nBackground reset to black.</string>
-	<string name="toast_invalid_color_grid">Invalid color.\nGrid reset to green.</string>
-	<string name="toast_invalid_color_target">Invalid color.\nTarget reset to red.</string>
-	<string name="toast_invalid_color_target_complete">Invalid color.\nCompleted Target reset to blue.</string>
-	<string name="toast_invalid_color_projectile">Invalid color.\nProjectile reset to yellow.</string>
-	<string name="toast_drag_min">Drag sensitivity must be at least 1.\nReset to 5.</string>
-	<string name="toast_drag_blank">Drag sensitivity cannot be blank.\nReset to 5.</string>
-	<string name="toast_pressure_blank">Pressure sensitivity cannot be blank.\nReset to 10.</string>
-	<string name="color_dialog_msg">Value can be a color name (e.g. blue) or a hex color (e.g. #0000ff, or #550000ff for alpha transparency)</string>
-	<string name="more_apps">More apps</string>
 	<string name="about_text">%1$s - version %2$s\n%3$s\nBy %4$s\n%5$s\n%6$s\n\n\n%7$s</string>
 	<string name="about_instructions">
 "Controls:
@@ -61,4 +43,117 @@ Scoring - Random game type:
 	With both Collision and Keep Targets enabled: Number of active targets hit by the specific projectile multiplied by the number of targets on screen.
 	Otherwise: Number of active targets hit by the specific projectile multiplied by 20."
 	</string>
+	
+	<!-- GameField.java -->
+	<string name="hud_high">High: %s</string>
+	<string name="hud_score">Score: %s</string>
+	<string name="hud_angle">Angle: %s</string>
+	<string name="hud_velocity">Velocity: %s</string>
+	
+	<!-- GameType.java -->
+	<string name="toast_menu">Press menu button for help and preferences.</string>
+	
+	<!-- Preferences.java -->
+	<string name="toast_prefs_reset">Preferences reset</string>
+	<string name="toast_custom_reset">Custom game values reset</string>
+	<string name="toast_scores_cleared">Scores cleared</string>
+	<string name="toast_gridx_disabled">Grid X scale set to 0 (disabled)</string>
+	<string name="toast_gridy_disabled">Grid Y scale set to 0 (disabled)</string>
+	<string name="toast_invalid_color_bg">Invalid color.\nBackground reset to black.</string>
+	<string name="toast_invalid_color_grid">Invalid color.\nGrid reset to green.</string>
+	<string name="toast_invalid_color_target">Invalid color.\nTarget reset to red.</string>
+	<string name="toast_invalid_color_target_complete">Invalid color.\nCompleted Target reset to blue.</string>
+	<string name="toast_invalid_color_projectile">Invalid color.\nProjectile reset to yellow.</string>
+	<string name="toast_drag_min">Drag sensitivity must be at least 1.\nReset to 5.</string>
+	<string name="toast_drag_blank">Drag sensitivity cannot be blank.\nReset to 5.</string>
+	<string name="toast_pressure_blank">Pressure sensitivity cannot be blank.\nReset to 10.</string>
+	
+	<!-- layout/gametype.xml -->
+	<string name="select_game_type">Select game type</string>
+	<string name="random_targets">Random Targets</string>
+	<string name="custom">Custom</string>
+	
+	<!-- layout/customgame.xml -->
+	<string name="fire">Fire!</string>
+	<!-- layout-land/customgame.xml -->
+	<string name="fire_vertical">F\ni\nr\ne</string>
+	
+	<!-- layout/customgame_items.xml -->
+	<string name="angle">Angle</string>
+	<string name="angle_desc">Angle in degrees</string>
+	<string name="velocity">Velocity</string>
+	<string name="velocity_desc">Muzzle velocity in meters/sec</string>
+	<string name="fuze">Fuze</string>
+	<string name="fuze_desc">Fuze in seconds [0 = disable]</string>
+	<string name="gravity">Gravity</string>
+	<string name="gravity_desc">Gravity in G\'s (1G = 9.80665m/s²)</string>
+	<string name="wind">Wind</string>
+	<string name="wind_desc">Wind in m/s² [Positive = forward]</string>
+	<string name="target_distance">Target distance</string>
+	<string name="target_distance_desc">Ground distance of target in meters</string>
+	<string name="target_height">Target height</string>
+	<string name="target_height_desc">Altitude of target in meters</string>
+	<string name="target_radius">Target radius</string>
+	<string name="target_radius_desc">Target radius in meters</string>
+	<string name="projectile_radius">Projectile radius</string>
+	<string name="projectile_radius_desc">Projectile radius in meters</string>
+	
+	<!-- menu/main.xml -->
+	<string name="prefs">Preferences</string>
+	<string name="about">Help/About</string>
+	
+	<!-- xml/preferences.xml -->
+	<string name="v2_only">v2 only</string>
+	<string name="gameplay">Gameplay</string>
+	<string name="classic_mode">Classic Mode</string>
+	<string name="classic_mode_desc_on">Current mode: v1</string>
+	<string name="classic_mode_desc_off">Current mode: v2</string>
+	<string name="collision">Collision</string>
+	<string name="collision_desc">Collision between projectile and target</string>
+	<string name="auto_fire">Auto-fire</string>
+	<string name="auto_fire_desc_on">v2: Fully automatic machine gun\nClassic: Another projectile is fired when previous one completes</string>
+	<string name="auto_fire_desc_off">Manual: Press center D-Pad/wheel or touchscreen to fire one shot</string>
+	<string name="keep_targets">Keep Targets</string>
+	<string name="keep_targets_desc_on">Targets will remain when hit</string>
+	<string name="keep_targets_desc_off">Targets will be destroyed when hit</string>
+	<string name="scale">Scale</string>
+	<string name="scale_desc">Touchscreen sensitivity, game speed, and grid</string>
+	<string name="scale_xgrid">X-Grid scale</string>
+	<string name="scale_xgrid_desc">Scale to measure ground distance</string>
+	<string name="scale_xgrid_dlg">Set the distance (in meters) between each grid line measuring ground distance</string>
+	<string name="scale_ygrid">Y-Grid scale</string>
+	<string name="scale_ygrid_desc">Scale to measure altitude</string>
+	<string name="scale_ygrid_dlg">Set the distance (in meters) between each grid line measuring altitude</string>
+	<string name="touch_sensitivity_drag">Touchscreen drag sensitivity</string>
+	<string name="touch_sensitivity_drag_desc">Sensitivity for angle and velocity</string>
+	<string name="touch_sensitivity_drag_dlg">100 = 1 pixel per degree or m/s\n10 = 10 pixels per degree or m/s</string>
+	<string name="touch_sensitivity_pressure">Touchscreen pressure sensitivity</string>
+	<string name="touch_sensitivity_pressure_desc">Sensitivity for firing</string>
+	<string name="touch_sensitivity_pressure_dlg">Higher = More pressure\nThis varies by device and may take a few tries to get a good value.</string>
+	<string name="speed_multiplier">Speed Multiplier</string>
+	<string name="borders">Borders</string>
+	<string name="borders_desc">Physical boundaries along edges of screen</string>
+	<string name="ground">Ground</string>
+	<string name="roof">Roof</string>
+	<string name="wall_left">Left Wall</string>
+	<string name="wall_right">Right Wall</string>
+	<string name="visual_effects">Visual Effects</string>
+	<string name="visual_effects_desc">Disable these to improve performance</string>
+	<string name="projectile_trail">Projectile Trail</string>
+	<string name="explosive_target">Explosive Target</string>
+	<string name="explosive_target_desc_on">Hitting a target will create a firework explosion</string>
+	<string name="explosive_target_desc_off">Nothing really interesting happens when hitting a target\nImproves performance</string>
+	<string name="colors">Colors</string>
+	<string name="color_dialog_msg">Value can be a color name (e.g. blue) or a hex color (e.g. #0000ff, or #550000ff for alpha transparency)</string>
+	<string name="color_bg">Background color</string>
+	<string name="color_grid">Grid color</string>
+	<string name="color_target">Target color</string>
+	<string name="color_projectile">Projectile color</string>
+	<string name="color_target_complete">Completed Target color</string>
+	<string name="color_target_complete_desc">Color for targets that have been hit</string>
+	<string name="clear_scores">Clear saved scores</string>
+	<string name="reset_custom">Reset Custom Game</string>
+	<string name="reset_custom_desc">Reset Custom Game values to example defaults</string>
+	<string name="reset_prefs">Reset preferences</string>
+	<string name="reset_prefs_desc">Reset preferences to defaults</string>
 </resources>

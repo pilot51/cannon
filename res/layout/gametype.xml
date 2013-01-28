@@ -13,11 +13,27 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="fill_parent" android:layout_height="fill_parent" android:orientation="vertical" android:gravity="center_horizontal">
-	<LinearLayout android:id="@+id/layoutAd" android:layout_height="wrap_content" android:layout_width="match_parent" android:gravity="center" />
-	<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Select game type" android:textSize="30sp" android:layout_marginBottom="20dp" />
-	<Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/btnRandom" android:textSize="30sp" android:text="Random Targets" />
-	<Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Mission" android:textSize="30sp" android:id="@+id/btnMission" />
-	<Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/btnMulti" android:text="Multiplayer" android:textSize="30sp" />
-	<Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/btnCustom" android:text="Custom" android:textSize="30sp" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:gravity="center_horizontal"
+	android:orientation="vertical">
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="20dp"
+		android:text="@string/select_game_type"
+		android:textSize="30sp"/>
+	<Button
+		android:id="@+id/btnRandom"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/random_targets"
+		android:textSize="30sp"/>
+	<Button
+		android:id="@+id/btnCustom"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/custom"
+		android:textSize="30sp"/>
 </LinearLayout>

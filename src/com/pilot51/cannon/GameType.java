@@ -31,7 +31,7 @@ import android.widget.Toast;
 
 public class GameType extends Activity implements OnClickListener {
 	
-	private Button btnCustom, btnRandom, btnMission, btnMulti;
+	private Button btnCustom, btnRandom;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -47,12 +47,6 @@ public class GameType extends Activity implements OnClickListener {
 		btnCustom.setOnClickListener(this);
 		btnRandom = (Button) findViewById(R.id.btnRandom);
 		btnRandom.setOnClickListener(this);
-		btnMission = (Button) findViewById(R.id.btnMission);
-		btnMission.setOnClickListener(this);
-		btnMission.setVisibility(Button.GONE); // Disabled until operational
-		btnMulti = (Button) findViewById(R.id.btnMulti);
-		btnMulti.setOnClickListener(this);
-		btnMulti.setVisibility(Button.GONE); // Disabled until operational
 		
 		if(getLastNonConfigurationInstance() != (Object)true) {
 			Toast.makeText(this, R.string.toast_menu, Toast.LENGTH_LONG).show();
@@ -74,10 +68,6 @@ public class GameType extends Activity implements OnClickListener {
 			Intent i = new Intent(this, GameField.class);
 			i.putExtra("random", true);
 			startActivity(i);
-			break;
-		case R.id.btnMission:
-			break;
-		case R.id.btnMulti:
 			break;
 		}
 	}
