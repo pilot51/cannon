@@ -47,16 +47,14 @@
 		<EditTextPreference
 			android:defaultValue="50"
 			android:dialogMessage="@string/scale_xgrid_dlg"
-			android:digits="0123456789"
-			android:inputType="phone"
+			android:inputType="number"
 			android:key="gridX"
 			android:summary="@string/scale_xgrid_desc"
 			android:title="@string/scale_xgrid"/>
 		<EditTextPreference
 			android:defaultValue="50"
 			android:dialogMessage="@string/scale_ygrid_dlg"
-			android:digits="0123456789"
-			android:inputType="phone"
+			android:inputType="number"
 			android:key="gridY"
 			android:summary="@string/scale_ygrid_desc"
 			android:title="@string/scale_ygrid"/>
@@ -64,23 +62,20 @@
 			<EditTextPreference
 				android:defaultValue="5"
 				android:dialogMessage="@string/touch_sensitivity_drag_dlg"
-				android:digits="0123456789"
-				android:inputType="phone"
+				android:inputType="number"
 				android:key="senseMove"
 				android:summary="@string/touch_sensitivity_drag_desc"
 				android:title="@string/touch_sensitivity_drag"/>
 			<EditTextPreference
 				android:defaultValue="10"
 				android:dialogMessage="@string/touch_sensitivity_pressure_dlg"
-				android:digits="0123456789"
-				android:inputType="phone"
+				android:inputType="number"
 				android:key="sensePressure"
 				android:summary="@string/touch_sensitivity_pressure_desc"
 				android:title="@string/touch_sensitivity_pressure"/>
 			<EditTextPreference
 				android:defaultValue="1"
-				android:digits="0123456789."
-				android:inputType="phone"
+				android:inputType="numberDecimal"
 				android:key="speed"
 				android:title="@string/speed_multiplier"/>
 		</PreferenceCategory>

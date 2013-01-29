@@ -64,18 +64,6 @@ public class CustomGame extends Activity implements OnClickListener {
 		if(getSharedPreferences("valuePref", MODE_PRIVATE).contains("prefAngle")) movePref();
 		
 		loadValues();
-
-		// Set the virtual keyboard to the numeric "phone" type without
-		// overriding input type defined in the layout XML
-		editAngle.setRawInputType(3);
-		editVelocity.setRawInputType(3);
-		editFuze.setRawInputType(3);
-		editGravity.setRawInputType(3);
-		editWind.setRawInputType(3);
-		editTargetD.setRawInputType(3);
-		editTargetH.setRawInputType(3);
-		editTargetS.setRawInputType(3);
-		editProjS.setRawInputType(3);
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
