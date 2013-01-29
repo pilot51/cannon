@@ -190,7 +190,7 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 			PhysicsFactory.createBoxBody(mPhysicsWorld, right, BodyType.StaticBody, wallFixtureDef);
 			addEntity(right, 0, scene);
 		}
-		if (mRandom | CustomGame.getCustomPrefs().getInt("targetD", 0) > 0 | CustomGame.getCustomPrefs().getInt("targetH", 0) > 0) {
+		if (mRandom || CustomGame.getCustomPrefs().getInt("targetD", 0) > 0 | CustomGame.getCustomPrefs().getInt("targetH", 0) > 0) {
 			addTarget();
 			mPhysicsWorld.setContactListener(new ContactListener() {
 				public void beginContact(final Contact pContact) {
@@ -201,16 +201,14 @@ public class GameField extends BaseGameActivity implements IOnSceneTouchListener
 						TimerTask targetAction = new TimerTask() {
 							@Override
 							public void run() {
-								if (expTarget)
-									createFirework();
-								if (keepTargets)
+								if (expTarget) createFirework();
+								if (keepTargets) {
 									target.setColor(Color.red(colorHitTarget) / 255f, Color.green(colorHitTarget) / 255f, Color.blue(colorHitTarget) / 255f, Color.alpha(colorHitTarget) / 255f);
-								else {
+								} else {
 									nTargets--;
 									removeSprite(target, 1);
 								}
-								if (mRandom)
-									addTarget();
+								if (mRandom) addTarget();
 						}};
 						new Timer().schedule(targetAction, (long) (100 / speed));
 						long hits;
