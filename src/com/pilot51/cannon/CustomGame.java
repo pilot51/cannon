@@ -20,7 +20,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -30,17 +29,12 @@ import android.widget.Button;
 import android.widget.EditText;
 
 public class CustomGame extends Activity implements OnClickListener {
-
 	private Button btnFire;
-
 	private EditText editAngle, editVelocity, editFuze, editGravity, editWind,
 			editTargetD, editTargetH, editTargetS, editProjS;
-
 	private float angle, velocity, fuze, gravity, wind;
-
 	private int targetD, targetH, targetS, projS;
-
-	private SharedPreferences prefCustom;
+	private static SharedPreferences prefCustom;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -58,11 +52,6 @@ public class CustomGame extends Activity implements OnClickListener {
 		btnFire = (Button) findViewById(R.id.buttonFire);
 		btnFire.setOnClickListener(this);
 		prefCustom = getSharedPreferences("custom", MODE_PRIVATE);
-		
-		// Move old custom value preferences to new preferences (simpler naming)
-		// To be removed at least 1 month after v2 release
-		if(getSharedPreferences("valuePref", MODE_PRIVATE).contains("prefAngle")) movePref();
-		
 		loadValues();
 	}
 
@@ -75,10 +64,10 @@ public class CustomGame extends Activity implements OnClickListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_about:
-			new Common().menu(this);
+			Common.menu(this);
 			return true;
 		case R.id.menu_prefs:
-			startActivityForResult(new Intent(getBaseContext(), Preferences.class), 0);
+			startActivityForResult(new Intent(this, Preferences.class), 0);
 			return true;
 		}
 		return false;
@@ -89,7 +78,7 @@ public class CustomGame extends Activity implements OnClickListener {
 		case R.id.buttonFire:
 			grabValues();
 			saveValues();
-			if(PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getBoolean("classic", false)) {
+			if(Common.getPrefs().getBoolean("classic", false)) {
 				startActivity(new Intent(this, Classic.class));
 			} else startActivity(new Intent(this, GameField.class));
 			break;
@@ -158,32 +147,21 @@ public class CustomGame extends Activity implements OnClickListener {
 	}
 
 	private void saveValues() {
-		SharedPreferences.Editor e = prefCustom.edit();
-		e.putFloat("angle", angle);
-		e.putFloat("velocity", velocity);
-		e.putFloat("fuze", fuze);
-		e.putFloat("gravity", gravity);
-		e.putFloat("wind", wind);
-		e.putInt("targetD", targetD);
-		e.putInt("targetH", targetH);
-		e.putInt("targetS", targetS);
-		e.putInt("projS", projS);
-		e.commit();
+		prefCustom.edit()
+		.putFloat("angle", angle)
+		.putFloat("velocity", velocity)
+		.putFloat("fuze", fuze)
+		.putFloat("gravity", gravity)
+		.putFloat("wind", wind)
+		.putInt("targetD", targetD)
+		.putInt("targetH", targetH)
+		.putInt("targetS", targetS)
+		.putInt("projS", projS)
+		.commit();
 	}
 	
-	private void movePref() {
-		SharedPreferences p = getSharedPreferences("valuePref", 0);
-		SharedPreferences.Editor e = prefCustom.edit();
-		e.putFloat("angle", p.getFloat("prefAngle", 0));
-		e.putFloat("velocity", p.getFloat("prefVelocity", 0));
-		e.putFloat("fuze", p.getFloat("prefFuze", 0));
-		e.putFloat("gravity", p.getFloat("prefGravity", 0));
-		e.putFloat("wind", p.getFloat("prefWind", 0));
-		e.putInt("targetD", p.getInt("prefTargetD", 0));
-		e.putInt("targetH", p.getInt("prefTargetH", 0));
-		e.putInt("targetS", p.getInt("prefTargetS", 0));
-		e.commit();
-		p.edit().clear().commit();
+	static SharedPreferences getCustomPrefs() {
+		return prefCustom;
 	}
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {

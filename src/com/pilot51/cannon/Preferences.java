@@ -28,19 +28,14 @@ import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 public class Preferences extends PreferenceActivity implements OnSharedPreferenceChangeListener {
-
-	private SharedPreferences prefs;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);
-
-		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
+		
 		((Preference)findPreference("resetPrefs")).setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			public boolean onPreferenceClick(Preference p) {
-				prefs.edit().clear().commit();
+				Common.getPrefs().edit().clear().commit();
 				PreferenceManager.setDefaultValues(Preferences.this, R.xml.preferences, true);
 				finish();
 				startActivity(getIntent());
@@ -70,13 +65,13 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 	@Override
 	protected void onResume() {
 		super.onResume();
-		prefs.registerOnSharedPreferenceChangeListener(this);
+		Common.getPrefs().registerOnSharedPreferenceChangeListener(this);
 	}
 
 	@Override
 	protected void onPause() {
+		Common.getPrefs().unregisterOnSharedPreferenceChangeListener(this);
 		super.onPause();
-		prefs.unregisterOnSharedPreferenceChangeListener(this);
 	}
 
 	public void onSharedPreferenceChanged(SharedPreferences sp, String key) {

@@ -18,17 +18,32 @@ package com.pilot51.cannon;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.widget.TextView;
 
 public class Common {
-	void menu(final Activity a) {
+	private static SharedPreferences prefs;
+	
+	static void init(Context c) {
+		// Load default preferences from xml if not saved
+		PreferenceManager.setDefaultValues(c, R.xml.preferences, true);
+		prefs = PreferenceManager.getDefaultSharedPreferences(c);
+	}
+	
+	static SharedPreferences getPrefs() {
+		return prefs;
+	}
+	
+	static void menu(final Activity a) {
 		String
 			appName = a.getString(R.string.app_name),
 			appVer = a.getString(R.string.app_version),

@@ -23,15 +23,12 @@ import org.anddev.andengine.input.touch.TouchEvent;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
-//import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -93,8 +90,6 @@ public class Classic extends Activity {
 			paintCannon = new Paint(),
 			paintGrid = new Paint();
 		private float
-			cannonx,
-			cannony,
 			angle,
 			velocity, // ft/sec
 			wind,
@@ -102,7 +97,6 @@ public class Classic extends Activity {
 			time = 0,
 			time2 = 0,
 			//time3 = 0, // Experimental explosion -- Disabled
-			//viewdist,
 			timeLimit; // time in seconds until projectile stops
 		private long mLastTime = 0, now = 0;
 		private double elapsed;
@@ -110,31 +104,27 @@ public class Classic extends Activity {
 
 		// int part1, part2, part3, part4, part5, part6; // Experimental explosion -- Disabled
 
-		private SharedPreferences prefs, prefCustom;
-
 		private Point cannon;
 
 		private ClassicView(Context context) {
 			super(context);
 			DisplayMetrics dm = new DisplayMetrics();
 			getWindowManager().getDefaultDisplay().getMetrics(dm);
-			this.screenX = dm.widthPixels;
-			this.screenY = dm.heightPixels;
-			prefCustom = getSharedPreferences("custom", MODE_PRIVATE);
-			this.angle = prefCustom.getFloat("angle", 0);
-			this.velocity = prefCustom.getFloat("velocity", 0);
-			this.timeLimit = prefCustom.getFloat("fuze", 0);
-			this.gravity = prefCustom.getFloat("gravity", 0);
-			this.wind = prefCustom.getFloat("wind", 0);
-			this.targetD = prefCustom.getInt("targetD", 0);
-			this.targetH = prefCustom.getInt("targetH", 0);
-			this.targetS = prefCustom.getInt("targetS", 0);
-			this.projS = prefCustom.getInt("projS", 0);
-			prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-			colorBg = Color.parseColor(prefs.getString("colorBG", null));
-			colorGrid = Color.parseColor(prefs.getString("colorGrid", null));
-			colorTarget = Color.parseColor(prefs.getString("colorTarget", null));
-			colorProj = Color.parseColor(prefs.getString("colorProj", null));
+			screenX = dm.widthPixels;
+			screenY = dm.heightPixels;
+			angle = CustomGame.getCustomPrefs().getFloat("angle", 0);
+			velocity = CustomGame.getCustomPrefs().getFloat("velocity", 0);
+			timeLimit = CustomGame.getCustomPrefs().getFloat("fuze", 0);
+			gravity = CustomGame.getCustomPrefs().getFloat("gravity", 0);
+			wind = CustomGame.getCustomPrefs().getFloat("wind", 0);
+			targetD = CustomGame.getCustomPrefs().getInt("targetD", 0);
+			targetH = CustomGame.getCustomPrefs().getInt("targetH", 0);
+			targetS = CustomGame.getCustomPrefs().getInt("targetS", 0);
+			projS = CustomGame.getCustomPrefs().getInt("projS", 0);
+			colorBg = Color.parseColor(Common.getPrefs().getString("colorBG", null));
+			colorGrid = Color.parseColor(Common.getPrefs().getString("colorGrid", null));
+			colorTarget = Color.parseColor(Common.getPrefs().getString("colorTarget", null));
+			colorProj = Color.parseColor(Common.getPrefs().getString("colorProj", null));
 			setBackgroundColor(colorBg);
 			paintTarget.setAntiAlias(true);
 			paintCannon.setAntiAlias(true);
@@ -154,9 +144,9 @@ public class Classic extends Activity {
 			if (time < timeLimit || timeLimit == 0) {
 				drawCannon(canvas);
 				time = time + (float) elapsed;
-			}
-			else if (prefs.getBoolean("repeat", false)) refire();
-			else {
+			} else if (Common.getPrefs().getBoolean("repeat", false)) {
+				refire();
+			} else {
 				setFocusable(false);
 				for (Point point : cannonPoints) {
 					canvas.drawCircle(point.x, point.y, projS, paintCannon);
@@ -164,23 +154,23 @@ public class Classic extends Activity {
 			}
 			if (targetD > 0 | targetH > 0) {
 				// Detect collision
-				if ((prefs.getBoolean("collide", false) && targetS >= Math.sqrt(Math.pow((cannon.x - targetD), 2) + Math.pow((screenY - cannon.y - targetH), 2)))) {
-					if (prefs.getBoolean("repeat", false)) refire();
+				if ((Common.getPrefs().getBoolean("collide", false) && targetS >= Math.sqrt(Math.pow((cannon.x - targetD), 2) + Math.pow((screenY - cannon.y - targetH), 2)))) {
+					if (Common.getPrefs().getBoolean("repeat", false)) refire();
 					else setFocusable(false);
 				}
 			}
 			// Reset returncheck when projectile returns to screen 
 			if (returncheck & cannon.x > 0 & cannon.x < screenX & cannon.y > 0 & cannon.y < screenY) {
-				// Log.d(TAG, "Projectile has returned");
+				// Projectile has returned
 				returncheck = false;
 			}
 			// If projectile goes off screen & has not already been checked for return
 			if (!returncheck & (cannon.x < 0 | cannon.x > screenX | cannon.y < 0 | cannon.y > screenY)) {
-				// Log.d(TAG, "Start return check");
+				// Start return check
 				float timecheck = time, cannonxcheck = 0, cannonycheck = 0;
 				// If there is a possibility of return based on basic knowledge, scan future for return
 				if ((gravity < 0 & cannon.y > screenY) | (wind > 0 & cannon.x < 0) | (gravity > 0 & cannon.y < 0) | (wind < 0 & cannon.x > screenX)) {
-					// Log.d(TAG, "Scanning future for return");
+					// Scanning future for return
 					do {
 						cannonxcheck = (float) (velocity * Math.cos(Math.toRadians(angle)) * timecheck + 0.5 * wind * (float) Math.pow(timecheck, 2));
 						cannonycheck = (float) -(velocity * Math.sin(Math.toRadians(angle)) * timecheck - 0.5 * SensorManager.GRAVITY_EARTH * gravity * Math.pow(timecheck, 2) - screenY);
@@ -193,24 +183,20 @@ public class Classic extends Activity {
 				}
 				// If return found
 				if (cannonxcheck > 0 & cannonxcheck < screenX & cannonycheck > 0 & cannonycheck < screenY) {
-					// Log.d(TAG, "Projectile will return");
+					// Projectile will return
 					returncheck = true;
-				}
-				// If return is impossible
-				else {
-					// Log.d(TAG, "Projectile will not return");
-					if (prefs.getBoolean("repeat", false)) refire();
+				} else { // If return is impossible
+					// Projectile will not return
+					if (Common.getPrefs().getBoolean("repeat", false)) refire();
 					else setFocusable(false);
 					returncheck = false;
 				}
 			}
-
 			if (isFocusable()) invalidate();
-			if (onKeyDown(KeyEvent.KEYCODE_DPAD_CENTER, null)) {}
 		}
 
 		private void drawGrid(Canvas canvas) {
-			gridX = Integer.parseInt(prefs.getString("gridX", null));
+			gridX = Integer.parseInt(Common.getPrefs().getString("gridX", null));
 			if (gridX > 0) {
 				// Draw vertical lines within screen space
 				int grid = 0;
@@ -219,7 +205,7 @@ public class Classic extends Activity {
 					canvas.drawLine(grid, 0, grid, screenY, paintGrid);
 				} while (grid < screenX - gridX && gridX != 0);
 			}
-			gridY = Integer.parseInt(prefs.getString("gridY", null));
+			gridY = Integer.parseInt(Common.getPrefs().getString("gridY", null));
 			if (gridY > 0) {
 				// Draw horizontal lines within screen space
 				int grid = screenY;
@@ -249,7 +235,7 @@ public class Classic extends Activity {
 			cannon = new Point();
 			cannon.x = (float) (velocity * Math.cos(Math.toRadians(angle)) * time + 0.5 * wind * (float) Math.pow(time, 2));
 			cannon.y = (float) -(velocity * Math.sin(Math.toRadians(angle)) * time - 0.5 * 9.81 * gravity * Math.pow(time, 2) - screenY);
-			if (prefs.getBoolean("trail", false)) {
+			if (Common.getPrefs().getBoolean("trail", false)) {
 				cannonPoints.add(cannon);
 				for (Point point : cannonPoints) {
 					canvas.drawCircle(point.x, point.y, projS, paintCannon);
@@ -264,18 +250,6 @@ public class Classic extends Activity {
 			setFocusable(true);
 			invalidate();
 		}
-
-		/*
-			void originalCannon() {
-				x = targets * Math.sin(360÷timelimit÷2)time+targetd;
-				y = targets * Math.cos(360÷timelimit÷2)time+targeth;
-				(Ssin (360÷(L÷2))T+D,Scos (360÷(L÷2))T+H
-				cannonx = velocity * Math.cos(angle) * T - 0.5 * wind * T²;
-				cannony = velocity * Math.sin(angle) * T - 0.5 * 9.8 * gravity * T²;
-				((Vcos A)T-(0.5)(W)T²,(Vsin A)T-(0.5)(9.8)(G)T²)
-				velocity = velocity * 2.0835; // Converts to ft/sec on calculator
-			}
-		*/
 	}
 
 	private class Point {
